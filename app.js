@@ -9,6 +9,7 @@ let savedPlaces = loadPlaces();
 let publicMapIndex = [];
 let publicMapPlaces = [];
 let activeMapId = "draft";
+let pendingDeleteCategory = "";
 let savedIcons = loadIconLibrary();
 let savedCategories = loadCategoryLibrary();
 let activeCategories = new Set();
@@ -290,7 +291,9 @@ function currentPlaces() {
 function renderMarkers() {
   markers.forEach((marker) => marker.setMap(null));
   markers.clear();
-  currentPlaces().forEach(addMarker);
+  currentPlaces()
+    .filter((place) => place.isMarked !== false)
+    .forEach(addMarker);
 }
 
 function groupedCategories() {
@@ -335,6 +338,9 @@ function renderCategoryFilters() {
 
   groups.forEach((data, category) => {
     const active = activeCategories.size === 0 || activeCategories.has(category);
+    const wrap = document.createElement("div");
+    wrap.className = "category-item-wrap";
+
     const item = document.createElement("button");
     item.type = "button";
     item.className = `category-item ${active ? "" : "inactive"}`;
@@ -365,7 +371,23 @@ function renderCategoryFilters() {
       renderMarkers();
     };
 
-    host.appendChild(item);
+    wrap.appendChild(item);
+
+    if (activeMapId === "draft") {
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.className = "category-delete-button";
+      deleteButton.title = `删除分类“${category}”`;
+      deleteButton.setAttribute("aria-label", `删除分类“${category}”`);
+      deleteButton.textContent = "×";
+      deleteButton.onclick = (event) => {
+        event.stopPropagation();
+        openDeleteCategoryDialog(category, data.count);
+      };
+      wrap.appendChild(deleteButton);
+    }
+
+    host.appendChild(wrap);
   });
 }
 
@@ -380,16 +402,29 @@ function renderSavedPlaces() {
 
   places.forEach((place) => {
     const item = document.createElement("div");
-    item.className = "saved-item";
+    const isUnmarked = place.isMarked === false;
+    item.className = `saved-item ${isUnmarked ? "unmarked" : ""}`;
     item.innerHTML = `
-      ${place.iconUrl ? `<img class="mini-icon" src="${place.iconUrl}" alt="">` : `<span class="saved-place-pin"></span>`}
+      ${place.iconUrl && !isUnmarked
+        ? `<img class="mini-icon" src="${place.iconUrl}" alt="">`
+        : `<span class="saved-place-pin"></span>`}
       <div class="item-copy">
-        <div class="item-title">${escapeHtml(place.name)}</div>
-        <div class="item-meta">${escapeHtml(place.category)}${place.address ? " · " + escapeHtml(place.address) : ""}</div>
+        <div class="item-title">
+          ${escapeHtml(place.name)}
+          ${isUnmarked ? '<span class="unmarked-badge">未标记</span>' : ""}
+        </div>
+        <div class="item-meta">
+          ${escapeHtml(place.category || "未分类")}
+          ${place.address ? " · " + escapeHtml(place.address) : ""}
+        </div>
       </div>`;
     item.onclick = () => {
       map.setZoomAndCenter(17, [place.longitude, place.latitude]);
-      markers.get(place.id)?.emit("click");
+      if (isUnmarked) {
+        window.editSavedPlace(place.id);
+      } else {
+        markers.get(place.id)?.emit("click");
+      }
     };
     host.appendChild(item);
   });
@@ -578,6 +613,48 @@ function renderCategorySelect(currentCategory = "") {
     option.selected = true;
     select.appendChild(option);
   }
+}
+
+function openDeleteCategoryDialog(category, count) {
+  pendingDeleteCategory = category;
+  $("deleteCategoryMessage").innerHTML =
+    `确定删除分类 <strong>“${escapeHtml(category)}”</strong> 吗？` +
+    (count ? ` 该分类下目前有 <strong>${count}</strong> 家餐厅。` : "");
+  $("deleteCategoryDialog").showModal();
+}
+
+function closeDeleteCategoryDialog() {
+  pendingDeleteCategory = "";
+  $("deleteCategoryDialog").close();
+}
+
+function confirmDeleteCategory(event) {
+  event.preventDefault();
+  const category = pendingDeleteCategory;
+  if (!category || activeMapId !== "draft") {
+    closeDeleteCategoryDialog();
+    return;
+  }
+
+  savedCategories = savedCategories.filter((item) => item.name !== category);
+
+  savedPlaces = savedPlaces.map((place) => {
+    if (place.category !== category) return place;
+
+    return {
+      ...place,
+      category: "",
+      iconUrl: "",
+      isMarked: false,
+      updatedAt: new Date().toISOString()
+    };
+  });
+
+  activeCategories.delete(category);
+  persistCategoryLibrary();
+  persistPlaces();
+  closeDeleteCategoryDialog();
+  renderAll();
 }
 
 function renderIconLibrary() {
@@ -836,6 +913,7 @@ function savePlace(event) {
     longitude: Number($("longitude").value),
     latitude: Number($("latitude").value),
     iconUrl: selectedIconUrl(),
+    isMarked: true,
     recommendation: recommendationTitle
       ? {
           title: recommendationTitle,
@@ -985,6 +1063,10 @@ $("recommendationPhotoFile").onchange = (event) => {
 $("removeRecommendationPhotoBtn").onclick = () => {
   setRecommendationPhoto("");
 };
+
+$("deleteCategoryForm").addEventListener("submit", confirmDeleteCategory);
+$("closeDeleteCategoryDialogBtn").onclick = closeDeleteCategoryDialog;
+$("cancelDeleteCategoryBtn").onclick = closeDeleteCategoryDialog;
 
 $("categoryForm").addEventListener("submit", saveStandaloneCategory);
 $("closeCategoryDialogBtn").onclick = () => $("categoryDialog").close();

@@ -81,6 +81,35 @@
   </div>
 
 
+
+  <dialog id="deleteCategoryDialog" class="compact-dialog danger-dialog">
+    <form id="deleteCategoryForm">
+      <header class="dialog-header">
+        <div>
+          <div class="dialog-kicker">高风险操作</div>
+          <h2>删除分类</h2>
+        </div>
+        <button type="button" id="closeDeleteCategoryDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
+      </header>
+
+      <div class="dialog-scroll">
+        <section class="form-section first-section last-section">
+          <p id="deleteCategoryMessage" class="danger-message"></p>
+          <div class="danger-impact">
+            <strong>删除后将发生：</strong>
+            <p>分类本身会被删除；该分类下的餐厅仍会保留，但会变成“未分类”，并且暂时不再显示在地图上。</p>
+          </div>
+        </section>
+      </div>
+
+      <footer class="dialog-actions">
+        <div class="dialog-spacer"></div>
+        <button type="button" id="cancelDeleteCategoryBtn" class="neutral-button">取消</button>
+        <button type="submit" class="danger-primary-button">确认删除</button>
+      </footer>
+    </form>
+  </dialog>
+
   <dialog id="categoryDialog" class="compact-dialog">
     <form id="categoryForm">
       <header class="dialog-header">
