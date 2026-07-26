@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的地点地图</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="app">
+    <main class="map-shell">
+      <div id="map"></div>
+
+      <section class="google-panel" id="mainPanel">
+        <div class="search-box">
+          <button id="menuBtn" class="round-icon-button" type="button" aria-label="收起菜单">
+            <span></span><span></span><span></span>
+          </button>
+          <input id="poiKeyword" type="search" placeholder="在地图中搜索地点" autocomplete="off" />
+          <button id="clearKeywordBtn" class="clear-input-button hidden" type="button" aria-label="清除">×</button>
+          <button id="searchBtn" class="search-icon-button" type="button" aria-label="搜索">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 20-4.35-4.35a7.5 7.5 0 1 0-1 1L20 21zM5.5 11a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div id="panelContent" class="panel-content">
+          <section id="searchResultsSection" class="content-section hidden">
+            <div class="section-title-row">
+              <h2>搜索结果</h2>
+              <button id="clearResultsBtn" class="link-button" type="button">关闭</button>
+            </div>
+            <div id="searchResults" class="result-list"></div>
+          </section>
+
+          <section class="content-section category-section">
+            <div class="section-title-row">
+              <h2>我的分类</h2>
+              <span id="categorySummary" class="summary-text"></span>
+            </div>
+            <div id="categoryFilters" class="category-list"></div>
+          </section>
+
+          <section class="content-section saved-section">
+            <div class="section-title-row">
+              <h2>已保存</h2>
+              <span id="placeCount" class="summary-text">0</span>
+            </div>
+            <div id="savedPlaces" class="saved-list"></div>
+          </section>
+
+          <section class="panel-footer-actions">
+            <button id="exportBtn" class="panel-export-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 20h14v-2H5v2zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09 1.42-1.42L12 2z"/>
+              </svg>
+              <span>导出地图数据</span>
+            </button>
+          </section>
+        </div>
+      </section>
+
+      <button id="openPanelBtn" class="map-control-button open-panel-button hidden" type="button" aria-label="打开菜单">☰</button>
+      <div id="loading" class="loading-card">正在加载地图…</div>
+      <div class="bottom-hint">双击地图可手动添加地点</div>
+    </main>
+  </div>
+
+
+  <dialog id="categoryDialog" class="compact-dialog">
+    <form id="categoryForm">
+      <header class="dialog-header">
+        <div>
+          <div class="dialog-kicker">我的分类</div>
+          <h2>新建分类</h2>
+        </div>
+        <button type="button" id="closeCategoryDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
+      </header>
+
+      <div class="dialog-scroll category-dialog-body">
+        <section class="form-section first-section">
+          <label class="form-field">
+            <span>分类名称 <em>*</em></span>
+            <input id="standaloneCategoryName" required maxlength="24" placeholder="例如：咖啡、展览、云南菜" />
+          </label>
+        </section>
+
+        <section class="form-section last-section">
+          <div class="section-heading">
+            <div>
+              <h3>分类图标（可选）</h3>
+              <p>可从已保存的图标库中选择，也可以上传新图标。</p>
+            </div>
+          </div>
+
+          <div id="categoryIconLibrary" class="icon-library"></div>
+
+          <label class="upload-tile">
+            <input id="categoryIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+            <span class="upload-plus">＋</span>
+            <span>上传新图标</span>
+            <small>上传后也会保存在地点图标库中</small>
+          </label>
+        </section>
+      </div>
+
+      <footer class="dialog-actions">
+        <div class="dialog-spacer"></div>
+        <button type="button" id="cancelCategoryBtn" class="neutral-button">取消</button>
+        <button type="submit" class="google-primary-button">创建</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="placeDialog">
+    <form id="placeForm">
+      <header class="dialog-header">
+        <div>
+          <div class="dialog-kicker">保存到我的地图</div>
+          <h2 id="dialogTitle">添加地点</h2>
+        </div>
+        <button type="button" id="closeDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
+      </header>
+
+      <div class="dialog-scroll">
+        <input id="placeId" type="hidden" />
+        <input id="poiId" type="hidden" />
+        <input id="longitude" type="hidden" />
+        <input id="latitude" type="hidden" />
+
+        <section class="form-section first-section">
+          <label class="form-field">
+            <span>地点名称 <em>*</em></span>
+            <input id="placeName" required maxlength="80" />
+          </label>
+
+          <div class="form-field">
+            <span>分类 <em>*</em></span>
+            <div class="category-input-row">
+              <select id="categorySelect"></select>
+              <button id="newCategoryBtn" class="secondary-text-button" type="button">＋ 新建分类</button>
+            </div>
+            <input id="newCategoryName" class="hidden" maxlength="24" placeholder="输入新的分类名称" />
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-heading">
+            <div>
+              <h3>地点图标</h3>
+              <p>上传一次后会保存在图标库中，以后可直接选择。</p>
+            </div>
+          </div>
+
+          <div id="iconLibrary" class="icon-library"></div>
+
+          <label class="upload-tile">
+            <input id="customIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+            <span class="upload-plus">＋</span>
+            <span>上传新图标</span>
+            <small>PNG、JPG、WebP 或 SVG，建议小于 500 KB</small>
+          </label>
+        </section>
+
+        <section class="form-section recommendation-section">
+          <div class="section-heading">
+            <div>
+              <h3>推荐菜单</h3>
+              <p>可记录这家店最值得推荐的一道菜或一个项目。</p>
+            </div>
+          </div>
+
+          <label class="form-field">
+            <span>标题</span>
+            <input id="recommendationTitle" maxlength="80" placeholder="例如：招牌烤鸭" />
+          </label>
+
+          <label class="form-field">
+            <span>描述</span>
+            <textarea id="recommendationDescription" rows="3" maxlength="300" placeholder="口味、分量、价格或推荐理由"></textarea>
+          </label>
+
+          <div class="form-field">
+            <span>照片</span>
+            <div id="recommendationPhotoPreview" class="photo-preview hidden">
+              <img id="recommendationPhotoImage" alt="推荐项目照片预览" />
+              <button id="removeRecommendationPhotoBtn" type="button" class="photo-remove-button">删除照片</button>
+            </div>
+            <label class="photo-upload-button">
+              <input id="recommendationPhotoFile" type="file" accept="image/png,image/jpeg,image/webp" />
+              <span>上传照片</span>
+            </label>
+            <small class="field-help">上传照片或填写描述后，标题将成为必填项。</small>
+          </div>
+        </section>
+
+        <section class="form-section visit-section">
+          <div class="section-heading">
+            <div>
+              <h3>到访记录</h3>
+              <p>记录这次是什么时候去的，以及是否有人同行。</p>
+            </div>
+          </div>
+
+          <label class="form-field">
+            <span>日期</span>
+            <input id="visitDate" type="date" />
+          </label>
+
+          <div class="form-field">
+            <span>同行方式</span>
+            <div class="visit-mode-switch" role="group" aria-label="同行方式">
+              <button id="visitSoloBtn" class="visit-mode-button selected" type="button" data-mode="solo">
+                自己去
+              </button>
+              <button id="visitWithBtn" class="visit-mode-button" type="button" data-mode="with">
+                和别人一起
+              </button>
+            </div>
+          </div>
+
+          <label id="visitCompanionsField" class="form-field hidden">
+            <span>with</span>
+            <input id="visitCompanions" maxlength="100" placeholder="输入同行人的名字，可填写多人" />
+          </label>
+        </section>
+
+        <section class="form-section">
+          <details class="more-details">
+            <summary>更多信息</summary>
+            <div class="details-content">
+              <label class="form-field">
+                <span>地址</span>
+                <input id="placeAddress" maxlength="160" />
+              </label>
+            </div>
+          </details>
+        </section>
+
+        <section class="form-section last-section">
+          <label class="form-field">
+            <span>备注（可选）</span>
+            <textarea id="placeNote" rows="4" maxlength="500" placeholder="记录适合场景、是否想再去、同行人等"></textarea>
+          </label>
+        </section>
+      </div>
+
+      <footer class="dialog-actions">
+        <button type="button" id="deletePlaceBtn" class="delete-button hidden">删除地点</button>
+        <div class="dialog-spacer"></div>
+        <button type="button" id="cancelBtn" class="neutral-button">取消</button>
+        <button type="submit" class="google-primary-button">保存</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
