@@ -138,6 +138,9 @@ function initMap() {
     viewMode: "2D",
     resizeEnable: true,
     doubleClickZoom: false
+
+    // 只保留地图背景、道路和建筑，隐藏高德默认 POI 点及其图标
+  features: ["bg", "road", "building"]
   });
 
   map.addControl(new AMap.Scale());
