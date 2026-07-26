@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "maps": [
+    {
+      "id": "beijing",
+      "title": "北京美食地图",
+      "description": "EatWithYu · 北京",
+      "file": "./maps/beijing.json",
+      "center": [
+        116.397428,
+        39.90923
+      ],
+      "zoom": 11,
+      "count": 0
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "id": "beijing",
+  "title": "北京美食地图",
+  "description": "EatWithYu 的北京美食地点",
+  "updatedAt": "",
+  "map": {
+    "center": [
+      116.397428,
+      39.90923
+    ],
+    "zoom": 11
+  },
+  "places": []
+}
