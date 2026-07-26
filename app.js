@@ -137,7 +137,7 @@ function initMap() {
     center: cfg.defaultCenter || [116.397428, 39.90923],
     viewMode: "2D",
     resizeEnable: true,
-    doubleClickZoom: false
+    doubleClickZoom: false,
 
     // 只保留地图背景、道路和建筑，隐藏高德默认 POI 点及其图标
   features: ["bg", "road", "building"]
