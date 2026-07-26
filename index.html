@@ -34,9 +34,22 @@
             <div id="searchResults" class="result-list"></div>
           </section>
 
+          <section class="content-section map-library-section">
+            <div class="section-title-row">
+              <h2>地图</h2>
+              <span id="activeMapSummary" class="summary-text"></span>
+            </div>
+            <div id="mapPresetList" class="map-preset-list">
+              <div class="item-meta">正在读取地图列表…</div>
+            </div>
+            <button id="copyPublicMapBtn" class="copy-map-button hidden" type="button">
+              复制为我的编辑
+            </button>
+          </section>
+
           <section class="content-section category-section">
             <div class="section-title-row">
-              <h2>我的分类</h2>
+              <h2 id="categorySectionTitle">我的分类</h2>
               <span id="categorySummary" class="summary-text"></span>
             </div>
             <div id="categoryFilters" class="category-list"></div>
@@ -44,7 +57,7 @@
 
           <section class="content-section saved-section">
             <div class="section-title-row">
-              <h2>已保存</h2>
+              <h2 id="savedSectionTitle">已保存</h2>
               <span id="placeCount" class="summary-text">0</span>
             </div>
             <div id="savedPlaces" class="saved-list"></div>
@@ -55,7 +68,7 @@
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M5 20h14v-2H5v2zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09 1.42-1.42L12 2z"/>
               </svg>
-              <span>导出地图数据</span>
+              <span>导出发布文件</span>
             </button>
           </section>
         </div>
