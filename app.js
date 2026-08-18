@@ -1,67 +1,175 @@
-const STORAGE_KEY = "personal-poi-map-v1";
-const ICON_LIBRARY_KEY = "personal-poi-map-icon-library-v1";
-const CATEGORY_LIBRARY_KEY = "personal-poi-map-category-library-v1";
+const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
+const sharedConfig = window.SHARED_MAP_CONFIG || {};
+const editorToken = new URLSearchParams(window.location.hash.slice(1)).get("edit") || "";
+const canEdit = Boolean(editorToken);
 
 let map;
 let placeSearch;
 let markers = new Map();
-let savedPlaces = loadPlaces();
-let publicMapIndex = [];
-let publicMapPlaces = [];
-let activeMapId = "draft";
+let savedPlaces = [];
 let pendingDeleteCategory = "";
-let savedIcons = loadIconLibrary();
-let savedCategories = loadCategoryLibrary();
+let savedIcons = [];
+let savedCategories = [];
 let activeCategories = new Set();
 let selectedIconId = "";
 let selectedCategoryIconId = "";
 let recommendationPhotoData = "";
 let selectedVisitMode = "solo";
 let infoWindow;
+let sharedVersion = null;
+let saveTimer = null;
+let isHydrating = true;
 
 const $ = (id) => document.getElementById(id);
 
-function loadPlaces() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function loadIconLibrary() {
-  try {
-    const icons = JSON.parse(localStorage.getItem(ICON_LIBRARY_KEY));
-    return Array.isArray(icons) ? icons : [];
-  } catch {
-    return [];
-  }
-}
-
-
-function loadCategoryLibrary() {
-  try {
-    const categories = JSON.parse(localStorage.getItem(CATEGORY_LIBRARY_KEY));
-    return Array.isArray(categories) ? categories : [];
-  } catch {
-    return [];
-  }
-}
-
 function persistPlaces() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPlaces));
+  scheduleSharedSave();
 }
 
 function persistIconLibrary() {
-  localStorage.setItem(ICON_LIBRARY_KEY, JSON.stringify(savedIcons));
+  scheduleSharedSave();
 }
 
 function persistCategoryLibrary() {
-  localStorage.setItem(CATEGORY_LIBRARY_KEY, JSON.stringify(savedCategories));
+  scheduleSharedSave();
+}
+
+function hasSharedBackend() {
+  return Boolean(
+    sharedConfig.supabaseUrl &&
+    sharedConfig.supabaseAnonKey &&
+    !sharedConfig.supabaseUrl.includes("请替换") &&
+    !sharedConfig.supabaseAnonKey.includes("请替换")
+  );
+}
+
+function sharedHeaders() {
+  return {
+    apikey: sharedConfig.supabaseAnonKey,
+    Authorization: `Bearer ${sharedConfig.supabaseAnonKey}`,
+    "Content-Type": "application/json"
+  };
+}
+
+function setSyncStatus(message, state = "") {
+  const status = $("sharedStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.state = state;
+}
+
+function applySharedData(data = {}) {
+  savedPlaces = Array.isArray(data.places) ? data.places : [];
+  savedCategories = Array.isArray(data.categories) ? data.categories : [];
+  savedIcons = Array.isArray(data.icons) ? data.icons : [];
+}
+
+async function loadFallbackMap() {
+  const response = await fetch(SHARED_MAP_FALLBACK_FILE, { cache: "no-store" });
+  if (!response.ok) throw new Error("地图文件读取失败");
+  const data = await response.json();
+  applySharedData({ places: data.places || [], categories: [], icons: [] });
+}
+
+async function loadSharedMap() {
+  if (!hasSharedBackend()) {
+    await loadFallbackMap();
+    setSyncStatus("等待连接共享数据", "offline");
+    return;
+  }
+
+  const mapId = encodeURIComponent(sharedConfig.mapId || "beijing");
+  const url = `${sharedConfig.supabaseUrl}/rest/v1/shared_maps?id=eq.${mapId}&select=title,data,version,updated_at`;
+  const response = await fetch(url, { headers: sharedHeaders(), cache: "no-store" });
+  if (!response.ok) throw new Error("共享地图读取失败");
+
+  const rows = await response.json();
+  if (!rows.length) throw new Error("共享地图尚未初始化");
+
+  applySharedData(rows[0].data || {});
+  sharedVersion = rows[0].version;
+  setSyncStatus(canEdit ? "可共同编辑" : "只读浏览", canEdit ? "editable" : "readonly");
+}
+
+async function bootstrapSharedMap() {
+  document.body.classList.toggle("read-only", !canEdit);
+  $("editorLinkAction")?.classList.toggle("hidden", !canEdit);
+  setSyncStatus("正在同步…", "saving");
+
+  try {
+    await loadSharedMap();
+  } catch (error) {
+    console.error(error);
+    try {
+      await loadFallbackMap();
+    } catch (fallbackError) {
+      console.error(fallbackError);
+      applySharedData();
+    }
+    setSyncStatus("共享数据暂时不可用", "error");
+  } finally {
+    isHydrating = false;
+  }
+}
+
+function sharedPayload() {
+  return {
+    places: savedPlaces,
+    categories: savedCategories,
+    icons: savedIcons
+  };
+}
+
+function scheduleSharedSave() {
+  if (isHydrating || !canEdit) return;
+  if (!hasSharedBackend()) {
+    setSyncStatus("尚未连接共享数据", "error");
+    return;
+  }
+
+  window.clearTimeout(saveTimer);
+  setSyncStatus("正在保存…", "saving");
+  saveTimer = window.setTimeout(saveSharedMap, 250);
+}
+
+async function saveSharedMap() {
+  try {
+    const response = await fetch(`${sharedConfig.supabaseUrl}/rest/v1/rpc/save_shared_map`, {
+      method: "POST",
+      headers: sharedHeaders(),
+      body: JSON.stringify({
+        p_map_id: sharedConfig.mapId || "beijing",
+        p_editor_token: editorToken,
+        p_data: sharedPayload(),
+        p_expected_version: sharedVersion
+      })
+    });
+
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = result?.message || "共享地图保存失败";
+      if (/版本|version|conflict/i.test(message)) {
+        alert("另一位编辑者刚刚更新了地图。请刷新页面读取最新内容后再编辑。");
+      } else if (/密钥|token|permission|权限/i.test(message)) {
+        alert("这条编辑链接无效或已失效。");
+      } else {
+        alert(message);
+      }
+      throw new Error(message);
+    }
+
+    const row = Array.isArray(result) ? result[0] : result;
+    if (row?.version != null) sharedVersion = row.version;
+    setSyncStatus("已保存到共享地图", "saved");
+  } catch (error) {
+    console.error(error);
+    setSyncStatus("保存失败", "error");
+  }
 }
 
 function migrateCategoriesFromPlaces() {
   const knownNames = new Set(savedCategories.map((category) => category.name));
+  let changed = false;
 
   savedPlaces.forEach((place) => {
     if (!place.category || knownNames.has(place.category)) return;
@@ -73,13 +181,15 @@ function migrateCategoriesFromPlaces() {
       createdAt: new Date().toISOString()
     });
     knownNames.add(place.category);
+    changed = true;
   });
 
-  persistCategoryLibrary();
+  if (changed) persistCategoryLibrary();
 }
 
 function migrateIconsFromPlaces() {
   const knownUrls = new Set(savedIcons.map((icon) => icon.url));
+  let changed = false;
 
   savedPlaces.forEach((place) => {
     if (
@@ -95,10 +205,11 @@ function migrateIconsFromPlaces() {
       };
       savedIcons.push(icon);
       knownUrls.add(icon.url);
+      changed = true;
     }
   });
 
-  persistIconLibrary();
+  if (changed) persistIconLibrary();
 }
 
 function loadAmap() {
@@ -162,7 +273,7 @@ function initMap() {
   });
 
   map.on("dblclick", (event) => {
-    if (activeMapId !== "draft") return;
+    if (!canEdit) return;
     openPlaceDialog({
       name: "地图上的地点",
       address: "",
@@ -174,7 +285,7 @@ function initMap() {
   migrateIconsFromPlaces();
   migrateCategoriesFromPlaces();
   $("loading").classList.add("hidden");
-  loadPublicMapIndex();
+  renderAll();
 }
 
 function escapeHtml(value = "") {
@@ -273,7 +384,7 @@ function addMarker(place) {
         ${visitHtml}
         ${recommendationHtml}
         ${place.note ? `<p>${escapeHtml(place.note)}</p>` : ""}
-        ${activeMapId === "draft"
+        ${canEdit
           ? `<button class="google-primary-button" onclick="window.editSavedPlace('${place.id}')">编辑地点</button>`
           : ""}
       </div>
@@ -288,7 +399,7 @@ function addMarker(place) {
 }
 
 function currentPlaces() {
-  return activeMapId === "draft" ? savedPlaces : publicMapPlaces;
+  return savedPlaces;
 }
 
 function renderMarkers() {
@@ -302,11 +413,9 @@ function renderMarkers() {
 function groupedCategories() {
   const groups = new Map();
 
-  if (activeMapId === "draft") {
-    savedCategories.forEach((category) => {
-      groups.set(category.name, { count: 0, iconUrl: category.iconUrl || "" });
-    });
-  }
+  savedCategories.forEach((category) => {
+    groups.set(category.name, { count: 0, iconUrl: category.iconUrl || "" });
+  });
 
   currentPlaces().forEach((place) => {
     if (!groups.has(place.category)) {
@@ -327,7 +436,7 @@ function renderCategoryFilters() {
   host.innerHTML = "";
   $("categorySummary").textContent = groups.size ? `${groups.size} 个分类` : "0 个分类";
 
-  if (activeMapId === "draft") {
+  if (canEdit) {
     const addButton = document.createElement("button");
     addButton.type = "button";
     addButton.className = "new-category-entry";
@@ -376,7 +485,7 @@ function renderCategoryFilters() {
 
     wrap.appendChild(item);
 
-    if (activeMapId === "draft") {
+    if (canEdit) {
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.className = "category-delete-button";
@@ -397,8 +506,8 @@ function renderCategoryFilters() {
 function renderSavedPlaces() {
   const places = currentPlaces();
   $("placeCount").textContent = places.length;
-  $("savedSectionTitle").textContent = activeMapId === "draft" ? "我的编辑" : "地图地点";
-  $("categorySectionTitle").textContent = activeMapId === "draft" ? "我的分类" : "分类";
+  $("savedSectionTitle").textContent = "地图地点";
+  $("categorySectionTitle").textContent = "分类";
 
   const host = $("savedPlaces");
   host.innerHTML = "";
@@ -423,7 +532,7 @@ function renderSavedPlaces() {
       </div>`;
     item.onclick = () => {
       map.setZoomAndCenter(17, [place.longitude, place.latitude]);
-      if (isUnmarked) {
+      if (isUnmarked && canEdit) {
         window.editSavedPlace(place.id);
       } else {
         markers.get(place.id)?.emit("click");
@@ -433,9 +542,7 @@ function renderSavedPlaces() {
   });
 
   if (!places.length) {
-    host.innerHTML = activeMapId === "draft"
-      ? '<div class="item-meta">你的编辑数据会保存在当前浏览器中。</div>'
-      : '<div class="item-meta">这个公开地图暂时还没有地点。</div>';
+    host.innerHTML = '<div class="item-meta">“在北京吃饭”暂时还没有地点。</div>';
   }
 }
 
@@ -446,93 +553,18 @@ function renderAll() {
   renderSavedPlaces();
 }
 
-async function loadPublicMapIndex() {
-  try {
-    const response = await fetch("./maps/index.json", { cache: "no-store" });
-    if (!response.ok) throw new Error("地图列表读取失败");
-    const data = await response.json();
-    publicMapIndex = Array.isArray(data.maps) ? data.maps : [];
-  } catch (error) {
-    console.warn(error);
-    publicMapIndex = [];
-  }
-  renderAll();
-}
-
 function renderMapPresets() {
   const host = $("mapPresetList");
-  host.innerHTML = "";
-
-  const draftButton = document.createElement("button");
-  draftButton.type = "button";
-  draftButton.className = `map-preset-button ${activeMapId === "draft" ? "active" : ""}`;
-  draftButton.innerHTML = `
-    <span class="map-preset-icon">我</span>
+  host.innerHTML = `
+    <div class="map-preset-button active shared-map-card">
+    <span class="map-preset-icon">京</span>
     <span class="map-preset-copy">
-      <span class="map-preset-title">我的编辑</span>
-      <span class="map-preset-meta">仅保存在当前浏览器</span>
+      <span class="map-preset-title">在北京吃饭</span>
+      <span id="sharedStatus" class="map-preset-meta">${canEdit ? "可共同编辑" : "只读浏览"}</span>
     </span>
-    <span class="map-preset-count">${savedPlaces.length}</span>`;
-  draftButton.onclick = switchToDraft;
-  host.appendChild(draftButton);
-
-  publicMapIndex.forEach((preset) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `map-preset-button ${activeMapId === preset.id ? "active" : ""}`;
-    button.innerHTML = `
-      <span class="map-preset-icon">${escapeHtml((preset.title || "地图").slice(0,1))}</span>
-      <span class="map-preset-copy">
-        <span class="map-preset-title">${escapeHtml(preset.title || preset.id)}</span>
-        <span class="map-preset-meta">${escapeHtml(preset.description || "公开地图")}</span>
-      </span>
-      <span class="map-preset-count">${Number.isFinite(preset.count) ? preset.count : ""}</span>`;
-    button.onclick = () => loadPublicMap(preset);
-    host.appendChild(button);
-  });
-
-  $("copyPublicMapBtn").classList.toggle("hidden", activeMapId === "draft");
+    <span class="map-preset-count">${savedPlaces.length}</span>
+    </div>`;
   $("activeMapSummary").textContent = `${currentPlaces().length} 个地点`;
-}
-
-async function loadPublicMap(preset) {
-  try {
-    $("loading").classList.remove("hidden");
-    $("loading").textContent = `正在加载${preset.title || "地图"}…`;
-    const response = await fetch(preset.file, { cache: "no-store" });
-    if (!response.ok) throw new Error("地图文件读取失败");
-    const data = await response.json();
-    publicMapPlaces = Array.isArray(data.places) ? data.places : [];
-    activeMapId = preset.id;
-    activeCategories.clear();
-
-    const center = data.map?.center || preset.center;
-    const zoom = data.map?.zoom || preset.zoom;
-    if (Array.isArray(center) && center.length === 2) {
-      map.setZoomAndCenter(zoom || 11, center);
-    }
-    renderAll();
-  } catch (error) {
-    console.error(error);
-    alert("公开地图加载失败，请检查 maps/index.json 和对应地图文件。");
-  } finally {
-    $("loading").classList.add("hidden");
-  }
-}
-
-function switchToDraft() {
-  activeMapId = "draft";
-  publicMapPlaces = [];
-  activeCategories.clear();
-  renderAll();
-}
-
-function copyPublicMapToDraft() {
-  if (activeMapId === "draft" || !publicMapPlaces.length) return;
-  savedPlaces = publicMapPlaces.map((place) => ({ ...place }));
-  persistPlaces();
-  switchToDraft();
-  alert(`已将 ${savedPlaces.length} 个地点复制到“我的编辑”。`);
 }
 
 function searchPoi() {
@@ -634,7 +666,7 @@ function closeDeleteCategoryDialog() {
 function confirmDeleteCategory(event) {
   event.preventDefault();
   const category = pendingDeleteCategory;
-  if (!category || activeMapId !== "draft") {
+  if (!category || !canEdit) {
     closeDeleteCategoryDialog();
     return;
   }
@@ -742,6 +774,7 @@ function renderCategoryIconLibrary() {
 }
 
 function openCategoryDialog() {
+  if (!canEdit) return;
   $("standaloneCategoryName").value = "";
   selectedCategoryIconId = "";
   renderCategoryIconLibrary();
@@ -755,6 +788,7 @@ function selectedCategoryIconUrl() {
 
 function saveStandaloneCategory(event) {
   event.preventDefault();
+  if (!canEdit) return;
 
   const name = $("standaloneCategoryName").value.trim();
   if (!name) return;
@@ -810,6 +844,7 @@ function setVisitMode(mode) {
 }
 
 function openPlaceDialog(data, editingId = "") {
+  if (!canEdit) return;
   $("placeId").value = editingId;
   $("poiId").value = data.poiId || "";
   $("longitude").value = data.location[0];
@@ -844,6 +879,7 @@ function openPlaceDialog(data, editingId = "") {
 }
 
 window.editSavedPlace = function (id) {
+  if (!canEdit) return;
   infoWindow?.close();
 
   const place = savedPlaces.find((item) => item.id === id);
@@ -882,6 +918,7 @@ function validateRecommendation() {
 
 function savePlace(event) {
   event.preventDefault();
+  if (!canEdit) return;
 
   const category = resolvedCategory();
   if (!category) {
@@ -950,6 +987,7 @@ function savePlace(event) {
 }
 
 function deleteCurrentPlace() {
+  if (!canEdit) return;
   const id = $("placeId").value;
   if (!id || !confirm("确定删除这个地点吗？")) return;
 
@@ -960,16 +998,11 @@ function deleteCurrentPlace() {
 }
 
 function exportData() {
-  if (activeMapId !== "draft") {
-    alert("请先切换到“我的编辑”，再导出发布文件。");
-    return;
-  }
-
   const payload = JSON.stringify({
     version: 1,
     id: "beijing",
-    title: "北京美食地图",
-    description: "EatWithYu 的北京美食地点",
+    title: "在北京吃饭",
+    description: "共同编辑的北京美食地点",
     updatedAt: new Date().toISOString(),
     map: {
       center: window.MAP_CONFIG?.defaultCenter || [116.397428, 39.90923],
@@ -1029,8 +1062,6 @@ $("placeForm").addEventListener("submit", savePlace);
 $("deletePlaceBtn").onclick = deleteCurrentPlace;
 $("closeDialogBtn").onclick = () => $("placeDialog").close();
 $("cancelBtn").onclick = () => $("placeDialog").close();
-$("exportBtn").onclick = exportData;
-$("copyPublicMapBtn").onclick = copyPublicMapToDraft;
 $("customIconFile").onchange = (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -1105,4 +1136,17 @@ $("openPanelBtn").onclick = () => {
   $("openPanelBtn").classList.add("hidden");
 };
 
-loadAmap();
+$("copyEditorLinkBtn").onclick = async () => {
+  if (!canEdit) return;
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    const button = $("copyEditorLinkBtn");
+    const original = button.textContent;
+    button.textContent = "编辑链接已复制";
+    window.setTimeout(() => { button.textContent = original; }, 1800);
+  } catch {
+    window.prompt("复制下面的编辑链接", window.location.href);
+  }
+};
+
+bootstrapSharedMap().then(loadAmap);

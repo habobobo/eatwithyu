@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的地点地图</title>
+  <title>在北京吃饭</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
@@ -17,7 +17,11 @@
             <span></span><span></span><span></span>
           </button>
           <input id="poiKeyword" type="search" placeholder="在地图中搜索地点" autocomplete="off" />
-          <button id="clearKeywordBtn" class="clear-input-button hidden" type="button" aria-label="清除">×</button>
+          <button id="clearKeywordBtn" class="clear-input-button hidden" type="button" aria-label="清除">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.29 19.7l-1.41-1.42L9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.3z"/>
+            </svg>
+          </button>
           <button id="searchBtn" class="search-icon-button" type="button" aria-label="搜索">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m21 20-4.35-4.35a7.5 7.5 0 1 0-1 1L20 21zM5.5 11a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0z"/>
@@ -36,20 +40,21 @@
 
           <section class="content-section map-library-section">
             <div class="section-title-row">
-              <h2>地图</h2>
+              <h2>共享地图</h2>
               <span id="activeMapSummary" class="summary-text"></span>
             </div>
             <div id="mapPresetList" class="map-preset-list">
               <div class="item-meta">正在读取地图列表…</div>
             </div>
-            <button id="copyPublicMapBtn" class="copy-map-button hidden" type="button">
-              复制为我的编辑
-            </button>
+            <div id="editorLinkAction" class="editor-link-action hidden">
+              <button id="copyEditorLinkBtn" class="copy-map-button" type="button">复制编辑链接</button>
+              <p>拿到这条链接的人可以编辑地图，请只发给可信的人。</p>
+            </div>
           </section>
 
           <section class="content-section category-section">
             <div class="section-title-row">
-              <h2 id="categorySectionTitle">我的分类</h2>
+              <h2 id="categorySectionTitle">分类</h2>
               <span id="categorySummary" class="summary-text"></span>
             </div>
             <div id="categoryFilters" class="category-list"></div>
@@ -63,14 +68,6 @@
             <div id="savedPlaces" class="saved-list"></div>
           </section>
 
-          <section class="panel-footer-actions">
-            <button id="exportBtn" class="panel-export-button" type="button">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 20h14v-2H5v2zm7-18-5.5 5.5 1.42 1.42L11 5.83V16h2V5.83l3.08 3.09 1.42-1.42L12 2z"/>
-              </svg>
-              <span>导出发布文件</span>
-            </button>
-          </section>
         </div>
       </section>
 
@@ -114,7 +111,7 @@
     <form id="categoryForm">
       <header class="dialog-header">
         <div>
-          <div class="dialog-kicker">我的分类</div>
+          <div class="dialog-kicker">在北京吃饭</div>
           <h2>新建分类</h2>
         </div>
         <button type="button" id="closeCategoryDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
@@ -159,7 +156,7 @@
     <form id="placeForm">
       <header class="dialog-header">
         <div>
-          <div class="dialog-kicker">保存到我的地图</div>
+          <div class="dialog-kicker">保存到“在北京吃饭”</div>
           <h2 id="dialogTitle">添加地点</h2>
         </div>
         <button type="button" id="closeDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
