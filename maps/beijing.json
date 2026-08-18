@@ -1,8 +1,8 @@
 {
   "version": 1,
   "id": "beijing",
-  "title": "北京美食地图",
-  "description": "EatWithYu 的北京美食地点",
+  "title": "在北京吃饭",
+  "description": "共同编辑的北京美食地点",
   "updatedAt": "",
   "map": {
     "center": [

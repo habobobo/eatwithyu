@@ -3,8 +3,8 @@
   "maps": [
     {
       "id": "beijing",
-      "title": "北京美食地图",
-      "description": "EatWithYu · 北京",
+      "title": "在北京吃饭",
+      "description": "共同编辑的北京美食地图",
       "file": "./maps/beijing.json",
       "center": [
         116.397428,
