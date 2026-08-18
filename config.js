@@ -5,3 +5,11 @@ window.MAP_CONFIG = {
   defaultCenter: [116.397428, 39.90923], // 北京
   defaultZoom: 12
 };
+
+// Supabase 的 Project URL 和 anon public key 可以安全地放在前端；
+// 编辑密钥不要写在这里，它只存在于 #edit=... 的编辑链接中。
+window.SHARED_MAP_CONFIG = {
+  supabaseUrl: "请替换为 Supabase Project URL",
+  supabaseAnonKey: "请替换为 Supabase anon public key",
+  mapId: "beijing"
+};
