@@ -103,7 +103,7 @@ const mockCloudbase = {
 const editorToken = "a-secure-editor-token-that-is-longer-than-32-characters";
 process.env.EDITOR_TOKEN_SHA256 = crypto.createHash("sha256").update(editorToken).digest("hex");
 process.env.MAP_ID = "beijing";
-process.env.MAP_TITLE = "在北京吃饭";
+process.env.MAP_TITLE = "eatwithyu";
 
 const originalLoad = Module._load;
 Module._load = function (request, parent, isMain) {
@@ -118,6 +118,7 @@ async function run() {
   const publicMap = await mapFunction.main({ action: "get", mapId: "beijing" });
   assert.equal(publicMap.ok, true);
   assert.equal(publicMap.editable, false);
+  assert.equal(publicMap.title, "eatwithyu");
   assert.deepEqual(publicMap.data, { places: [], categories: [], icons: [] });
 
   const httpMapResponse = await mapFunction.main({
@@ -163,6 +164,7 @@ async function run() {
     mapId: "beijing",
     editorToken,
     expectedVersion: 0,
+    title: "eatwithyu",
     data: {
       places: [{
         id: "place-1",
@@ -178,6 +180,8 @@ async function run() {
     }
   });
   assert.equal(firstSave.version, 1);
+  assert.equal(firstSave.title, "eatwithyu");
+  assert.equal(documents.get("beijing").title, "eatwithyu");
   assert.equal(documents.get("beijing").data.places[0].recommendation.photo, "");
   assert.equal(JSON.stringify(documents.get("beijing")).includes(editorToken), false);
 
@@ -198,9 +202,12 @@ async function run() {
     mapId: "beijing",
     editorToken,
     expectedVersion: 1,
+    title: "周末吃饭",
     data: hydrated.data
   });
   assert.equal(secondSave.version, 2);
+  assert.equal(secondSave.title, "周末吃饭");
+  assert.equal(documents.get("beijing").title, "周末吃饭");
 
   const manyPlaces = Array.from({ length: 300 }, (_, index) => ({
     id: `place-${index + 1}`,
@@ -220,6 +227,7 @@ async function run() {
   });
   assert.equal(scaleSave.version, 3);
   const scaleRead = await mapFunction.main({ action: "get", mapId: "beijing" });
+  assert.equal(scaleRead.title, "周末吃饭");
   assert.equal(scaleRead.data.places.length, 300);
   console.log("CloudBase function tests passed");
 }
