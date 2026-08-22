@@ -7,7 +7,7 @@ const TABLE = "shared_maps";
 const ASSET_BUCKET = process.env.ASSET_BUCKET || "eatwithyu-assets";
 const assets = app.storage.from(ASSET_BUCKET);
 const DEFAULT_MAP_ID = process.env.MAP_ID || "beijing";
-const MAP_TITLE = process.env.MAP_TITLE || "在北京吃饭";
+const MAP_TITLE = process.env.MAP_TITLE || "eatwithyu";
 const MAX_MAP_BYTES = 4.5 * 1024 * 1024;
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -53,6 +53,15 @@ function requireMapId(mapId) {
     throw new MapServiceError("MAP_NOT_FOUND", "共享地图不存在");
   }
   return normalized;
+}
+
+function normalizeMapTitle(value) {
+  const title = String(value || "").trim().replace(/\s+/g, " ");
+  if (!title) return MAP_TITLE;
+  if ([...title].length > 60) {
+    throw new MapServiceError("INVALID_TITLE", "地图名称不能超过 60 个字符");
+  }
+  return title;
 }
 
 function throwResultError(result) {
@@ -176,7 +185,7 @@ async function getMap(event) {
   const data = await hydratePublicAssetUrls(document?.data || emptyMapData());
   return {
     ok: true,
-    title: document?.title || MAP_TITLE,
+    title: normalizeMapTitle(document?.title || MAP_TITLE),
     data,
     version: Number(document?.version || 0),
     updatedAt: document?.updatedAt || "",
@@ -190,6 +199,7 @@ async function saveMap(event) {
   const data = normalizeMapData(event.data);
   const expectedVersion = Number(event.expectedVersion || 0);
   const current = await readMapDocument(mapId);
+  const title = normalizeMapTitle(event.title || current?.title || MAP_TITLE);
   const updatedAt = new Date().toISOString();
   const writeId = crypto.randomBytes(16).toString("hex");
 
@@ -199,7 +209,7 @@ async function saveMap(event) {
     }
     const inserted = await db.from(TABLE).insert({
       id: mapId,
-      title: MAP_TITLE,
+      title,
       data,
       version: 1,
       updated_at: updatedAt,
@@ -210,7 +220,7 @@ async function saveMap(event) {
       if (latest) throw new MapServiceError("VERSION_CONFLICT", "地图版本冲突，请刷新后重试");
       throw inserted.error;
     }
-    return { ok: true, version: 1, updatedAt };
+    return { ok: true, title, version: 1, updatedAt };
   }
 
   const currentVersion = Number(current.version || 0);
@@ -221,7 +231,7 @@ async function saveMap(event) {
   const result = await db
     .from(TABLE)
     .update({
-      title: MAP_TITLE,
+      title,
       data,
       version: currentVersion + 1,
       updated_at: updatedAt,
@@ -235,7 +245,7 @@ async function saveMap(event) {
   if (saved?.writeId !== writeId) {
     throw new MapServiceError("VERSION_CONFLICT", "地图版本冲突，请刷新后重试");
   }
-  return { ok: true, version: currentVersion + 1, updatedAt };
+  return { ok: true, title, version: currentVersion + 1, updatedAt };
 }
 
 function fileTypeFromDataUrl(dataUrl) {
