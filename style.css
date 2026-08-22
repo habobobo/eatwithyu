@@ -277,6 +277,30 @@ button {
   flex: 1;
 }
 
+.search-result-action {
+  flex: 0 0 auto;
+  margin-left: 12px;
+  color: var(--google-blue);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.search-empty-state {
+  padding: 10px 2px 4px;
+  line-height: 1.6;
+}
+
+.search-readonly-notice {
+  margin: 2px 0 6px;
+  padding: 9px 10px;
+  border-radius: 6px;
+  background: #f8f9fa;
+  color: #5f6368;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
 .item-title {
   margin-bottom: 4px;
   font-size: 14px;
@@ -454,6 +478,13 @@ button {
 .info-card button {
   width: 100%;
   margin-top: 10px;
+}
+
+.info-card .search-preview-hint {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e8eaed;
+  color: #70757a;
 }
 
 

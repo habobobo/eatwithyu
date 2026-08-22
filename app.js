@@ -8,6 +8,8 @@ let mapTitle = DEFAULT_MAP_TITLE;
 let map;
 let placeSearch;
 let markers = new Map();
+let searchMarkers = [];
+let activeSearchId = 0;
 let savedPlaces = [];
 let pendingDeleteCategory = "";
 let savedIcons = [];
@@ -422,7 +424,7 @@ function initMap() {
     pageSize: 15,
     pageIndex: 1,
     extensions: "all",
-    city: cfg.defaultCity || "北京",
+    city: "全国",
     citylimit: false
   });
 
@@ -728,50 +730,121 @@ function renderMapPresets() {
   $("activeMapSummary").textContent = `${currentPlaces().length} 个地点`;
 }
 
+function clearSearchMarkers() {
+  searchMarkers.forEach((marker) => marker.setMap(null));
+  searchMarkers = [];
+  infoWindow?.close();
+}
+
+function searchViewportPadding() {
+  return window.innerWidth >= 760
+    ? [72, 72, 72, 420]
+    : [72, 44, 72, 44];
+}
+
+function focusSearchMarker(marker) {
+  if (!map || !marker) return;
+  map.setFitView([marker], false, searchViewportPadding(), 17);
+}
+
+function searchResultAddress(poi) {
+  const region = [poi.cityname, poi.adname].filter(Boolean).join(" · ");
+  return [region, poi.address].filter(Boolean).join(" · ") || poi.pname || "";
+}
+
+function openSearchResult(poi, location, marker) {
+  focusSearchMarker(marker);
+
+  if (canEdit) {
+    openPlaceDialog({
+      name: poi.name,
+      address: searchResultAddress(poi),
+      location,
+      poiId: poi.id || ""
+    });
+    return;
+  }
+
+  infoWindow.setContent(`
+    <div class="info-card search-preview-card">
+      <h3>${escapeHtml(poi.name)}</h3>
+      <p>${escapeHtml(searchResultAddress(poi) || "暂无地址")}</p>
+      <p class="search-preview-hint">这是搜索结果，使用编辑链接可添加到地图。</p>
+    </div>
+  `);
+  infoWindow.open(map, location);
+}
+
 function searchPoi() {
   const keyword = $("poiKeyword").value.trim();
   if (!keyword || !placeSearch) return;
 
+  const searchId = ++activeSearchId;
+  clearSearchMarkers();
   $("searchResultsSection").classList.remove("hidden");
   $("searchResults").innerHTML = '<div class="item-meta">正在搜索…</div>';
 
   placeSearch.search(keyword, (status, result) => {
+    if (searchId !== activeSearchId) return;
+
     if (status !== "complete" || !result?.poiList?.pois?.length) {
-      $("searchResults").innerHTML = '<div class="item-meta">没有找到结果，请换一个关键词。</div>';
+      $("searchResults").innerHTML = '<div class="item-meta search-empty-state">全国范围内没有找到结果，请尝试输入“城市 + 餐厅名”。</div>';
       return;
     }
 
     const host = $("searchResults");
-    host.innerHTML = "";
+    host.innerHTML = canEdit
+      ? ""
+      : '<div class="search-readonly-notice">当前是公开浏览链接：可以查看搜索位置，但收藏地点需要使用编辑链接。</div>';
 
-    result.poiList.pois.forEach((poi) => {
-      if (!poi.location) return;
+    const visiblePois = result.poiList.pois.filter((poi) => poi.location);
+    if (!visiblePois.length) {
+      host.innerHTML = '<div class="item-meta search-empty-state">搜索结果没有可显示的地图位置，请换一个关键词。</div>';
+      return;
+    }
 
+    visiblePois.forEach((poi) => {
       const location = [poi.location.lng, poi.location.lat];
+      const marker = new AMap.Marker({
+        position: location,
+        content: defaultMarkerContent(),
+        offset: new AMap.Pixel(-10, -28),
+        anchor: "center",
+        title: poi.name,
+        zIndex: 160
+      });
+      marker.setMap(map);
+      searchMarkers.push(marker);
+
       const item = document.createElement("div");
       item.className = "result-item";
+      item.setAttribute("role", "button");
+      item.setAttribute("tabindex", "0");
 
       item.innerHTML = `
         <div class="item-copy">
           <div class="item-title">${escapeHtml(poi.name)}</div>
-          <div class="item-meta">${escapeHtml(
-            poi.address || `${poi.pname || ""}${poi.cityname || ""}${poi.adname || ""}`
-          )}</div>
+          <div class="item-meta">${escapeHtml(searchResultAddress(poi))}</div>
         </div>
+        <span class="search-result-action">${canEdit ? "收藏到地图" : "查看位置"}</span>
       `;
 
-      item.onclick = () => {
-        map.setZoomAndCenter(17, location);
-        openPlaceDialog({
-          name: poi.name,
-          address: poi.address || "",
-          location,
-          poiId: poi.id || ""
-        });
+      const selectResult = () => openSearchResult(poi, location, marker);
+      item.onclick = selectResult;
+      item.onkeydown = (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectResult();
+        }
       };
+      marker.on("click", selectResult);
 
       host.appendChild(item);
     });
+
+    if (searchMarkers.length) {
+      map.setFitView(searchMarkers, false, searchViewportPadding(), 16);
+    }
   });
 }
 
@@ -1153,6 +1226,9 @@ function savePlace(event) {
 
   persistPlaces();
   $("placeDialog").close();
+  $("searchResultsSection").classList.add("hidden");
+  activeSearchId += 1;
+  clearSearchMarkers();
   renderAll();
 }
 
@@ -1324,6 +1400,8 @@ $("clearKeywordBtn").onclick = () => {
 
 $("clearResultsBtn").onclick = () => {
   $("searchResultsSection").classList.add("hidden");
+  activeSearchId += 1;
+  clearSearchMarkers();
 };
 
 $("newCategoryBtn").onclick = () => {
