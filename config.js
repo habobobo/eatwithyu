@@ -6,10 +6,14 @@ window.MAP_CONFIG = {
   defaultZoom: 12
 };
 
-// Supabase 的 Project URL 和 anon public key 可以安全地放在前端；
-// 编辑密钥不要写在这里，它只存在于 #edit=... 的编辑链接中。
+// CloudBase 的环境 ID 和 Publishable Key 可以安全地放在前端；
+// 编辑密钥不要写在这里，它只存在于 #edit=... 的私密编辑链接中。
 window.SHARED_MAP_CONFIG = {
-  supabaseUrl: "请替换为 Supabase Project URL",
-  supabaseAnonKey: "请替换为 Supabase anon public key",
+  provider: "cloudbase",
+  cloudbaseEnvId: "habobo-d0gt9d9345d88be3f",
+  cloudbaseAccessKey: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjAwMGJiN2E5LTJjNDAtNGMyNy05OTIzLTA4MGQ5MmIyYWJmZSJ9.eyJpc3MiOiJodHRwczovL2hhYm9iby1kMGd0OWQ5MzQ1ZDg4YmUzZi5hcC1zaGFuZ2hhaS50Y2ItYXBpLnRlbmNlbnRjbG91ZGFwaS5jb20iLCJzdWIiOiJhbm9uIiwiYXVkIjoiaGFib2JvLWQwZ3Q5ZDkzNDVkODhiZTNmIiwiZXhwIjo0MDkxMDcwODgyLCJpYXQiOjE3ODczODc2ODIsIm5vbmNlIjoibUtDZlJ2VnZSMy1NNGlZYVFLdjRiQSIsImF0X2hhc2giOiJtS0NmUnZWdlIzLU00aVlhUUt2NGJBIiwibmFtZSI6IkFub255bW91cyIsInNjb3BlIjoiYW5vbnltb3VzIiwicHJvamVjdF9pZCI6ImhhYm9iby1kMGd0OWQ5MzQ1ZDg4YmUzZiIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJyb2xlIjoiYW5vbiIsImlzX2Fub255bW91cyI6dHJ1ZSwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiYW5vbnltb3VzIiwicHJvdmlkZXJzIjpbImFub255bW91cyJdfSwidXNlcl9tZXRhZGF0YSI6eyJuYW1lIjoiQW5vbnltb3VzIn0sInVzZXJfdHlwZSI6IiIsImNsaWVudF90eXBlIjoiY2xpZW50X3VzZXIiLCJpc19zeXN0ZW1fYWRtaW4iOmZhbHNlfQ.qjUQIOOi7y_uCAmJTPTmHgk0fGhil11gh56D3UGw0GcoJZgfAi3OOisD6Dv4auju8__FuT00waAdEzxAC9Vc0m0ufk9xkyupX8nyee0xb9bs5wQSKsQiAK1BEVxgygoE8vYDjWbhUKw6ScjjpSj6p0BuU1zwgdy8SuaLa3fNYeBJQ12taBA8CwjKWTUmccmNa84q4_niUP2pdHGPnXVZuQcAQEu3rUiMtC2ZNHCd5xI5pbcAO5b4q8r1ITui3wqzMuDxYKXsgClonFqm0hr_QolP9dyzNSCMPyA4_fsnZdVnJUeiKr74MnaaNWo3e8utUb-na1ADJHlfIorzPbkwNQ",
+  cloudbaseRegion: "ap-shanghai",
+  cloudbaseFunctionName: "eatwithyu-map",
+  cloudbaseHttpEndpoint: "https://habobo-d0gt9d9345d88be3f-1259424278.ap-shanghai.app.tcloudbase.com/eatwithyu-map-public",
   mapId: "beijing"
 };

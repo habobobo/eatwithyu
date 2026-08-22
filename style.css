@@ -1351,11 +1351,21 @@ textarea {
   margin-top: 10px;
 }
 
+.share-actions {
+  margin-top: 10px;
+}
+
+.share-actions p,
 .editor-link-action p {
   margin: 7px 2px 0;
   color: #70757a;
   font-size: 11px;
   line-height: 1.5;
+}
+
+.secondary-copy-button {
+  margin-top: 6px;
+  color: #5f6368;
 }
 
 #sharedStatus[data-state="saving"] { color: #b06000; }

@@ -1,0 +1,15 @@
+{
+  "envId": "habobo-d0gt9d9345d88be3f",
+  "region": "ap-shanghai",
+  "functionRoot": "./cloudfunctions",
+  "functions": [
+    {
+      "name": "eatwithyu-map",
+      "timeout": 20,
+      "memorySize": 256,
+      "runtime": "Nodejs20.19",
+      "installDependency": true,
+      "handler": "index.main"
+    }
+  ]
+}

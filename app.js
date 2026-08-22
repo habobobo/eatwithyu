@@ -1,7 +1,7 @@
 const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
 const sharedConfig = window.SHARED_MAP_CONFIG || {};
-const editorToken = new URLSearchParams(window.location.hash.slice(1)).get("edit") || "";
-const canEdit = Boolean(editorToken);
+const requestedEditorToken = new URLSearchParams(window.location.hash.slice(1)).get("edit") || "";
+let canEdit = false;
 
 let map;
 let placeSearch;
@@ -14,11 +14,17 @@ let activeCategories = new Set();
 let selectedIconId = "";
 let selectedCategoryIconId = "";
 let recommendationPhotoData = "";
+let recommendationPhotoFileId = "";
 let selectedVisitMode = "solo";
 let infoWindow;
 let sharedVersion = null;
 let saveTimer = null;
+let saveInFlight = false;
+let saveQueued = false;
 let isHydrating = true;
+let cloudbaseApp = null;
+let sharedStatusText = "正在同步…";
+let sharedStatusState = "saving";
 
 const $ = (id) => document.getElementById(id);
 
@@ -34,34 +40,71 @@ function persistCategoryLibrary() {
   scheduleSharedSave();
 }
 
-function hasSharedBackend() {
-  return Boolean(
-    sharedConfig.supabaseUrl &&
-    sharedConfig.supabaseAnonKey &&
-    !sharedConfig.supabaseUrl.includes("请替换") &&
-    !sharedConfig.supabaseAnonKey.includes("请替换")
-  );
+function isConfiguredValue(value) {
+  return Boolean(value && !String(value).includes("请替换"));
 }
 
-function sharedHeaders() {
-  return {
-    apikey: sharedConfig.supabaseAnonKey,
-    Authorization: `Bearer ${sharedConfig.supabaseAnonKey}`,
-    "Content-Type": "application/json"
-  };
+function sharedProvider() {
+  if (
+    sharedConfig.provider === "cloudbase" &&
+    isConfiguredValue(sharedConfig.cloudbaseHttpEndpoint)
+  ) {
+    return "cloudbase-http";
+  }
+
+  if (
+    sharedConfig.provider === "cloudbase" &&
+    isConfiguredValue(sharedConfig.cloudbaseEnvId) &&
+    isConfiguredValue(sharedConfig.cloudbaseAccessKey)
+  ) {
+    return "cloudbase";
+  }
+
+  return "static";
+}
+
+function hasSharedBackend() {
+  return sharedProvider() !== "static";
 }
 
 function setSyncStatus(message, state = "") {
+  sharedStatusText = message;
+  sharedStatusState = state;
   const status = $("sharedStatus");
   if (!status) return;
   status.textContent = message;
   status.dataset.state = state;
 }
 
+function logSharedError(context, error) {
+  const code = error?.code ? ` [${error.code}]` : "";
+  const message = error?.message || String(error || "未知错误");
+  console.error(`${context}${code}: ${message}`);
+}
+
 function applySharedData(data = {}) {
   savedPlaces = Array.isArray(data.places) ? data.places : [];
   savedCategories = Array.isArray(data.categories) ? data.categories : [];
   savedIcons = Array.isArray(data.icons) ? data.icons : [];
+  resolveAssetReferences();
+}
+
+function resolveAssetReferences() {
+  const iconsById = new Map(savedIcons.map((icon) => [icon.id, icon]));
+
+  savedCategories = savedCategories.map((category) => ({
+    ...category,
+    iconUrl: category.iconId
+      ? iconsById.get(category.iconId)?.url || ""
+      : category.iconUrl || ""
+  }));
+
+  savedPlaces = savedPlaces.map((place) => ({
+    ...place,
+    iconUrl: place.iconId
+      ? iconsById.get(place.iconId)?.url || ""
+      : place.iconUrl || ""
+  }));
 }
 
 async function loadFallbackMap() {
@@ -71,41 +114,113 @@ async function loadFallbackMap() {
   applySharedData({ places: data.places || [], categories: [], icons: [] });
 }
 
+function normalizeCloudFunctionResult(response) {
+  let result = response?.result;
+  if (typeof result === "string") {
+    try {
+      result = JSON.parse(result);
+    } catch {
+      throw new Error("共享服务返回了无法识别的数据");
+    }
+  }
+
+  if (!result || result.ok === false) {
+    const error = new Error(result?.message || response?.message || "共享服务请求失败");
+    error.code = result?.code || response?.code || "CLOUD_FUNCTION_ERROR";
+    throw error;
+  }
+
+  return result;
+}
+
+function initializeCloudbase() {
+  if (cloudbaseApp) return cloudbaseApp;
+  if (!window.cloudbase) throw new Error("CloudBase SDK 加载失败");
+
+  cloudbaseApp = window.cloudbase.init({
+    env: sharedConfig.cloudbaseEnvId,
+    accessKey: sharedConfig.cloudbaseAccessKey,
+    region: sharedConfig.cloudbaseRegion || "ap-shanghai",
+    timeout: 20000
+  });
+
+  return cloudbaseApp;
+}
+
+async function callCloudbase(action, data = {}) {
+  if (sharedProvider() === "cloudbase-http") {
+    const response = await fetch(sharedConfig.cloudbaseHttpEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action,
+        mapId: sharedConfig.mapId || "beijing",
+        ...data
+      })
+    });
+    const result = await response.json();
+    return normalizeCloudFunctionResult({ result });
+  }
+
+  const app = initializeCloudbase();
+  const response = await app.callFunction({
+    name: sharedConfig.cloudbaseFunctionName || "eatwithyu-map",
+    data: {
+      action,
+      mapId: sharedConfig.mapId || "beijing",
+      ...data
+    },
+    parse: true
+  });
+  return normalizeCloudFunctionResult(response);
+}
+
+function applyEditMode() {
+  document.body.classList.toggle("read-only", !canEdit);
+  $("editorLinkAction")?.classList.toggle("hidden", !canEdit);
+}
+
 async function loadSharedMap() {
   if (!hasSharedBackend()) {
     await loadFallbackMap();
+    canEdit = false;
+    applyEditMode();
     setSyncStatus("等待连接共享数据", "offline");
     return;
   }
 
-  const mapId = encodeURIComponent(sharedConfig.mapId || "beijing");
-  const url = `${sharedConfig.supabaseUrl}/rest/v1/shared_maps?id=eq.${mapId}&select=title,data,version,updated_at`;
-  const response = await fetch(url, { headers: sharedHeaders(), cache: "no-store" });
-  if (!response.ok) throw new Error("共享地图读取失败");
+  const result = await callCloudbase("get", {
+    editorToken: requestedEditorToken
+  });
 
-  const rows = await response.json();
-  if (!rows.length) throw new Error("共享地图尚未初始化");
+  applySharedData(result.data || {});
+  sharedVersion = Number(result.version || 0);
+  canEdit = Boolean(requestedEditorToken && result.editable);
+  applyEditMode();
 
-  applySharedData(rows[0].data || {});
-  sharedVersion = rows[0].version;
-  setSyncStatus(canEdit ? "可共同编辑" : "只读浏览", canEdit ? "editable" : "readonly");
+  if (requestedEditorToken && !canEdit) {
+    setSyncStatus("编辑链接无效 · 只读浏览", "error");
+  } else {
+    setSyncStatus(canEdit ? "可共同编辑" : "公开地图 · 无需登录", canEdit ? "editable" : "readonly");
+  }
 }
 
 async function bootstrapSharedMap() {
-  document.body.classList.toggle("read-only", !canEdit);
-  $("editorLinkAction")?.classList.toggle("hidden", !canEdit);
+  applyEditMode();
   setSyncStatus("正在同步…", "saving");
 
   try {
     await loadSharedMap();
   } catch (error) {
-    console.error(error);
+    logSharedError("共享地图加载失败", error);
     try {
       await loadFallbackMap();
     } catch (fallbackError) {
-      console.error(fallbackError);
+      logSharedError("本地备份加载失败", fallbackError);
       applySharedData();
     }
+    canEdit = false;
+    applyEditMode();
     setSyncStatus("共享数据暂时不可用", "error");
   } finally {
     isHydrating = false;
@@ -114,9 +229,26 @@ async function bootstrapSharedMap() {
 
 function sharedPayload() {
   return {
-    places: savedPlaces,
-    categories: savedCategories,
-    icons: savedIcons
+    places: savedPlaces.map((place) => ({
+      ...place,
+      iconUrl: place.iconId ? "" : place.iconUrl || "",
+      recommendation: place.recommendation
+        ? {
+            ...place.recommendation,
+            photo: place.recommendation.photoFileId
+              ? ""
+              : place.recommendation.photo || ""
+          }
+        : null
+    })),
+    categories: savedCategories.map((category) => ({
+      ...category,
+      iconUrl: category.iconId ? "" : category.iconUrl || ""
+    })),
+    icons: savedIcons.map((icon) => ({
+      ...icon,
+      url: icon.fileId ? "" : icon.url || ""
+    }))
   };
 }
 
@@ -128,42 +260,43 @@ function scheduleSharedSave() {
   }
 
   window.clearTimeout(saveTimer);
+  saveQueued = true;
   setSyncStatus("正在保存…", "saving");
   saveTimer = window.setTimeout(saveSharedMap, 250);
 }
 
 async function saveSharedMap() {
+  if (saveInFlight) {
+    saveQueued = true;
+    return;
+  }
+
+  saveInFlight = true;
+  saveQueued = false;
   try {
-    const response = await fetch(`${sharedConfig.supabaseUrl}/rest/v1/rpc/save_shared_map`, {
-      method: "POST",
-      headers: sharedHeaders(),
-      body: JSON.stringify({
-        p_map_id: sharedConfig.mapId || "beijing",
-        p_editor_token: editorToken,
-        p_data: sharedPayload(),
-        p_expected_version: sharedVersion
-      })
+    const result = await callCloudbase("save", {
+      editorToken: requestedEditorToken,
+      data: sharedPayload(),
+      expectedVersion: sharedVersion
     });
 
-    const result = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = result?.message || "共享地图保存失败";
-      if (/版本|version|conflict/i.test(message)) {
-        alert("另一位编辑者刚刚更新了地图。请刷新页面读取最新内容后再编辑。");
-      } else if (/密钥|token|permission|权限/i.test(message)) {
-        alert("这条编辑链接无效或已失效。");
-      } else {
-        alert(message);
-      }
-      throw new Error(message);
-    }
-
-    const row = Array.isArray(result) ? result[0] : result;
-    if (row?.version != null) sharedVersion = row.version;
-    setSyncStatus("已保存到共享地图", "saved");
+    if (result.version != null) sharedVersion = Number(result.version);
+    setSyncStatus("已保存 · 公开链接同步可见", "saved");
   } catch (error) {
     console.error(error);
+    saveQueued = false;
+    if (/CONFLICT|版本|version/i.test(`${error.code || ""} ${error.message || ""}`)) {
+      alert("另一位编辑者刚刚更新了地图。请刷新页面读取最新内容后再编辑。");
+    } else if (/EDITOR_TOKEN|密钥|token|permission|权限/i.test(`${error.code || ""} ${error.message || ""}`)) {
+      alert("这条编辑链接无效或已失效。");
+    }
     setSyncStatus("保存失败", "error");
+  } finally {
+    saveInFlight = false;
+    if (saveQueued) {
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(saveSharedMap, 0);
+    }
   }
 }
 
@@ -177,6 +310,7 @@ function migrateCategoriesFromPlaces() {
     savedCategories.push({
       id: crypto.randomUUID ? crypto.randomUUID() : `category-${Date.now()}-${Math.random()}`,
       name: place.category,
+      iconId: place.iconId || "",
       iconUrl: place.iconUrl || "",
       createdAt: new Date().toISOString()
     });
@@ -204,6 +338,7 @@ function migrateIconsFromPlaces() {
         createdAt: new Date().toISOString()
       };
       savedIcons.push(icon);
+      place.iconId = icon.id;
       knownUrls.add(icon.url);
       changed = true;
     }
@@ -417,7 +552,7 @@ function groupedCategories() {
     groups.set(category.name, { count: 0, iconUrl: category.iconUrl || "" });
   });
 
-  currentPlaces().forEach((place) => {
+  currentPlaces().filter((place) => place.isMarked !== false && place.category).forEach((place) => {
     if (!groups.has(place.category)) {
       groups.set(place.category, { count: 0, iconUrl: place.iconUrl || "" });
     }
@@ -560,7 +695,7 @@ function renderMapPresets() {
     <span class="map-preset-icon">京</span>
     <span class="map-preset-copy">
       <span class="map-preset-title">在北京吃饭</span>
-      <span id="sharedStatus" class="map-preset-meta">${canEdit ? "可共同编辑" : "只读浏览"}</span>
+      <span id="sharedStatus" class="map-preset-meta" data-state="${escapeHtml(sharedStatusState)}">${escapeHtml(sharedStatusText)}</span>
     </span>
     <span class="map-preset-count">${savedPlaces.length}</span>
     </div>`;
@@ -679,6 +814,7 @@ function confirmDeleteCategory(event) {
     return {
       ...place,
       category: "",
+      iconId: "",
       iconUrl: "",
       isMarked: false,
       updatedAt: new Date().toISOString()
@@ -726,7 +862,8 @@ function renderIconLibrary() {
     deleteButton.title = "从图标库删除";
     deleteButton.onclick = (event) => {
       event.stopPropagation();
-      const inUse = savedPlaces.some((place) => place.iconUrl === icon.url);
+      const inUse = savedPlaces.some((place) => place.iconId === icon.id || place.iconUrl === icon.url) ||
+        savedCategories.some((category) => category.iconId === icon.id || category.iconUrl === icon.url);
 
       if (inUse) {
         alert("这个图标正在被地点使用，暂时不能从图标库删除。");
@@ -806,6 +943,7 @@ function saveStandaloneCategory(event) {
   savedCategories.push({
     id: crypto.randomUUID ? crypto.randomUUID() : `category-${Date.now()}`,
     name,
+    iconId: selectedCategoryIconId,
     iconUrl: selectedCategoryIconUrl(),
     createdAt: new Date().toISOString()
   });
@@ -819,8 +957,9 @@ function selectedIconUrl() {
   return savedIcons.find((icon) => icon.id === selectedIconId)?.url || "";
 }
 
-function setRecommendationPhoto(dataUrl) {
+function setRecommendationPhoto(dataUrl, fileId = "") {
   recommendationPhotoData = dataUrl || "";
+  recommendationPhotoFileId = fileId || "";
   $("recommendationPhotoPreview").classList.toggle("hidden", !recommendationPhotoData);
 
   if (recommendationPhotoData) {
@@ -858,13 +997,15 @@ function openPlaceDialog(data, editingId = "") {
   $("newCategoryName").classList.add("hidden");
   $("newCategoryBtn").textContent = "＋ 新建分类";
 
-  const matchingIcon = savedIcons.find((icon) => icon.url === data.iconUrl);
+  const matchingIcon = data.iconId
+    ? savedIcons.find((icon) => icon.id === data.iconId)
+    : savedIcons.find((icon) => icon.url === data.iconUrl);
   selectedIconId = matchingIcon?.id || "";
 
   const recommendation = data.recommendation || {};
   $("recommendationTitle").value = recommendation.title || "";
   $("recommendationDescription").value = recommendation.description || "";
-  setRecommendationPhoto(recommendation.photo || "");
+  setRecommendationPhoto(recommendation.photo || "", recommendation.photoFileId || "");
 
   const visitRecord = data.visitRecord || {};
   $("visitDate").value = visitRecord.date || "";
@@ -890,6 +1031,7 @@ window.editSavedPlace = function (id) {
     address: place.address,
     category: place.category,
     note: place.note,
+    iconId: place.iconId || "",
     iconUrl: place.iconUrl,
     recommendation: place.recommendation || {},
     visitRecord: place.visitRecord || {},
@@ -952,13 +1094,15 @@ function savePlace(event) {
     note: $("placeNote").value.trim(),
     longitude: Number($("longitude").value),
     latitude: Number($("latitude").value),
+    iconId: selectedIconId,
     iconUrl: selectedIconUrl(),
     isMarked: true,
     recommendation: recommendationTitle
       ? {
           title: recommendationTitle,
           description: $("recommendationDescription").value.trim(),
-          photo: recommendationPhotoData
+          photo: recommendationPhotoData,
+          photoFileId: recommendationPhotoFileId
         }
       : null,
     visitRecord: $("visitDate").value
@@ -998,8 +1142,9 @@ function deleteCurrentPlace() {
 }
 
 function exportData() {
+  const data = sharedPayload();
   const payload = JSON.stringify({
-    version: 1,
+    version: 2,
     id: "beijing",
     title: "在北京吃饭",
     description: "共同编辑的北京美食地点",
@@ -1008,26 +1153,97 @@ function exportData() {
       center: window.MAP_CONFIG?.defaultCenter || [116.397428, 39.90923],
       zoom: window.MAP_CONFIG?.defaultZoom || 11
     },
-    places: savedPlaces
+    places: data.places,
+    categories: data.categories,
+    icons: data.icons
   }, null, 2);
 
   const blob = new Blob([payload], { type: "application/json" });
   const anchor = document.createElement("a");
   anchor.href = URL.createObjectURL(blob);
-  anchor.download = "beijing.json";
+  anchor.download = `eatwithyu-beijing-${new Date().toISOString().slice(0, 10)}.json`;
   anchor.click();
   URL.revokeObjectURL(anchor.href);
 }
 
-function fileToDataUrl(file, maxSizeKb, callback) {
-  if (file.size > maxSizeKb * 1024) {
-    alert(`文件过大，请压缩到 ${maxSizeKb} KB 以内。`);
-    return;
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("图片读取失败"));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function optimizedImageDataUrl(file, kind) {
+  if (file.size > 12 * 1024 * 1024) {
+    throw new Error("原图过大，请选择 12 MB 以内的图片。");
   }
 
-  const reader = new FileReader();
-  reader.onload = () => callback(reader.result);
-  reader.readAsDataURL(file);
+  if (file.type === "image/svg+xml") {
+    if (kind !== "icon") throw new Error("推荐照片请使用 PNG、JPG 或 WebP。");
+    if (file.size > 300 * 1024) throw new Error("SVG 图标请控制在 300 KB 以内。");
+    return readFileAsDataUrl(file);
+  }
+
+  const sourceUrl = URL.createObjectURL(file);
+  try {
+    const image = await new Promise((resolve, reject) => {
+      const element = new Image();
+      element.onload = () => resolve(element);
+      element.onerror = () => reject(new Error("无法读取这张图片"));
+      element.src = sourceUrl;
+    });
+
+    const maxDimension = kind === "icon" ? 256 : 1280;
+    const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/webp", kind === "icon" ? 0.88 : 0.82);
+  } finally {
+    URL.revokeObjectURL(sourceUrl);
+  }
+}
+
+async function uploadSharedAsset(file, kind) {
+  const dataUrl = await optimizedImageDataUrl(file, kind);
+  if (sharedProvider() !== "cloudbase") {
+    return { url: dataUrl, fileId: "" };
+  }
+
+  setSyncStatus(kind === "icon" ? "正在上传图标…" : "正在上传照片…", "saving");
+  const result = await callCloudbase("uploadAsset", {
+    editorToken: requestedEditorToken,
+    kind,
+    fileName: file.name,
+    dataUrl
+  });
+  setSyncStatus("可共同编辑", "editable");
+  return { url: result.url, fileId: result.fileId };
+}
+
+async function addIconFromFile(file, target) {
+  const asset = await uploadSharedAsset(file, "icon");
+  const icon = {
+    id: crypto.randomUUID ? crypto.randomUUID() : `icon-${Date.now()}`,
+    name: file.name.replace(/\.[^.]+$/, ""),
+    url: asset.url,
+    fileId: asset.fileId,
+    createdAt: new Date().toISOString()
+  };
+
+  savedIcons.unshift(icon);
+  if (target === "category") {
+    selectedCategoryIconId = icon.id;
+    renderCategoryIconLibrary();
+  } else {
+    selectedIconId = icon.id;
+    renderIconLibrary();
+  }
+  persistIconLibrary();
 }
 
 $("searchBtn").onclick = searchPoi;
@@ -1062,36 +1278,38 @@ $("placeForm").addEventListener("submit", savePlace);
 $("deletePlaceBtn").onclick = deleteCurrentPlace;
 $("closeDialogBtn").onclick = () => $("placeDialog").close();
 $("cancelBtn").onclick = () => $("placeDialog").close();
-$("customIconFile").onchange = (event) => {
+$("customIconFile").onchange = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  fileToDataUrl(file, 500, (dataUrl) => {
-    const icon = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `icon-${Date.now()}`,
-      name: file.name.replace(/\.[^.]+$/, ""),
-      url: dataUrl,
-      createdAt: new Date().toISOString()
-    };
-
-    savedIcons.unshift(icon);
-    selectedIconId = icon.id;
-    persistIconLibrary();
-    renderIconLibrary();
+  try {
+    await addIconFromFile(file, "place");
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "图标上传失败");
+    setSyncStatus("图标上传失败", "error");
+  } finally {
     event.target.value = "";
-  });
+  }
 };
 
 $("visitSoloBtn").onclick = () => setVisitMode("solo");
 $("visitWithBtn").onclick = () => setVisitMode("with");
 
-$("recommendationPhotoFile").onchange = (event) => {
+$("recommendationPhotoFile").onchange = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  fileToDataUrl(file, 1200, (dataUrl) => {
-    setRecommendationPhoto(dataUrl);
-  });
+  try {
+    const asset = await uploadSharedAsset(file, "photo");
+    setRecommendationPhoto(asset.url, asset.fileId);
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "照片上传失败");
+    setSyncStatus("照片上传失败", "error");
+  } finally {
+    event.target.value = "";
+  }
 };
 
 $("removeRecommendationPhotoBtn").onclick = () => {
@@ -1106,24 +1324,19 @@ $("categoryForm").addEventListener("submit", saveStandaloneCategory);
 $("closeCategoryDialogBtn").onclick = () => $("categoryDialog").close();
 $("cancelCategoryBtn").onclick = () => $("categoryDialog").close();
 
-$("categoryIconFile").onchange = (event) => {
+$("categoryIconFile").onchange = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  fileToDataUrl(file, 500, (dataUrl) => {
-    const icon = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `icon-${Date.now()}`,
-      name: file.name.replace(/\.[^.]+$/, ""),
-      url: dataUrl,
-      createdAt: new Date().toISOString()
-    };
-
-    savedIcons.unshift(icon);
-    selectedCategoryIconId = icon.id;
-    persistIconLibrary();
-    renderCategoryIconLibrary();
+  try {
+    await addIconFromFile(file, "category");
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "图标上传失败");
+    setSyncStatus("图标上传失败", "error");
+  } finally {
     event.target.value = "";
-  });
+  }
 };
 
 $("menuBtn").onclick = () => {
@@ -1136,17 +1349,27 @@ $("openPanelBtn").onclick = () => {
   $("openPanelBtn").classList.add("hidden");
 };
 
-$("copyEditorLinkBtn").onclick = async () => {
-  if (!canEdit) return;
+async function copyLink(button, url, successText, promptText) {
   try {
-    await navigator.clipboard.writeText(window.location.href);
-    const button = $("copyEditorLinkBtn");
+    await navigator.clipboard.writeText(url);
     const original = button.textContent;
-    button.textContent = "编辑链接已复制";
+    button.textContent = successText;
     window.setTimeout(() => { button.textContent = original; }, 1800);
   } catch {
-    window.prompt("复制下面的编辑链接", window.location.href);
+    window.prompt(promptText, url);
   }
+}
+
+$("copyPublicLinkBtn").onclick = () => {
+  const publicUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+  copyLink($("copyPublicLinkBtn"), publicUrl, "公开链接已复制", "复制下面的公开链接");
 };
+
+$("copyEditorLinkBtn").onclick = () => {
+  if (!canEdit) return;
+  copyLink($("copyEditorLinkBtn"), window.location.href, "编辑链接已复制", "复制下面的编辑链接");
+};
+
+$("exportBackupBtn").onclick = exportData;
 
 bootstrapSharedMap().then(loadAmap);

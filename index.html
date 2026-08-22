@@ -46,8 +46,13 @@
             <div id="mapPresetList" class="map-preset-list">
               <div class="item-meta">正在读取地图列表…</div>
             </div>
+            <div class="share-actions">
+              <button id="copyPublicLinkBtn" class="copy-map-button" type="button">复制公开链接</button>
+              <p>任何人打开都能查看，不需要登录。</p>
+            </div>
             <div id="editorLinkAction" class="editor-link-action hidden">
               <button id="copyEditorLinkBtn" class="copy-map-button" type="button">复制编辑链接</button>
+              <button id="exportBackupBtn" class="copy-map-button secondary-copy-button" type="button">导出数据备份</button>
               <p>拿到这条链接的人可以编辑地图，请只发给可信的人。</p>
             </div>
           </section>
@@ -294,7 +299,8 @@
     </form>
   </dialog>
 
-  <script src="./config.js"></script>
-  <script src="./app.js"></script>
+  <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+  <script src="./config.js?v=20260822"></script>
+  <script src="./app.js?v=20260822"></script>
 </body>
 </html>
