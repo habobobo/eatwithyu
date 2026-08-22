@@ -1,4 +1,4 @@
-# 在北京吃饭
+# eatwithyu
 
 一张使用高德底图、可以公开浏览并通过私密链接共同编辑的北京美食地图。
 
@@ -18,7 +18,8 @@
 - 推荐菜单标题、描述与照片
 - 到访日期、自己前往或同行人记录
 - 备注、未标记地点恢复、数据备份导出
-- 单一公开地图「在北京吃饭」
+- 单一公开地图「eatwithyu」
+- 持编辑链接的人可以随时重命名地图，名称会同步给所有访问者
 - 公开链接与私密编辑链接分别复制
 - 多人编辑版本冲突保护
 
@@ -51,7 +52,7 @@ EDITOR_TOKEN_SHA256=只放进云函数环境变量
 CLOUDBASE_APIKEY=Server API Key
 EDITOR_TOKEN_SHA256=上一步生成的哈希
 MAP_ID=beijing
-MAP_TITLE=在北京吃饭
+MAP_TITLE=eatwithyu
 ASSET_BUCKET=eatwithyu-assets
 ```
 

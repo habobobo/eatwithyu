@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>在北京吃饭</title>
+  <title>eatwithyu</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
@@ -51,6 +51,7 @@
               <p>任何人打开都能查看，不需要登录。</p>
             </div>
             <div id="editorLinkAction" class="editor-link-action hidden">
+              <button id="renameMapBtn" class="copy-map-button" type="button">重命名地图</button>
               <button id="copyEditorLinkBtn" class="copy-map-button" type="button">复制编辑链接</button>
               <button id="exportBackupBtn" class="copy-map-button secondary-copy-button" type="button">导出数据备份</button>
               <p>拿到这条链接的人可以编辑地图，请只发给可信的人。</p>
@@ -84,6 +85,34 @@
 
 
 
+
+  <dialog id="renameMapDialog" class="compact-dialog">
+    <form id="renameMapForm">
+      <header class="dialog-header">
+        <div>
+          <div class="dialog-kicker">共享地图</div>
+          <h2>重命名地图</h2>
+        </div>
+        <button type="button" id="closeRenameMapDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
+      </header>
+
+      <div class="dialog-scroll">
+        <section class="form-section first-section last-section">
+          <label class="form-field">
+            <span>地图名称 <em>*</em></span>
+            <input id="mapTitleInput" required maxlength="60" autocomplete="off" placeholder="输入地图名称" />
+          </label>
+        </section>
+      </div>
+
+      <footer class="dialog-actions">
+        <div class="dialog-spacer"></div>
+        <button type="button" id="cancelRenameMapBtn" class="neutral-button">取消</button>
+        <button type="submit" class="google-primary-button">保存名称</button>
+      </footer>
+    </form>
+  </dialog>
+
   <dialog id="deleteCategoryDialog" class="compact-dialog danger-dialog">
     <form id="deleteCategoryForm">
       <header class="dialog-header">
@@ -116,7 +145,7 @@
     <form id="categoryForm">
       <header class="dialog-header">
         <div>
-          <div class="dialog-kicker">在北京吃饭</div>
+          <div id="categoryDialogKicker" class="dialog-kicker">eatwithyu</div>
           <h2>新建分类</h2>
         </div>
         <button type="button" id="closeCategoryDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
@@ -161,7 +190,7 @@
     <form id="placeForm">
       <header class="dialog-header">
         <div>
-          <div class="dialog-kicker">保存到“在北京吃饭”</div>
+          <div id="placeDialogKicker" class="dialog-kicker">保存到“eatwithyu”</div>
           <h2 id="dialogTitle">添加地点</h2>
         </div>
         <button type="button" id="closeDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>

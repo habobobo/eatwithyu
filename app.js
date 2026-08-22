@@ -1,7 +1,9 @@
 const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
+const DEFAULT_MAP_TITLE = "eatwithyu";
 const sharedConfig = window.SHARED_MAP_CONFIG || {};
 const requestedEditorToken = new URLSearchParams(window.location.hash.slice(1)).get("edit") || "";
 let canEdit = false;
+let mapTitle = DEFAULT_MAP_TITLE;
 
 let map;
 let placeSearch;
@@ -82,6 +84,18 @@ function logSharedError(context, error) {
   console.error(`${context}${code}: ${message}`);
 }
 
+function normalizeMapTitle(value) {
+  const normalized = String(value || "").trim().replace(/\s+/g, " ");
+  return normalized.slice(0, 60) || DEFAULT_MAP_TITLE;
+}
+
+function applyMapIdentity() {
+  mapTitle = normalizeMapTitle(mapTitle);
+  document.title = mapTitle;
+  if ($("categoryDialogKicker")) $("categoryDialogKicker").textContent = mapTitle;
+  if ($("placeDialogKicker")) $("placeDialogKicker").textContent = `保存到“${mapTitle}”`;
+}
+
 function applySharedData(data = {}) {
   savedPlaces = Array.isArray(data.places) ? data.places : [];
   savedCategories = Array.isArray(data.categories) ? data.categories : [];
@@ -111,6 +125,8 @@ async function loadFallbackMap() {
   const response = await fetch(SHARED_MAP_FALLBACK_FILE, { cache: "no-store" });
   if (!response.ok) throw new Error("地图文件读取失败");
   const data = await response.json();
+  mapTitle = normalizeMapTitle(data.title);
+  applyMapIdentity();
   applySharedData({ places: data.places || [], categories: [], icons: [] });
 }
 
@@ -193,6 +209,8 @@ async function loadSharedMap() {
     editorToken: requestedEditorToken
   });
 
+  mapTitle = normalizeMapTitle(result.title);
+  applyMapIdentity();
   applySharedData(result.data || {});
   sharedVersion = Number(result.version || 0);
   canEdit = Boolean(requestedEditorToken && result.editable);
@@ -276,11 +294,17 @@ async function saveSharedMap() {
   try {
     const result = await callCloudbase("save", {
       editorToken: requestedEditorToken,
+      title: mapTitle,
       data: sharedPayload(),
       expectedVersion: sharedVersion
     });
 
     if (result.version != null) sharedVersion = Number(result.version);
+    if (result.title) {
+      mapTitle = normalizeMapTitle(result.title);
+      applyMapIdentity();
+      renderMapPresets();
+    }
     setSyncStatus("已保存 · 公开链接同步可见", "saved");
   } catch (error) {
     console.error(error);
@@ -677,7 +701,7 @@ function renderSavedPlaces() {
   });
 
   if (!places.length) {
-    host.innerHTML = '<div class="item-meta">“在北京吃饭”暂时还没有地点。</div>';
+    host.innerHTML = `<div class="item-meta">“${escapeHtml(mapTitle)}”暂时还没有地点。</div>`;
   }
 }
 
@@ -690,11 +714,13 @@ function renderAll() {
 
 function renderMapPresets() {
   const host = $("mapPresetList");
+  applyMapIdentity();
+  const mapInitial = escapeHtml(mapTitle.trim().slice(0, 1).toLocaleUpperCase() || "E");
   host.innerHTML = `
     <div class="map-preset-button active shared-map-card">
-    <span class="map-preset-icon">京</span>
+    <span class="map-preset-icon">${mapInitial}</span>
     <span class="map-preset-copy">
-      <span class="map-preset-title">在北京吃饭</span>
+      <span class="map-preset-title">${escapeHtml(mapTitle)}</span>
       <span id="sharedStatus" class="map-preset-meta" data-state="${escapeHtml(sharedStatusState)}">${escapeHtml(sharedStatusText)}</span>
     </span>
     <span class="map-preset-count">${savedPlaces.length}</span>
@@ -1141,12 +1167,46 @@ function deleteCurrentPlace() {
   renderAll();
 }
 
+function openRenameMapDialog() {
+  if (!canEdit) return;
+  $("mapTitleInput").value = mapTitle;
+  $("renameMapDialog").showModal();
+  window.setTimeout(() => {
+    $("mapTitleInput").focus();
+    $("mapTitleInput").select();
+  }, 0);
+}
+
+function closeRenameMapDialog() {
+  $("renameMapDialog").close();
+}
+
+function saveMapTitle(event) {
+  event.preventDefault();
+  if (!canEdit) return;
+
+  const requestedTitle = $("mapTitleInput").value.trim();
+  if (!requestedTitle) {
+    $("mapTitleInput").focus();
+    return;
+  }
+
+  const nextTitle = normalizeMapTitle(requestedTitle);
+  closeRenameMapDialog();
+  if (nextTitle === mapTitle) return;
+
+  mapTitle = nextTitle;
+  applyMapIdentity();
+  renderAll();
+  scheduleSharedSave();
+}
+
 function exportData() {
   const data = sharedPayload();
   const payload = JSON.stringify({
     version: 2,
     id: "beijing",
-    title: "在北京吃饭",
+    title: mapTitle,
     description: "共同编辑的北京美食地点",
     updatedAt: new Date().toISOString(),
     map: {
@@ -1323,6 +1383,11 @@ $("cancelDeleteCategoryBtn").onclick = closeDeleteCategoryDialog;
 $("categoryForm").addEventListener("submit", saveStandaloneCategory);
 $("closeCategoryDialogBtn").onclick = () => $("categoryDialog").close();
 $("cancelCategoryBtn").onclick = () => $("categoryDialog").close();
+
+$("renameMapBtn").onclick = openRenameMapDialog;
+$("renameMapForm").addEventListener("submit", saveMapTitle);
+$("closeRenameMapDialogBtn").onclick = closeRenameMapDialog;
+$("cancelRenameMapBtn").onclick = closeRenameMapDialog;
 
 $("categoryIconFile").onchange = async (event) => {
   const file = event.target.files[0];
