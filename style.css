@@ -66,6 +66,7 @@ button {
 }
 
 .search-box {
+  flex: 0 0 64px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -1702,6 +1703,7 @@ body.read-only .bottom-hint {
   }
 
   .search-box {
+    flex-basis: 60px;
     height: 60px;
     padding-right: 4px;
     padding-left: 4px;
