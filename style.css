@@ -62,7 +62,7 @@ button {
 
 .google-panel.collapsed {
   transform: translateX(calc(-100% - 30px));
-  opacity: 0;
+  opacity: .86;
   pointer-events: none;
 }
 
@@ -1130,7 +1130,6 @@ textarea {
     width: fit-content;
   }
 }
-
 
 .default-map-pin,
 .saved-place-pin {
@@ -2214,4 +2213,85 @@ body.read-only .bottom-hint {
   #placeDialog .dialog-actions {
     padding: 12px 16px 16px;
   }
+}
+
+/* 分类是 Logo 的唯一来源：点击分类 Logo 可单独更换 */
+.category-item-wrap .category-item {
+  padding-left: 38px;
+}
+
+.category-logo-button,
+.category-logo-static {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: transparent;
+}
+
+.category-logo-button {
+  cursor: pointer;
+}
+
+.category-logo-button .mini-icon,
+.category-logo-static .mini-icon,
+.category-logo-button .category-icon-placeholder,
+.category-logo-static .category-icon-placeholder {
+  width: 26px;
+  height: 26px;
+  pointer-events: none;
+}
+
+.category-logo-edit-mark {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #0071e3;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+.category-logo-button:hover .category-logo-edit-mark,
+.category-logo-button:focus-visible .category-logo-edit-mark {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+.category-logo-button:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+.category-item-wrap:has(.category-item.inactive) .category-logo-button,
+.category-item-wrap:has(.category-item.inactive) .category-logo-static {
+  opacity: .48;
+}
+
+#categoryDialog .section-heading h3 em {
+  color: #d93025;
+  font-style: normal;
+}
+
+#categoryDialog .readonly-field {
+  background: #f5f5f7;
+  color: #6e6e73;
+  cursor: default;
 }

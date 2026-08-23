@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260823h" />
+  <link rel="stylesheet" href="./style.css?v=20260823i" />
 </head>
 <body>
   <div id="app">
@@ -154,7 +154,7 @@
       <header class="dialog-header">
         <div>
           <div id="categoryDialogKicker" class="dialog-kicker">eatwithyu</div>
-          <h2>新建分类</h2>
+          <h2 id="categoryDialogTitle">新建分类</h2>
         </div>
         <button type="button" id="closeCategoryDialogBtn" class="dialog-close-button" aria-label="关闭">×</button>
       </header>
@@ -170,8 +170,8 @@
         <section class="form-section last-section">
           <div class="section-heading">
             <div>
-              <h3>分类图标（可选）</h3>
-              <p>可从已保存的图标库中选择，也可以上传新图标。</p>
+              <h3>分类 Logo <em>*</em></h3>
+              <p id="categoryIconHelp">一个分类固定使用一个 Logo；地点会自动沿用，无需重复选择。</p>
             </div>
           </div>
 
@@ -181,7 +181,7 @@
             <input id="categoryIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
             <span class="upload-plus">＋</span>
             <span>上传新图标</span>
-            <small>上传后也会保存在地点图标库中</small>
+            <small>PNG、JPG、WebP 或 SVG，上传后可供其他分类复用</small>
           </label>
         </section>
       </div>
@@ -189,7 +189,7 @@
       <footer class="dialog-actions">
         <div class="dialog-spacer"></div>
         <button type="button" id="cancelCategoryBtn" class="neutral-button">取消</button>
-        <button type="submit" class="google-primary-button">创建</button>
+        <button type="submit" id="saveCategoryBtn" class="google-primary-button">创建分类</button>
       </footer>
     </form>
   </dialog>
@@ -226,26 +226,7 @@
               <select id="categorySelect"></select>
               <button id="newCategoryBtn" class="secondary-text-button" type="button">＋ 新建分类</button>
             </div>
-            <input id="newCategoryName" class="hidden" maxlength="24" placeholder="输入新的分类名称" />
           </div>
-        </section>
-
-        <section class="form-section">
-          <div class="section-heading">
-            <div>
-              <h3>地点图标</h3>
-              <p>上传一次后会保存在图标库中，以后可直接选择。</p>
-            </div>
-          </div>
-
-          <div id="iconLibrary" class="icon-library"></div>
-
-          <label class="upload-tile">
-            <input id="customIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
-            <span class="upload-plus">＋</span>
-            <span>上传新图标</span>
-            <small>PNG、JPG、WebP 或 SVG，建议小于 500 KB</small>
-          </label>
         </section>
 
         <section class="form-section recommendation-section">
@@ -342,6 +323,6 @@
 
   <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
   <script src="./config.js?v=20260822"></script>
-  <script src="./app.js?v=20260823e"></script>
+  <script src="./app.js?v=20260823f"></script>
 </body>
 </html>

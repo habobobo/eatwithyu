@@ -26,8 +26,10 @@ let pendingDeleteCategory = "";
 let savedIcons = [];
 let savedCategories = [];
 let activeCategories = new Set();
-let selectedIconId = "";
 let selectedCategoryIconId = "";
+let editingCategoryId = "";
+let categoryDialogReturnToPlace = false;
+let categoryIntegrityChanged = false;
 let recommendationPhotoData = "";
 let recommendationPhotoFileId = "";
 let selectedVisitMode = "solo";
@@ -260,18 +262,25 @@ async function bootstrapSharedMap() {
 
 function sharedPayload() {
   return {
-    places: savedPlaces.map((place) => ({
-      ...place,
-      iconUrl: place.iconId ? "" : place.iconUrl || "",
-      recommendation: place.recommendation
-        ? {
-            ...place.recommendation,
-            photo: place.recommendation.photoFileId
-              ? ""
-              : place.recommendation.photo || ""
-          }
-        : null
-    })),
+    places: savedPlaces.map((place) => {
+      const category = findCategory(place.category, place.categoryId);
+      return {
+        ...place,
+        category: category?.name || place.category || "",
+        categoryId: category?.id || "",
+        // Logo 只属于分类。地点不再保存一份可独立修改的图标。
+        iconId: "",
+        iconUrl: "",
+        recommendation: place.recommendation
+          ? {
+              ...place.recommendation,
+              photo: place.recommendation.photoFileId
+                ? ""
+                : place.recommendation.photo || ""
+            }
+          : null
+      };
+    }),
     categories: savedCategories.map((category) => ({
       ...category,
       iconUrl: category.iconId ? "" : category.iconUrl || ""
@@ -337,25 +346,141 @@ async function saveSharedMap() {
   }
 }
 
-function migrateCategoriesFromPlaces() {
-  const knownNames = new Set(savedCategories.map((category) => category.name));
+function newCategoryId() {
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : `category-${Date.now()}-${Math.random()}`;
+}
+
+function normalizeCategoryName(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 24);
+}
+
+function categoryKey(value) {
+  return normalizeCategoryName(value).toLocaleLowerCase("zh-CN");
+}
+
+function findCategory(name = "", id = "") {
+  if (id) {
+    const byId = savedCategories.find((category) => category.id === id);
+    if (byId) return byId;
+  }
+
+  const key = categoryKey(name);
+  return key
+    ? savedCategories.find((category) => categoryKey(category.name) === key)
+    : null;
+}
+
+function categoryIconForPlace(place) {
+  return findCategory(place.category, place.categoryId)?.iconUrl || "";
+}
+
+function ensureCategoryIntegrity() {
+  const iconsById = new Map(savedIcons.map((icon) => [icon.id, icon]));
+  const iconsByUrl = new Map(savedIcons.map((icon) => [icon.url, icon]));
+  const categoriesByKey = new Map();
+  const categoryIdAliases = new Map();
+  const nextCategories = [];
   let changed = false;
 
-  savedPlaces.forEach((place) => {
-    if (!place.category || knownNames.has(place.category)) return;
+  savedCategories.forEach((source) => {
+    const name = normalizeCategoryName(source.name);
+    if (!name) {
+      changed = true;
+      return;
+    }
 
-    savedCategories.push({
-      id: crypto.randomUUID ? crypto.randomUUID() : `category-${Date.now()}-${Math.random()}`,
-      name: place.category,
-      iconId: place.iconId || "",
-      iconUrl: place.iconUrl || "",
-      createdAt: new Date().toISOString()
-    });
-    knownNames.add(place.category);
-    changed = true;
+    const key = categoryKey(name);
+    const existing = categoriesByKey.get(key);
+    const matchedIcon = source.iconId
+      ? iconsById.get(source.iconId)
+      : iconsByUrl.get(source.iconUrl);
+    const resolvedIconId = source.iconId || matchedIcon?.id || "";
+    const resolvedIconUrl = resolvedIconId
+      ? iconsById.get(resolvedIconId)?.url || source.iconUrl || ""
+      : source.iconUrl || "";
+
+    if (existing) {
+      if (source.id) categoryIdAliases.set(source.id, existing.id);
+      if (!existing.iconId && !existing.iconUrl && (resolvedIconId || resolvedIconUrl)) {
+        existing.iconId = resolvedIconId;
+        existing.iconUrl = resolvedIconUrl;
+      }
+      changed = true;
+      return;
+    }
+
+    const category = {
+      ...source,
+      id: source.id || newCategoryId(),
+      name,
+      iconId: resolvedIconId,
+      iconUrl: resolvedIconUrl
+    };
+    if (
+      !source.id ||
+      source.name !== name ||
+      source.iconId !== resolvedIconId ||
+      source.iconUrl !== resolvedIconUrl
+    ) changed = true;
+    categoriesByKey.set(key, category);
+    nextCategories.push(category);
   });
 
-  if (changed) persistCategoryLibrary();
+  savedPlaces.forEach((place) => {
+    const normalizedName = normalizeCategoryName(place.category);
+    const aliasedId = categoryIdAliases.get(place.categoryId) || place.categoryId || "";
+    let category = aliasedId
+      ? nextCategories.find((item) => item.id === aliasedId)
+      : null;
+    if (!category && normalizedName) category = categoriesByKey.get(categoryKey(normalizedName));
+
+    if (!category && normalizedName) {
+      category = {
+        id: newCategoryId(),
+        name: normalizedName,
+        iconId: place.iconId || "",
+        iconUrl: place.iconId
+          ? iconsById.get(place.iconId)?.url || place.iconUrl || ""
+          : place.iconUrl || "",
+        createdAt: new Date().toISOString()
+      };
+      categoriesByKey.set(categoryKey(normalizedName), category);
+      nextCategories.push(category);
+      changed = true;
+    }
+
+    if (category && !category.iconId && !category.iconUrl && (place.iconId || place.iconUrl)) {
+      category.iconId = place.iconId || "";
+      category.iconUrl = place.iconId
+        ? iconsById.get(place.iconId)?.url || place.iconUrl || ""
+        : place.iconUrl || "";
+      changed = true;
+    }
+
+    const nextName = category?.name || "";
+    const nextId = category?.id || "";
+    if (
+      place.category !== nextName ||
+      place.categoryId !== nextId ||
+      Boolean(place.iconId) ||
+      Boolean(place.iconUrl)
+    ) {
+      place.category = nextName;
+      place.categoryId = nextId;
+      place.iconId = "";
+      place.iconUrl = "";
+      changed = true;
+    }
+  });
+
+  savedCategories = nextCategories;
+  return changed;
 }
 
 function migrateIconsFromPlaces() {
@@ -457,7 +582,8 @@ function initMap() {
   });
 
   migrateIconsFromPlaces();
-  migrateCategoriesFromPlaces();
+  categoryIntegrityChanged = ensureCategoryIntegrity() || categoryIntegrityChanged;
+  if (categoryIntegrityChanged && canEdit) scheduleSharedSave();
   $("loading").classList.add("hidden");
   renderAll();
 }
@@ -489,7 +615,8 @@ function defaultMarkerContent() {
 }
 
 function markerContent(place) {
-  if (!place.iconUrl) {
+  const iconUrl = categoryIconForPlace(place);
+  if (!iconUrl) {
     return defaultMarkerContent();
   }
 
@@ -497,7 +624,7 @@ function markerContent(place) {
   element.className = "custom-marker";
 
   const image = document.createElement("img");
-  image.src = place.iconUrl;
+  image.src = iconUrl;
   image.alt = place.category || "地点";
   element.appendChild(image);
 
@@ -508,7 +635,7 @@ function addMarker(place) {
   if (!map) return;
   if (activeCategories.size && !activeCategories.has(place.category)) return;
 
-  const hasIcon = Boolean(place.iconUrl);
+  const hasIcon = Boolean(categoryIconForPlace(place));
   const marker = new AMap.Marker({
     position: [place.longitude, place.latitude],
     content: markerContent(place),
@@ -588,17 +715,22 @@ function groupedCategories() {
   const groups = new Map();
 
   savedCategories.forEach((category) => {
-    groups.set(category.name, { count: 0, iconUrl: category.iconUrl || "" });
+    groups.set(category.name, {
+      id: category.id,
+      count: 0,
+      iconUrl: category.iconUrl || ""
+    });
   });
 
   currentPlaces().filter((place) => place.isMarked !== false && place.category).forEach((place) => {
     if (!groups.has(place.category)) {
-      groups.set(place.category, { count: 0, iconUrl: place.iconUrl || "" });
+      groups.set(place.category, {
+        id: place.categoryId || "",
+        count: 0,
+        iconUrl: categoryIconForPlace(place)
+      });
     }
     groups.get(place.category).count += 1;
-    if (!groups.get(place.category).iconUrl && place.iconUrl) {
-      groups.get(place.category).iconUrl = place.iconUrl;
-    }
   });
 
   return groups;
@@ -618,7 +750,7 @@ function renderCategoryFilters() {
       <span class="new-category-plus">＋</span>
       <span>新建分类</span>
     `;
-    addButton.onclick = openCategoryDialog;
+    addButton.onclick = () => openCategoryDialog();
     host.appendChild(addButton);
   }
 
@@ -633,9 +765,6 @@ function renderCategoryFilters() {
 
     const initial = escapeHtml(category.trim().slice(0, 1) || "分");
     item.innerHTML = `
-      ${data.iconUrl
-        ? `<img class="mini-icon" src="${data.iconUrl}" alt="">`
-        : `<span class="category-icon-placeholder">${initial}</span>`}
       <span class="category-label">${escapeHtml(category)}</span>
       <span class="category-count">${data.count}</span>
     `;
@@ -660,6 +789,23 @@ function renderCategoryFilters() {
     wrap.appendChild(item);
 
     if (canEdit) {
+      const iconButton = document.createElement("button");
+      iconButton.type = "button";
+      iconButton.className = "category-logo-button";
+      iconButton.title = `更换“${category}”的 Logo`;
+      iconButton.setAttribute("aria-label", `更换“${category}”的 Logo`);
+      iconButton.innerHTML = `
+        ${data.iconUrl
+          ? `<img class="mini-icon" src="${data.iconUrl}" alt="">`
+          : `<span class="category-icon-placeholder">${initial}</span>`}
+        <span class="category-logo-edit-mark" aria-hidden="true">✎</span>
+      `;
+      iconButton.onclick = (event) => {
+        event.stopPropagation();
+        openCategoryDialog(data.id || category);
+      };
+      wrap.prepend(iconButton);
+
       const deleteButton = document.createElement("button");
       deleteButton.type = "button";
       deleteButton.className = "category-delete-button";
@@ -671,6 +817,13 @@ function renderCategoryFilters() {
         openDeleteCategoryDialog(category, data.count);
       };
       wrap.appendChild(deleteButton);
+    } else {
+      const icon = document.createElement("span");
+      icon.className = "category-logo-static";
+      icon.innerHTML = data.iconUrl
+        ? `<img class="mini-icon" src="${data.iconUrl}" alt="">`
+        : `<span class="category-icon-placeholder">${initial}</span>`;
+      wrap.prepend(icon);
     }
 
     host.appendChild(wrap);
@@ -689,10 +842,11 @@ function renderSavedPlaces() {
   places.forEach((place) => {
     const item = document.createElement("div");
     const isUnmarked = place.isMarked === false;
+    const categoryIconUrl = categoryIconForPlace(place);
     item.className = `saved-item ${isUnmarked ? "unmarked" : ""}`;
     item.innerHTML = `
-      ${place.iconUrl && !isUnmarked
-        ? `<img class="mini-icon" src="${place.iconUrl}" alt="">`
+      ${categoryIconUrl && !isUnmarked
+        ? `<img class="mini-icon" src="${categoryIconUrl}" alt="">`
         : `<span class="saved-place-pin"></span>`}
       <div class="item-copy">
         <div class="item-title">
@@ -1193,10 +1347,10 @@ async function searchPoi() {
 }
 
 function getCategories() {
-  return [...new Set([
-    ...savedCategories.map((category) => category.name),
-    ...savedPlaces.map((place) => place.category)
-  ].filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-CN"));
+  return savedCategories
+    .map((category) => category.name)
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b, "zh-CN"));
 }
 
 function renderCategorySelect(currentCategory = "") {
@@ -1257,6 +1411,7 @@ function confirmDeleteCategory(event) {
     return {
       ...place,
       category: "",
+      categoryId: "",
       iconId: "",
       iconUrl: "",
       isMarked: false,
@@ -1271,73 +1426,18 @@ function confirmDeleteCategory(event) {
   renderAll();
 }
 
-function renderIconLibrary() {
-  const host = $("iconLibrary");
+function renderCategoryIconLibrary() {
+  const host = $("categoryIconLibrary");
   host.innerHTML = "";
 
   if (!savedIcons.length) {
     host.innerHTML = `
       <div class="icon-library-empty">
-        还没有保存的图标。上传第一个图标后，它会一直保留在这里。
+        还没有可用的 Logo。请先上传一个图片。
       </div>
     `;
     return;
   }
-
-  savedIcons.forEach((icon) => {
-    const wrap = document.createElement("div");
-    wrap.className = "saved-icon-wrap";
-
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `saved-icon-option ${selectedIconId === icon.id ? "selected" : ""}`;
-    button.title = icon.name || "自定义图标";
-    button.innerHTML = `<img src="${icon.url}" alt="${escapeHtml(icon.name || "自定义图标")}">`;
-    button.onclick = () => {
-      selectedIconId = selectedIconId === icon.id ? "" : icon.id;
-      renderIconLibrary();
-    };
-
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.className = "icon-delete";
-    deleteButton.textContent = "×";
-    deleteButton.title = "从图标库删除";
-    deleteButton.onclick = (event) => {
-      event.stopPropagation();
-      const inUse = savedPlaces.some((place) => place.iconId === icon.id || place.iconUrl === icon.url) ||
-        savedCategories.some((category) => category.iconId === icon.id || category.iconUrl === icon.url);
-
-      if (inUse) {
-        alert("这个图标正在被地点使用，暂时不能从图标库删除。");
-        return;
-      }
-
-      savedIcons = savedIcons.filter((item) => item.id !== icon.id);
-      if (selectedIconId === icon.id) selectedIconId = "";
-      persistIconLibrary();
-      renderIconLibrary();
-    };
-
-    wrap.append(button, deleteButton);
-    host.appendChild(wrap);
-  });
-}
-
-function renderCategoryIconLibrary() {
-  const host = $("categoryIconLibrary");
-  host.innerHTML = "";
-
-  const noIconButton = document.createElement("button");
-  noIconButton.type = "button";
-  noIconButton.className = `saved-icon-option ${selectedCategoryIconId === "" ? "selected" : ""}`;
-  noIconButton.title = "不使用图标";
-  noIconButton.innerHTML = '<span class="category-icon-placeholder">无</span>';
-  noIconButton.onclick = () => {
-    selectedCategoryIconId = "";
-    renderCategoryIconLibrary();
-  };
-  host.appendChild(noIconButton);
 
   savedIcons.forEach((icon) => {
     const button = document.createElement("button");
@@ -1353,13 +1453,39 @@ function renderCategoryIconLibrary() {
   });
 }
 
-function openCategoryDialog() {
+function openCategoryDialog(categoryReference = "", returnToPlace = false) {
   if (!canEdit) return;
-  $("standaloneCategoryName").value = "";
-  selectedCategoryIconId = "";
+  const category = typeof categoryReference === "string"
+    ? findCategory(categoryReference, categoryReference)
+    : null;
+
+  editingCategoryId = category?.id || "";
+  categoryDialogReturnToPlace = Boolean(returnToPlace && !category);
+  $("standaloneCategoryName").value = category?.name || "";
+  $("standaloneCategoryName").readOnly = Boolean(category);
+  $("standaloneCategoryName").classList.toggle("readonly-field", Boolean(category));
+  selectedCategoryIconId = category?.iconId ||
+    savedIcons.find((icon) => icon.url === category?.iconUrl)?.id || "";
+  $("categoryDialogTitle").textContent = category ? "更换分类 Logo" : "新建分类";
+  $("categoryIconHelp").textContent = category
+    ? `“${category.name}”下的所有地点都会同步使用新的 Logo。`
+    : "一个分类固定使用一个 Logo；地点会自动沿用，无需重复选择。";
+  $("saveCategoryBtn").textContent = category ? "保存 Logo" : "创建分类";
   renderCategoryIconLibrary();
   $("categoryDialog").showModal();
-  setTimeout(() => $("standaloneCategoryName").focus(), 0);
+  setTimeout(() => {
+    if (category) {
+      $("categoryIconLibrary").querySelector("button")?.focus();
+    } else {
+      $("standaloneCategoryName").focus();
+    }
+  }, 0);
+}
+
+function closeCategoryEditorDialog() {
+  editingCategoryId = "";
+  categoryDialogReturnToPlace = false;
+  $("categoryDialog").close();
 }
 
 function selectedCategoryIconUrl() {
@@ -1370,34 +1496,51 @@ function saveStandaloneCategory(event) {
   event.preventDefault();
   if (!canEdit) return;
 
-  const name = $("standaloneCategoryName").value.trim();
+  const name = normalizeCategoryName($("standaloneCategoryName").value);
   if (!name) return;
 
-  const exists = getCategories().some(
-    (category) => category.toLocaleLowerCase() === name.toLocaleLowerCase()
-  );
-
-  if (exists) {
-    alert("这个分类已经存在。");
-    $("standaloneCategoryName").focus();
+  if (!selectedCategoryIconId) {
+    alert("请选择或上传一个分类 Logo。");
     return;
   }
 
-  savedCategories.push({
-    id: crypto.randomUUID ? crypto.randomUUID() : `category-${Date.now()}`,
-    name,
-    iconId: selectedCategoryIconId,
-    iconUrl: selectedCategoryIconUrl(),
-    createdAt: new Date().toISOString()
-  });
+  let category = editingCategoryId
+    ? savedCategories.find((item) => item.id === editingCategoryId)
+    : null;
 
+  if (!category) {
+    const exists = savedCategories.some(
+      (item) => categoryKey(item.name) === categoryKey(name)
+    );
+
+    if (exists) {
+      alert("这个分类已经存在，不能创建两个同名分类。");
+      $("standaloneCategoryName").focus();
+      return;
+    }
+
+    category = {
+      id: newCategoryId(),
+      name,
+      iconId: selectedCategoryIconId,
+      iconUrl: selectedCategoryIconUrl(),
+      createdAt: new Date().toISOString()
+    };
+    savedCategories.push(category);
+  } else {
+    category.iconId = selectedCategoryIconId;
+    category.iconUrl = selectedCategoryIconUrl();
+    category.updatedAt = new Date().toISOString();
+  }
+
+  ensureCategoryIntegrity();
   persistCategoryLibrary();
+  persistPlaces();
   $("categoryDialog").close();
-  renderCategoryFilters();
-}
-
-function selectedIconUrl() {
-  return savedIcons.find((icon) => icon.id === selectedIconId)?.url || "";
+  if (categoryDialogReturnToPlace) renderCategorySelect(category.name);
+  editingCategoryId = "";
+  categoryDialogReturnToPlace = false;
+  renderAll();
 }
 
 function setRecommendationPhoto(dataUrl, fileId = "") {
@@ -1436,14 +1579,6 @@ function openPlaceDialog(data, editingId = "") {
   $("placeNote").value = data.note || "";
 
   renderCategorySelect(data.category || "");
-  $("newCategoryName").value = "";
-  $("newCategoryName").classList.add("hidden");
-  $("newCategoryBtn").textContent = "＋ 新建分类";
-
-  const matchingIcon = data.iconId
-    ? savedIcons.find((icon) => icon.id === data.iconId)
-    : savedIcons.find((icon) => icon.url === data.iconUrl);
-  selectedIconId = matchingIcon?.id || "";
 
   const recommendation = data.recommendation || {};
   $("recommendationTitle").value = recommendation.title || "";
@@ -1458,7 +1593,6 @@ function openPlaceDialog(data, editingId = "") {
   $("deletePlaceBtn").classList.toggle("hidden", !editingId);
   $("dialogTitle").textContent = editingId ? "编辑地点" : "添加地点";
 
-  renderIconLibrary();
   $("placeDialog").showModal();
   window.requestAnimationFrame(() => {
     $("placeName").focus({ preventScroll: true });
@@ -1477,8 +1611,6 @@ window.editSavedPlace = function (id) {
     address: place.address,
     category: place.category,
     note: place.note,
-    iconId: place.iconId || "",
-    iconUrl: place.iconUrl,
     recommendation: place.recommendation || {},
     visitRecord: place.visitRecord || {},
     location: [place.longitude, place.latitude],
@@ -1487,8 +1619,7 @@ window.editSavedPlace = function (id) {
 };
 
 function resolvedCategory() {
-  const newCategory = $("newCategoryName").value.trim();
-  return newCategory || $("categorySelect").value;
+  return findCategory($("categorySelect").value);
 }
 
 function validateRecommendation() {
@@ -1510,7 +1641,7 @@ function savePlace(event) {
 
   const category = resolvedCategory();
   if (!category) {
-    alert("请选择分类，或新建一个分类。");
+    alert("请选择分类，或先新建一个分类。");
     return;
   }
 
@@ -1536,12 +1667,13 @@ function savePlace(event) {
     poiId: $("poiId").value,
     name: $("placeName").value.trim(),
     address: $("placeAddress").value.trim(),
-    category,
+    category: category.name,
+    categoryId: category.id,
     note: $("placeNote").value.trim(),
     longitude: Number($("longitude").value),
     latitude: Number($("latitude").value),
-    iconId: selectedIconId,
-    iconUrl: selectedIconUrl(),
+    iconId: "",
+    iconUrl: "",
     isMarked: true,
     recommendation: recommendationTitle
       ? {
@@ -1693,7 +1825,7 @@ async function optimizedImageDataUrl(file, kind) {
 
 async function uploadSharedAsset(file, kind) {
   const dataUrl = await optimizedImageDataUrl(file, kind);
-  if (sharedProvider() !== "cloudbase") {
+  if (sharedProvider() === "static") {
     return { url: dataUrl, fileId: "" };
   }
 
@@ -1708,7 +1840,7 @@ async function uploadSharedAsset(file, kind) {
   return { url: result.url, fileId: result.fileId };
 }
 
-async function addIconFromFile(file, target) {
+async function addIconFromFile(file) {
   const asset = await uploadSharedAsset(file, "icon");
   const icon = {
     id: crypto.randomUUID ? crypto.randomUUID() : `icon-${Date.now()}`,
@@ -1719,13 +1851,8 @@ async function addIconFromFile(file, target) {
   };
 
   savedIcons.unshift(icon);
-  if (target === "category") {
-    selectedCategoryIconId = icon.id;
-    renderCategoryIconLibrary();
-  } else {
-    selectedIconId = icon.id;
-    renderIconLibrary();
-  }
+  selectedCategoryIconId = icon.id;
+  renderCategoryIconLibrary();
   persistIconLibrary();
 }
 
@@ -1751,32 +1878,12 @@ $("clearResultsBtn").onclick = () => {
   clearSearchMarkers();
 };
 
-$("newCategoryBtn").onclick = () => {
-  const input = $("newCategoryName");
-  const opening = input.classList.contains("hidden");
-  input.classList.toggle("hidden", !opening);
-  $("newCategoryBtn").textContent = opening ? "使用已有分类" : "＋ 新建分类";
-  if (opening) input.focus();
-};
+$("newCategoryBtn").onclick = () => openCategoryDialog("", true);
 
 $("placeForm").addEventListener("submit", savePlace);
 $("deletePlaceBtn").onclick = deleteCurrentPlace;
 $("closeDialogBtn").onclick = () => $("placeDialog").close();
 $("cancelBtn").onclick = () => $("placeDialog").close();
-$("customIconFile").onchange = async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  try {
-    await addIconFromFile(file, "place");
-  } catch (error) {
-    console.error(error);
-    alert(error.message || "图标上传失败");
-    setSyncStatus("图标上传失败", "error");
-  } finally {
-    event.target.value = "";
-  }
-};
 
 $("visitSoloBtn").onclick = () => setVisitMode("solo");
 $("visitWithBtn").onclick = () => setVisitMode("with");
@@ -1806,8 +1913,8 @@ $("closeDeleteCategoryDialogBtn").onclick = closeDeleteCategoryDialog;
 $("cancelDeleteCategoryBtn").onclick = closeDeleteCategoryDialog;
 
 $("categoryForm").addEventListener("submit", saveStandaloneCategory);
-$("closeCategoryDialogBtn").onclick = () => $("categoryDialog").close();
-$("cancelCategoryBtn").onclick = () => $("categoryDialog").close();
+$("closeCategoryDialogBtn").onclick = closeCategoryEditorDialog;
+$("cancelCategoryBtn").onclick = closeCategoryEditorDialog;
 
 $("renameMapBtn").onclick = openRenameMapDialog;
 $("renameMapForm").addEventListener("submit", saveMapTitle);
@@ -1819,7 +1926,7 @@ $("categoryIconFile").onchange = async (event) => {
   if (!file) return;
 
   try {
-    await addIconFromFile(file, "category");
+    await addIconFromFile(file);
   } catch (error) {
     console.error(error);
     alert(error.message || "图标上传失败");
