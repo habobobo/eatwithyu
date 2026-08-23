@@ -919,6 +919,134 @@ function searchResultAddress(poi) {
   return [region, poi.address].filter(Boolean).join(" · ") || poi.pname || "";
 }
 
+function normalizePlaceIdentityText(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .toLocaleLowerCase("zh-CN")
+    .replace(/[\s·•・—\-_|｜/／,，。:：;；()（）\[\]【】'"“”‘’]+/g, "");
+}
+
+function placeLocation(value) {
+  if (Array.isArray(value)) {
+    const [lng, lat] = value.map(Number);
+    return Number.isFinite(lng) && Number.isFinite(lat) ? [lng, lat] : null;
+  }
+
+  if (value?.location) return locationArray(value.location);
+  const lng = Number(value?.longitude);
+  const lat = Number(value?.latitude);
+  return Number.isFinite(lng) && Number.isFinite(lat) ? [lng, lat] : null;
+}
+
+function distanceInMeters(firstLocation, secondLocation) {
+  if (!firstLocation || !secondLocation) return Infinity;
+  const toRadians = (degrees) => degrees * Math.PI / 180;
+  const [firstLng, firstLat] = firstLocation;
+  const [secondLng, secondLat] = secondLocation;
+  const latitudeDelta = toRadians(secondLat - firstLat);
+  const longitudeDelta = toRadians(secondLng - firstLng);
+  const firstLatitude = toRadians(firstLat);
+  const secondLatitude = toRadians(secondLat);
+  const haversine = Math.sin(latitudeDelta / 2) ** 2 +
+    Math.cos(firstLatitude) * Math.cos(secondLatitude) *
+    Math.sin(longitudeDelta / 2) ** 2;
+  const clamped = Math.min(1, Math.max(0, haversine));
+  return 6371000 * 2 * Math.atan2(Math.sqrt(clamped), Math.sqrt(1 - clamped));
+}
+
+function findExistingPlace(candidate, excludeId = "") {
+  const candidatePoiId = String(candidate.poiId || candidate.id || "").trim();
+  const candidateName = normalizePlaceIdentityText(candidate.name);
+  const candidateAddress = normalizePlaceIdentityText(
+    candidate.address || searchResultAddress(candidate)
+  );
+  const candidateLocation = placeLocation(candidate);
+
+  return savedPlaces.find((place) => {
+    if (place.id === excludeId) return false;
+
+    const savedPoiId = String(place.poiId || "").trim();
+    if (candidatePoiId && savedPoiId && candidatePoiId === savedPoiId) return true;
+
+    const savedLocation = placeLocation(place);
+    const distance = distanceInMeters(candidateLocation, savedLocation);
+    const savedName = normalizePlaceIdentityText(place.name);
+    const sameName = Boolean(candidateName && savedName && candidateName === savedName);
+    const similarName = Boolean(
+      candidateName &&
+      savedName &&
+      Math.min(candidateName.length, savedName.length) >= 3 &&
+      (candidateName.includes(savedName) || savedName.includes(candidateName))
+    );
+    const savedAddress = normalizePlaceIdentityText(place.address);
+    if (sameName && candidateAddress && candidateAddress === savedAddress) return true;
+    if (!Number.isFinite(distance)) return false;
+    if (sameName && distance <= 120) return true;
+    if (similarName && distance <= 35) return true;
+
+    const sameAddress = Boolean(
+      candidateAddress &&
+      savedAddress &&
+      (candidateAddress === savedAddress ||
+        candidateAddress.includes(savedAddress) ||
+        savedAddress.includes(candidateAddress))
+    );
+    return sameAddress && similarName && distance <= 80;
+  }) || null;
+}
+
+function savedSearchHighlight(place) {
+  const position = placeLocation(place);
+  if (!position) return null;
+
+  const content = document.createElement("div");
+  content.className = "saved-search-map-highlight";
+  content.setAttribute("aria-label", "已收藏");
+  const iconUrl = categoryIconForPlace(place);
+  const initial = escapeHtml((place.category || "已").trim().slice(0, 1));
+  content.innerHTML = iconUrl
+    ? `<img src="${escapeHtml(iconUrl)}" alt="">`
+    : `<span class="category-icon-placeholder">${initial}</span>`;
+
+  const marker = new AMap.Marker({
+    position,
+    content,
+    offset: new AMap.Pixel(-20, -20),
+    anchor: "center",
+    title: `${place.name} · 已收藏`,
+    zIndex: 190
+  });
+  marker.setMap(map);
+  searchMarkers.push(marker);
+  return marker;
+}
+
+function openSavedSearchResult(place, highlightMarker) {
+  const position = placeLocation(place);
+  if (!position) return;
+  if (highlightMarker) focusSearchMarker(highlightMarker);
+
+  if (place.isMarked === false && canEdit) {
+    window.editSavedPlace(place.id);
+    return;
+  }
+
+  const savedMarker = markers.get(place.id);
+  if (savedMarker) {
+    savedMarker.emit("click");
+    return;
+  }
+
+  infoWindow.setContent(`
+    <div class="info-card search-preview-card">
+      <h3>${escapeHtml(place.name)}</h3>
+      <p>${escapeHtml(place.address || "暂无地址")}</p>
+      <p class="search-preview-hint">这个地点已经收藏在地图中。</p>
+    </div>
+  `);
+  infoWindow.open(map, position);
+}
+
 function splitSearchInput(value) {
   const normalized = String(value || "").trim().replace(/\s+/g, " ");
   const tokens = normalized.split(" ").filter(Boolean);
@@ -1303,31 +1431,65 @@ async function searchPoi() {
 
   visiblePois.forEach((poi) => {
       const location = [poi.location.lng, poi.location.lat];
-      const marker = new AMap.Marker({
-        position: location,
-        content: defaultMarkerContent(),
-        offset: new AMap.Pixel(-10, -28),
-        anchor: "center",
-        title: poi.name,
-        zIndex: 160
+      const existingPlace = findExistingPlace({
+        id: poi.id || "",
+        name: poi.name,
+        address: searchResultAddress(poi),
+        location
       });
-      marker.setMap(map);
-      searchMarkers.push(marker);
+      const marker = existingPlace
+        ? savedSearchHighlight(existingPlace)
+        : new AMap.Marker({
+            position: location,
+            content: defaultMarkerContent(),
+            offset: new AMap.Pixel(-10, -28),
+            anchor: "center",
+            title: poi.name,
+            zIndex: 160
+          });
+      if (!existingPlace) {
+        marker.setMap(map);
+        searchMarkers.push(marker);
+      }
 
       const item = document.createElement("div");
-      item.className = "result-item";
+      item.className = `result-item ${existingPlace ? "saved-result" : ""}`;
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
 
-      item.innerHTML = `
+      if (existingPlace) {
+        const savedIconUrl = categoryIconForPlace(existingPlace);
+        const initial = escapeHtml((existingPlace.category || "已").trim().slice(0, 1));
+        const savedStateText = existingPlace.isMarked === false ? "待恢复" : "已收藏";
+        item.innerHTML = `
+          <span class="result-saved-marker">
+            ${savedIconUrl
+              ? `<img src="${escapeHtml(savedIconUrl)}" alt="">`
+              : `<span class="category-icon-placeholder">${initial}</span>`}
+            <span class="result-saved-check" aria-hidden="true">✓</span>
+          </span>
+          <div class="item-copy">
+            <div class="item-title">
+              ${escapeHtml(poi.name)}
+              <span class="saved-result-badge">${savedStateText}</span>
+            </div>
+            <div class="item-meta">${escapeHtml(searchResultAddress(poi))}</div>
+          </div>
+          <span class="search-result-action saved-action">${existingPlace.isMarked === false && canEdit ? "恢复收藏" : "查看收藏"}</span>
+        `;
+      } else {
+        item.innerHTML = `
         <div class="item-copy">
           <div class="item-title">${escapeHtml(poi.name)}</div>
           <div class="item-meta">${escapeHtml(searchResultAddress(poi))}</div>
         </div>
         <span class="search-result-action">${canEdit ? "收藏到地图" : "查看位置"}</span>
-      `;
+        `;
+      }
 
-      const selectResult = () => openSearchResult(poi, location, marker);
+      const selectResult = () => existingPlace
+        ? openSavedSearchResult(existingPlace, marker)
+        : openSearchResult(poi, location, marker);
       item.onclick = selectResult;
       item.onkeydown = (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -1335,7 +1497,7 @@ async function searchPoi() {
           selectResult();
         }
       };
-      marker.on("click", selectResult);
+      if (!existingPlace) marker.on("click", selectResult);
 
       host.appendChild(item);
   });
@@ -1696,6 +1858,25 @@ function savePlace(event) {
   };
 
   if (!place.name || !Number.isFinite(place.longitude)) return;
+
+  const duplicatePlace = findExistingPlace(place, editingId);
+  if (duplicatePlace) {
+    alert(duplicatePlace.isMarked === false
+      ? "这个地点已经存在于地图资料中，请直接恢复并编辑原地点。"
+      : "这个地点已经收藏过了，不能重复添加。即将为你打开原地点。");
+    $("placeDialog").close();
+    clearSearchMarkers();
+    renderAll();
+
+    if (duplicatePlace.isMarked === false && canEdit) {
+      window.editSavedPlace(duplicatePlace.id);
+    } else {
+      const duplicateLocation = placeLocation(duplicatePlace);
+      if (duplicateLocation) map.setZoomAndCenter(17, duplicateLocation);
+      markers.get(duplicatePlace.id)?.emit("click");
+    }
+    return;
+  }
 
   if (editingId) {
     savedPlaces = savedPlaces.map((item) => item.id === editingId ? place : item);

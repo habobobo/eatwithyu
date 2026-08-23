@@ -2295,3 +2295,143 @@ body.read-only .bottom-hint {
   color: #6e6e73;
   cursor: default;
 }
+
+/* 搜索结果中的已收藏状态 */
+.result-item.saved-result::before,
+.result-item.saved-result::after {
+  display: none;
+}
+
+.result-item.saved-result {
+  border: 1px solid transparent;
+  background: #f7fbf8;
+}
+
+.result-item.saved-result:hover,
+.result-item.saved-result:focus-visible {
+  border-color: #cce8d3;
+  background: #edf7f0;
+  outline: none;
+}
+
+.result-saved-marker {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  margin-right: 9px;
+  border: 1px solid #dfe5e1;
+  border-radius: 50%;
+  padding: 4px;
+  background: #fff;
+}
+
+.result-saved-marker > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.result-saved-marker .category-icon-placeholder {
+  width: 26px;
+  height: 26px;
+  font-size: 11px;
+}
+
+.result-saved-check {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #188038;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.saved-result-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #e6f4ea;
+  color: #137333;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  vertical-align: 1px;
+}
+
+.search-result-action.saved-action {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.saved-search-map-highlight {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #188038;
+  border-radius: 50%;
+  padding: 5px;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(24, 128, 56, .13);
+  pointer-events: none;
+}
+
+.saved-search-map-highlight > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.saved-search-map-highlight .category-icon-placeholder {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.saved-search-map-highlight::after {
+  content: "✓ 已收藏";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #188038;
+  color: #fff;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .18);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .saved-result-badge {
+    display: none;
+  }
+
+  .search-result-action.saved-action {
+    padding: 0 7px;
+  }
+}
