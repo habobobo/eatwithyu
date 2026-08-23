@@ -1,5 +1,15 @@
 const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
 const DEFAULT_MAP_TITLE = "eatwithyu";
+const SEARCH_CITY_NAMES = new Set(`
+  北京 上海 天津 重庆 香港 澳门 深圳 广州 东莞 佛山 珠海 汕头
+  石家庄 太原 呼和浩特 沈阳 大连 长春 哈尔滨 南京 苏州 无锡
+  杭州 宁波 温州 绍兴 嘉兴 金华 台州 合肥 福州 厦门 泉州
+  南昌 济南 青岛 烟台 威海 潍坊 临沂 郑州 洛阳 开封 南阳
+  武汉 宜昌 襄阳 荆州 长沙 岳阳 株洲 衡阳 常德 南宁 桂林
+  柳州 北海 海口 三亚 成都 绵阳 乐山 宜宾 德阳 南充 自贡
+  泸州 贵阳 遵义 昆明 大理 丽江 西双版纳 拉萨 西安 兰州
+  西宁 银川 乌鲁木齐 唐山 保定 秦皇岛 廊坊
+`.trim().split(/\s+/));
 const sharedConfig = window.SHARED_MAP_CONFIG || {};
 const requestedEditorToken = new URLSearchParams(window.location.hash.slice(1)).get("edit") || "";
 let canEdit = false;
@@ -10,6 +20,7 @@ let placeSearch;
 let markers = new Map();
 let searchMarkers = [];
 let activeSearchId = 0;
+let pendingManualPlaceName = "";
 let savedPlaces = [];
 let pendingDeleteCategory = "";
 let savedIcons = [];
@@ -435,8 +446,10 @@ function initMap() {
 
   map.on("dblclick", (event) => {
     if (!canEdit) return;
+    const placeName = pendingManualPlaceName || "地图上的地点";
+    resetManualPlacement();
     openPlaceDialog({
-      name: "地图上的地点",
+      name: placeName,
       address: "",
       location: [event.lnglat.lng, event.lnglat.lat],
       poiId: ""
@@ -752,6 +765,135 @@ function searchResultAddress(poi) {
   return [region, poi.address].filter(Boolean).join(" · ") || poi.pname || "";
 }
 
+function splitSearchInput(value) {
+  const normalized = String(value || "").trim().replace(/\s+/g, " ");
+  const tokens = normalized.split(" ").filter(Boolean);
+  let city = "";
+
+  const looksLikeCity = (token) => {
+    const normalizedToken = token.replace(/市$/, "");
+    return token.endsWith("市") || SEARCH_CITY_NAMES.has(normalizedToken);
+  };
+  if (tokens.length > 1 && looksLikeCity(tokens[tokens.length - 1])) {
+    city = tokens.pop().replace(/市$/, "");
+  } else if (tokens.length > 1 && looksLikeCity(tokens[0])) {
+    city = tokens.shift().replace(/市$/, "");
+  }
+
+  return {
+    city,
+    keyword: tokens.join(" ") || normalized
+  };
+}
+
+function searchAttempts(rawKeyword) {
+  const parsed = splitSearchInput(rawKeyword);
+  const compact = parsed.keyword.replace(/\s+/g, "");
+  const latin = (parsed.keyword.match(/[a-z0-9]+/gi) || []).join(" ");
+  const chinese = (parsed.keyword.match(/[\u3400-\u9fff]+/g) || []).join(" ");
+  const variants = [parsed.keyword, compact, latin, chinese].filter(Boolean);
+  const attempts = [];
+  const seen = new Set();
+
+  variants.forEach((query) => {
+    const normalizedQuery = query.trim();
+    const key = normalizedQuery.toLocaleLowerCase();
+    if (!normalizedQuery || seen.has(key)) return;
+    seen.add(key);
+    attempts.push({
+      query: normalizedQuery,
+      city: parsed.city || "全国",
+      citylimit: Boolean(parsed.city)
+    });
+  });
+
+  return { attempts, parsed };
+}
+
+function runPlaceSearch(attempt) {
+  return new Promise((resolve) => {
+    let settled = false;
+    let timeout;
+    const finish = (pois) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      resolve(pois);
+    };
+    timeout = window.setTimeout(() => finish([]), 10000);
+    const searcher = new AMap.PlaceSearch({
+      pageSize: 15,
+      pageIndex: 1,
+      extensions: "all",
+      city: attempt.city,
+      citylimit: attempt.citylimit
+    });
+
+    searcher.search(attempt.query, (status, result) => {
+      finish(status === "complete" && result?.poiList?.pois
+        ? result.poiList.pois.filter((poi) => poi.location)
+        : []);
+    });
+  });
+}
+
+function mergeSearchResults(resultGroups, limit = 15) {
+  const merged = [];
+  const seen = new Set();
+  const longestGroup = Math.max(0, ...resultGroups.map((group) => group.length));
+
+  for (let index = 0; index < longestGroup && merged.length < limit; index += 1) {
+    resultGroups.forEach((group) => {
+      const poi = group[index];
+      if (!poi || merged.length >= limit) return;
+      const key = poi.id || `${poi.name}-${poi.location.lng}-${poi.location.lat}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      merged.push(poi);
+    });
+  }
+
+  return merged;
+}
+
+function resetManualPlacement() {
+  pendingManualPlaceName = "";
+  if ($("bottomHint")) $("bottomHint").textContent = "双击地图可手动添加地点";
+}
+
+function startManualPlacement(rawKeyword, city) {
+  if (!canEdit) return;
+  pendingManualPlaceName = splitSearchInput(rawKeyword).keyword || rawKeyword;
+  activeSearchId += 1;
+  clearSearchMarkers();
+  $("searchResultsSection").classList.add("hidden");
+  $("mainPanel").classList.add("collapsed");
+  $("openPanelBtn").classList.remove("hidden");
+  $("bottomHint").textContent = `双击餐厅所在位置，添加“${pendingManualPlaceName}”`;
+  if (city) map.setCity(city);
+}
+
+function appendManualSearchAction(host, rawKeyword, city, isEmpty = false) {
+  if (!canEdit) return;
+
+  const action = document.createElement("div");
+  action.className = `search-manual-action ${isEmpty ? "empty" : ""}`;
+  action.innerHTML = `
+    <div class="search-manual-copy">
+      <strong>${isEmpty ? "高德可能还没有收录这家店" : "没有你要找的地点？"}</strong>
+      <span>可直接在地图上选择位置，并保留你输入的店名。</span>
+    </div>
+  `;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "manual-search-button";
+  button.textContent = "在地图上手动标记";
+  button.onclick = () => startManualPlacement(rawKeyword, city);
+  action.appendChild(button);
+  host.appendChild(action);
+}
+
 function openSearchResult(poi, location, marker) {
   focusSearchMarker(marker);
 
@@ -775,35 +917,36 @@ function openSearchResult(poi, location, marker) {
   infoWindow.open(map, location);
 }
 
-function searchPoi() {
+async function searchPoi() {
   const keyword = $("poiKeyword").value.trim();
   if (!keyword || !placeSearch) return;
 
   const searchId = ++activeSearchId;
+  resetManualPlacement();
   clearSearchMarkers();
   $("searchResultsSection").classList.remove("hidden");
-  $("searchResults").innerHTML = '<div class="item-meta">正在搜索…</div>';
+  const { attempts, parsed } = searchAttempts(keyword);
+  $("searchResults").innerHTML = `<div class="item-meta">正在${parsed.city ? `${escapeHtml(parsed.city)}范围内` : "全国范围内"}搜索…</div>`;
 
-  placeSearch.search(keyword, (status, result) => {
-    if (searchId !== activeSearchId) return;
+  const resultGroups = await Promise.all(attempts.map(runPlaceSearch));
+  if (searchId !== activeSearchId) return;
 
-    if (status !== "complete" || !result?.poiList?.pois?.length) {
-      $("searchResults").innerHTML = '<div class="item-meta search-empty-state">全国范围内没有找到结果，请尝试输入“城市 + 餐厅名”。</div>';
-      return;
-    }
+  const visiblePois = mergeSearchResults(resultGroups);
+  const host = $("searchResults");
+  host.innerHTML = canEdit
+    ? ""
+    : '<div class="search-readonly-notice">当前是公开浏览链接：可以查看搜索位置，但收藏地点需要使用编辑链接。</div>';
 
-    const host = $("searchResults");
-    host.innerHTML = canEdit
-      ? ""
-      : '<div class="search-readonly-notice">当前是公开浏览链接：可以查看搜索位置，但收藏地点需要使用编辑链接。</div>';
+  if (!visiblePois.length) {
+    const empty = document.createElement("div");
+    empty.className = "item-meta search-empty-state";
+    empty.textContent = `${parsed.city ? `${parsed.city}范围内` : "全国范围内"}没有找到对应 POI。`;
+    host.appendChild(empty);
+    appendManualSearchAction(host, keyword, parsed.city, true);
+    return;
+  }
 
-    const visiblePois = result.poiList.pois.filter((poi) => poi.location);
-    if (!visiblePois.length) {
-      host.innerHTML = '<div class="item-meta search-empty-state">搜索结果没有可显示的地图位置，请换一个关键词。</div>';
-      return;
-    }
-
-    visiblePois.forEach((poi) => {
+  visiblePois.forEach((poi) => {
       const location = [poi.location.lng, poi.location.lat];
       const marker = new AMap.Marker({
         position: location,
@@ -840,12 +983,12 @@ function searchPoi() {
       marker.on("click", selectResult);
 
       host.appendChild(item);
-    });
-
-    if (searchMarkers.length) {
-      map.setFitView(searchMarkers, false, searchViewportPadding(), 16);
-    }
   });
+
+  appendManualSearchAction(host, keyword, parsed.city);
+  if (searchMarkers.length) {
+    map.setFitView(searchMarkers, false, searchViewportPadding(), 16);
+  }
 }
 
 function getCategories() {
