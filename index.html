@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260823j" />
+  <link rel="stylesheet" href="./style.css?v=20260824a" />
 </head>
 <body>
   <div id="app">
@@ -54,15 +54,29 @@
             <div id="mapPresetList" class="map-preset-list">
               <div class="item-meta">正在读取地图列表…</div>
             </div>
-            <div class="share-actions">
-              <button id="copyPublicLinkBtn" class="copy-map-button" type="button">复制公开链接</button>
-              <p>任何人打开都能查看，不需要登录。</p>
-            </div>
-            <div id="editorLinkAction" class="editor-link-action hidden">
-              <button id="renameMapBtn" class="copy-map-button" type="button">重命名地图</button>
-              <button id="copyEditorLinkBtn" class="copy-map-button" type="button">复制编辑链接</button>
-              <button id="exportBackupBtn" class="copy-map-button secondary-copy-button" type="button">导出数据备份</button>
-              <p>拿到这条链接的人可以编辑地图，请只发给可信的人。</p>
+            <div class="map-action-toolbar" role="toolbar" aria-label="地图操作">
+              <button id="copyPublicLinkBtn" class="map-action-button" type="button" aria-label="复制公开链接" data-tooltip="复制公开链接">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.18 3.18 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5a2.9 2.9 0 0 0 .05.52L8.12 9.13a3 3 0 1 0 0 5.74l6.93 3.61A2.9 2.9 0 0 0 15 19a3 3 0 1 0 3-3Z"/>
+                </svg>
+              </button>
+              <div id="editorLinkAction" class="editor-link-action hidden" role="group" aria-label="编辑操作">
+                <button id="renameMapBtn" class="map-action-button" type="button" aria-label="重命名地图" data-tooltip="重命名地图">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 17.25V20h2.75L17.81 8.94l-2.75-2.75L4 17.25Zm15.71-10.9a.75.75 0 0 0 0-1.06l-1-1a.75.75 0 0 0-1.06 0l-1.57 1.57 2.75 2.75 1.58-1.57a.75.75 0 0 0 0-1.06Z"/>
+                  </svg>
+                </button>
+                <button id="copyEditorLinkBtn" class="map-action-button" type="button" aria-label="复制编辑链接" data-tooltip="复制编辑链接">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10.59 13.41a1.98 1.98 0 0 0 2.82 0l3.59-3.59A2 2 0 0 0 14.17 7l-1.29 1.29-1.41-1.42 1.29-1.29a4 4 0 0 1 5.66 5.66l-3.59 3.59a4 4 0 0 1-5.66 0l-.7-.71 1.41-1.41.71.7Zm2.82-2.82a1.98 1.98 0 0 0-2.82 0L7 14.18A2 2 0 0 0 9.83 17l1.29-1.29 1.41 1.42-1.29 1.29a4 4 0 0 1-5.66-5.66l3.59-3.59a4 4 0 0 1 5.66 0l.7.71-1.41 1.41-.71-.7Z"/>
+                  </svg>
+                </button>
+                <button id="exportBackupBtn" class="map-action-button" type="button" aria-label="导出数据备份" data-tooltip="导出数据备份">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M11 4h2v8.17l2.59-2.58L17 11l-5 5-5-5 1.41-1.41L11 12.17V4ZM5 18h14v2H5v-2Z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </section>
 
@@ -323,6 +337,6 @@
 
   <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
   <script src="./config.js?v=20260822"></script>
-  <script src="./app.js?v=20260823g"></script>
+  <script src="./app.js?v=20260824a"></script>
 </body>
 </html>

@@ -2435,3 +2435,186 @@ body.read-only .bottom-hint {
     padding: 0 7px;
   }
 }
+
+/* 紧凑的地图操作栏 */
+.map-action-toolbar {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.map-action-toolbar .editor-link-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.map-action-button {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #5f6368;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease, transform .15s ease;
+}
+
+.map-action-button:hover,
+.map-action-button:focus-visible {
+  background: #f1f3f4;
+  color: #1a73e8;
+  outline: none;
+}
+
+.map-action-button:active {
+  transform: scale(.94);
+}
+
+.map-action-button svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.map-action-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 7px);
+  z-index: 5;
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #3c4043;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(60,64,67,.25);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .12s ease, transform .12s ease;
+}
+
+.map-action-button:hover::after,
+.map-action-button:focus-visible::after,
+.map-action-button.copied::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.map-action-button.copied {
+  background: #e6f4ea;
+  color: #188038;
+}
+
+/* 25–30 个分类时仍保持高效、完整可读 */
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 7px;
+}
+
+.category-item-wrap {
+  width: 100%;
+  min-width: 0;
+}
+
+.category-item-wrap .category-item {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  height: auto;
+  gap: 4px;
+  padding-right: 8px;
+  padding-left: 31px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+}
+
+.category-logo-button,
+.category-logo-static {
+  left: 4px;
+  width: 23px;
+  height: 23px;
+}
+
+.category-logo-button .mini-icon,
+.category-logo-static .mini-icon,
+.category-logo-button .category-icon-placeholder,
+.category-logo-static .category-icon-placeholder {
+  width: 23px;
+  height: 23px;
+}
+
+.category-label {
+  min-width: 0;
+  max-width: none;
+  flex: 1;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.category-count {
+  flex: 0 0 auto;
+  font-size: 11px;
+}
+
+.category-delete-button {
+  top: 4px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  transform: none;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60,64,67,.18);
+  font-size: 15px;
+}
+
+.category-item-wrap:hover .category-count,
+.category-item-wrap:focus-within .category-count {
+  opacity: 0;
+}
+
+.new-category-entry {
+  width: 100%;
+  min-height: 40px;
+  margin: 0;
+  gap: 7px;
+  padding: 5px 7px;
+  border: 1px dashed #c4d7f5;
+  border-radius: 10px;
+  background: #f8fbff;
+  font-size: 12px;
+}
+
+.new-category-entry:hover {
+  border-color: #8ab4f8;
+  background: #eef5ff;
+}
+
+.new-category-plus {
+  width: 23px;
+  height: 23px;
+  font-size: 16px;
+}
+
+@media (max-width: 320px) {
+  .category-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

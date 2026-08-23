@@ -2130,9 +2130,15 @@ $("openPanelBtn").onclick = () => {
 async function copyLink(button, url, successText, promptText) {
   try {
     await navigator.clipboard.writeText(url);
-    const original = button.textContent;
-    button.textContent = successText;
-    window.setTimeout(() => { button.textContent = original; }, 1800);
+    const originalTooltip = button.dataset.tooltip || button.getAttribute("aria-label") || "";
+    button.dataset.tooltip = successText;
+    button.setAttribute("aria-label", successText);
+    button.classList.add("copied");
+    window.setTimeout(() => {
+      button.dataset.tooltip = originalTooltip;
+      button.setAttribute("aria-label", originalTooltip);
+      button.classList.remove("copied");
+    }, 1800);
   } catch {
     window.prompt(promptText, url);
   }
