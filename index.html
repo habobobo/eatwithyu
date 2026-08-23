@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260823b" />
+  <link rel="stylesheet" href="./style.css?v=20260823f" />
 </head>
 <body>
   <div id="app">
@@ -16,7 +16,15 @@
           <button id="menuBtn" class="round-icon-button" type="button" aria-label="收起菜单">
             <span></span><span></span><span></span>
           </button>
-          <input id="poiKeyword" type="search" placeholder="在地图中搜索地点" autocomplete="off" />
+          <input
+            id="poiKeyword"
+            type="text"
+            placeholder="搜索地点、餐厅或地址"
+            autocomplete="off"
+            enterkeyhint="search"
+            spellcheck="false"
+            aria-label="搜索地点、餐厅或地址"
+          />
           <button id="clearKeywordBtn" class="clear-input-button hidden" type="button" aria-label="清除">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M18.3 5.71 12 12l6.3 6.29-1.42 1.42L10.59 13.4 4.29 19.7l-1.41-1.42L9.17 12 2.88 5.71 4.29 4.3l6.3 6.29 6.29-6.3z"/>
@@ -330,6 +338,6 @@
 
   <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
   <script src="./config.js?v=20260822"></script>
-  <script src="./app.js?v=20260823b"></script>
+  <script src="./app.js?v=20260823d"></script>
 </body>
 </html>

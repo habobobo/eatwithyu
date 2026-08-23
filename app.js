@@ -402,7 +402,7 @@ function loadAmap() {
   const script = document.createElement("script");
   script.src =
     `https://webapi.amap.com/maps?v=2.0&key=${encodeURIComponent(cfg.key)}` +
-    "&plugin=AMap.PlaceSearch,AMap.Scale,AMap.ToolBar";
+    "&plugin=AMap.PlaceSearch,AMap.Geocoder,AMap.Scale,AMap.ToolBar";
 
   script.onload = initMap;
   script.onerror = () => {
@@ -788,10 +788,37 @@ function splitSearchInput(value) {
 
 function searchAttempts(rawKeyword) {
   const parsed = splitSearchInput(rawKeyword);
-  const compact = parsed.keyword.replace(/\s+/g, "");
+  const punctuationNormalized = parsed.keyword
+    .replace(/[·•・—\-_|｜/／,，。:：;；()（）\[\]【】]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const compact = punctuationNormalized.replace(/\s+/g, "");
   const latin = (parsed.keyword.match(/[a-z0-9]+/gi) || []).join(" ");
   const chinese = (parsed.keyword.match(/[\u3400-\u9fff]+/g) || []).join(" ");
-  const variants = [parsed.keyword, compact, latin, chinese].filter(Boolean);
+  const chineseSegments = punctuationNormalized
+    .split(" ")
+    .filter((segment) => /^[\u3400-\u9fff]{2,}$/.test(segment));
+  const chineseCharacters = (parsed.keyword.match(/[\u3400-\u9fff]+/g) || []).join("");
+  const fuzzyChinese = [];
+
+  if (chineseCharacters.length >= 4) {
+    fuzzyChinese.push(chineseCharacters.slice(0, Math.min(4, chineseCharacters.length)));
+    fuzzyChinese.push(chineseCharacters.slice(-Math.min(6, chineseCharacters.length)));
+  }
+  if (chineseCharacters.length >= 6) {
+    fuzzyChinese.push(chineseCharacters.slice(2));
+    fuzzyChinese.push(chineseCharacters.slice(0, -2));
+  }
+
+  const variants = [
+    parsed.keyword,
+    punctuationNormalized,
+    compact,
+    latin,
+    chinese,
+    ...chineseSegments,
+    ...fuzzyChinese
+  ].filter(Boolean);
   const attempts = [];
   const seen = new Set();
 
@@ -873,6 +900,153 @@ function startManualPlacement(rawKeyword, city) {
   if (city) map.setCity(city);
 }
 
+function locationArray(location) {
+  if (!location) return null;
+  const lng = typeof location.getLng === "function" ? location.getLng() : location.lng;
+  const lat = typeof location.getLat === "function" ? location.getLat() : location.lat;
+  return Number.isFinite(Number(lng)) && Number.isFinite(Number(lat))
+    ? [Number(lng), Number(lat)]
+    : null;
+}
+
+function runAddressGeocode(address, city) {
+  return new Promise((resolve) => {
+    if (!window.AMap?.Geocoder) {
+      resolve([]);
+      return;
+    }
+
+    let settled = false;
+    const finish = (results) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timeout);
+      resolve(results);
+    };
+    const timeout = window.setTimeout(() => finish([]), 10000);
+    const geocoder = new AMap.Geocoder({ city: city || "全国" });
+
+    geocoder.getLocation(address, (status, result) => {
+      if (status !== "complete" || result?.info !== "OK" || !result?.geocodes) {
+        finish([]);
+        return;
+      }
+
+      finish(result.geocodes.map((geocode) => ({
+        name: geocode.formattedAddress || address,
+        address: geocode.formattedAddress || address,
+        location: locationArray(geocode.location),
+        source: "address"
+      })).filter((candidate) => candidate.location));
+    });
+  });
+}
+
+async function findAddressCandidates(address, city) {
+  const addressCity = splitSearchInput(address).city;
+  const resolvedCity = city || addressCity;
+  const [geocodes, pois] = await Promise.all([
+    runAddressGeocode(address, resolvedCity),
+    runPlaceSearch({
+      query: address,
+      city: resolvedCity || "全国",
+      citylimit: Boolean(resolvedCity)
+    })
+  ]);
+  const candidates = [
+    ...geocodes,
+    ...pois.map((poi) => ({
+      name: poi.name,
+      address: searchResultAddress(poi) || address,
+      location: locationArray(poi.location),
+      source: "poi"
+    }))
+  ];
+  const seen = new Set();
+
+  return candidates.filter((candidate) => {
+    if (!candidate.location) return false;
+    const key = `${candidate.location[0].toFixed(5)}-${candidate.location[1].toFixed(5)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 8);
+}
+
+function chooseAddressCandidate(candidate, placeName) {
+  resetManualPlacement();
+  clearSearchMarkers();
+
+  const marker = new AMap.Marker({
+    position: candidate.location,
+    content: defaultMarkerContent(),
+    offset: new AMap.Pixel(-10, -28),
+    anchor: "center",
+    title: placeName,
+    zIndex: 170
+  });
+  marker.setMap(map);
+  searchMarkers.push(marker);
+  focusSearchMarker(marker);
+
+  openPlaceDialog({
+    name: placeName,
+    address: candidate.address,
+    location: candidate.location,
+    poiId: ""
+  });
+}
+
+function renderAddressCandidates(host, candidates, placeName) {
+  host.innerHTML = "";
+
+  if (!candidates.length) {
+    host.innerHTML = '<div class="manual-address-status error">没有定位到这个地址，请补充城市、区、道路或商场名称后重试。</div>';
+    return;
+  }
+
+  const heading = document.createElement("div");
+  heading.className = "manual-address-status";
+  heading.textContent = "请选择正确的位置：";
+  host.appendChild(heading);
+
+  candidates.forEach((candidate) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "manual-address-result";
+    button.innerHTML = `
+      <span class="manual-address-result-title">${escapeHtml(candidate.name)}</span>
+      <span class="manual-address-result-meta">${escapeHtml(candidate.address)}</span>
+    `;
+    button.onclick = () => chooseAddressCandidate(candidate, placeName);
+    host.appendChild(button);
+  });
+}
+
+async function searchManualAddress(rawKeyword, city, input, resultsHost, submitButton) {
+  const address = input.value.trim();
+  if (!address) {
+    input.focus();
+    return;
+  }
+
+  const placeName = splitSearchInput(rawKeyword).keyword || rawKeyword;
+  submitButton.disabled = true;
+  submitButton.textContent = "定位中…";
+  resultsHost.innerHTML = '<div class="manual-address-status">正在查找地址…</div>';
+
+  try {
+    const candidates = await findAddressCandidates(address, city);
+    renderAddressCandidates(resultsHost, candidates, placeName);
+  } catch (error) {
+    console.error("地址定位失败:", error);
+    resultsHost.innerHTML = '<div class="manual-address-status error">地址定位暂时失败，请稍后重试。</div>';
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "查找地址";
+  }
+}
+
 function appendManualSearchAction(host, rawKeyword, city, isEmpty = false) {
   if (!canEdit) return;
 
@@ -881,16 +1055,43 @@ function appendManualSearchAction(host, rawKeyword, city, isEmpty = false) {
   action.innerHTML = `
     <div class="search-manual-copy">
       <strong>${isEmpty ? "高德可能还没有收录这家店" : "没有你要找的地点？"}</strong>
-      <span>可直接在地图上选择位置，并保留你输入的店名。</span>
+      <span>输入街道地址、商场或建筑名称，定位后再确认收藏。</span>
     </div>
   `;
 
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "manual-search-button";
-  button.textContent = "在地图上手动标记";
-  button.onclick = () => startManualPlacement(rawKeyword, city);
-  action.appendChild(button);
+  const addressForm = document.createElement("form");
+  addressForm.className = "manual-address-form";
+
+  const addressInput = document.createElement("input");
+  addressInput.type = "search";
+  addressInput.className = "manual-address-input";
+  addressInput.placeholder = city
+    ? `例如：${city}罗湖万象城`
+    : "例如：深圳市罗湖区宝安南路1881号";
+  addressInput.autocomplete = "off";
+  addressInput.setAttribute("aria-label", "输入详细地址或建筑名称");
+
+  const addressButton = document.createElement("button");
+  addressButton.type = "submit";
+  addressButton.className = "manual-search-button";
+  addressButton.textContent = "查找地址";
+
+  const addressResults = document.createElement("div");
+  addressResults.className = "manual-address-results";
+
+  addressForm.append(addressInput, addressButton);
+  addressForm.onsubmit = (event) => {
+    event.preventDefault();
+    searchManualAddress(rawKeyword, city, addressInput, addressResults, addressButton);
+  };
+  action.append(addressForm, addressResults);
+
+  const mapButton = document.createElement("button");
+  mapButton.type = "button";
+  mapButton.className = "manual-map-pick-button";
+  mapButton.textContent = "地址仍不确定？在地图上选择位置";
+  mapButton.onclick = () => startManualPlacement(rawKeyword, city);
+  action.appendChild(mapButton);
   host.appendChild(action);
 }
 
