@@ -26,7 +26,8 @@ body,
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -1738,5 +1739,479 @@ body.read-only .bottom-hint {
 
   .manual-address-form .manual-search-button {
     width: 100%;
+  }
+}
+
+/* Apple 式地点编辑面板 */
+#placeDialog {
+  width: min(640px, calc(100vw - 32px));
+  height: min(860px, calc(100vh - 32px));
+  max-height: calc(100vh - 32px);
+  border-radius: 24px;
+  color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .24), 0 3px 14px rgba(0, 0, 0, .10);
+}
+
+#placeDialog::backdrop {
+  background: rgba(0, 0, 0, .34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+#placeDialog #placeForm {
+  background: #f5f5f7;
+}
+
+#placeDialog .dialog-header {
+  position: relative;
+  z-index: 2;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, .08);
+  background: rgba(255, 255, 255, .94);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+}
+
+#placeDialog .dialog-kicker {
+  margin-bottom: 7px;
+  color: #6e6e73;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  text-transform: none;
+}
+
+#placeDialog .dialog-header h2 {
+  color: #1d1d1f;
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+#placeDialog .dialog-close-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #e8e8ed;
+  color: #6e6e73;
+  font-size: 0;
+  transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+
+#placeDialog .dialog-close-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+#placeDialog .dialog-close-button:hover {
+  background: #dedee3;
+  color: #1d1d1f;
+}
+
+#placeDialog .dialog-close-button:active {
+  transform: scale(.95);
+}
+
+#placeDialog .dialog-close-button:focus-visible {
+  outline: 3px solid rgba(0, 113, 227, .28);
+  outline-offset: 2px;
+}
+
+#placeDialog .dialog-scroll {
+  padding: 16px 18px 24px;
+  background: #f5f5f7;
+  scrollbar-color: #c7c7cc transparent;
+}
+
+#placeDialog .dialog-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+#placeDialog .dialog-scroll::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #c7c7cc;
+  background-clip: padding-box;
+}
+
+#placeDialog .form-section {
+  margin-top: 12px;
+  padding: 22px;
+  border: 1px solid rgba(0, 0, 0, .055);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .025);
+}
+
+#placeDialog .form-section.first-section {
+  margin-top: 0;
+  gap: 20px;
+}
+
+#placeDialog .form-section.last-section {
+  margin-bottom: 0;
+}
+
+#placeDialog .section-heading {
+  margin-bottom: 18px;
+}
+
+#placeDialog .section-heading h3 {
+  color: #1d1d1f;
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 650;
+  letter-spacing: -.01em;
+}
+
+#placeDialog .section-heading p {
+  max-width: 480px;
+  margin-top: 5px;
+  color: #6e6e73;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+#placeDialog .form-field {
+  gap: 8px;
+}
+
+#placeDialog .form-field + .form-field {
+  margin-top: 18px;
+}
+
+#placeDialog .form-field > span {
+  color: #3a3a3c;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+#placeDialog .form-field em {
+  margin-left: 2px;
+  color: #ff3b30;
+}
+
+#placeDialog input,
+#placeDialog textarea,
+#placeDialog select {
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #1d1d1f;
+  font-size: 16px;
+  line-height: 22px;
+  transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
+#placeDialog input,
+#placeDialog select {
+  min-height: 48px;
+  padding: 0 14px;
+}
+
+#placeDialog select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8' viewBox='0 0 14 8'%3E%3Cpath d='m1 1 6 6 6-6' fill='none' stroke='%236e6e73' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
+
+#placeDialog textarea {
+  min-height: 104px;
+  padding: 13px 14px;
+  line-height: 24px;
+}
+
+#placeDialog input::placeholder,
+#placeDialog textarea::placeholder {
+  color: #98989d;
+}
+
+#placeDialog input:hover,
+#placeDialog textarea:hover,
+#placeDialog select:hover {
+  border-color: #b8b8bd;
+}
+
+#placeDialog input:focus,
+#placeDialog textarea:focus,
+#placeDialog select:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, .16);
+}
+
+#placeDialog .category-input-row {
+  gap: 12px;
+}
+
+#placeDialog .secondary-text-button {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 11px;
+  background: #f5f5f7;
+  color: #0066cc;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+#placeDialog .secondary-text-button:hover {
+  background: #e8e8ed;
+}
+
+#placeDialog .icon-library {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 58px);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#placeDialog .saved-icon-wrap,
+#placeDialog .saved-icon-option {
+  width: 58px;
+  height: 58px;
+}
+
+#placeDialog .saved-icon-option {
+  border: 1px solid transparent;
+  border-radius: 16px;
+  padding: 8px;
+  background: #f5f5f7;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
+  transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+#placeDialog .saved-icon-option:hover {
+  transform: translateY(-1px);
+  background: #eeeef0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05), 0 4px 10px rgba(0, 0, 0, .06);
+}
+
+#placeDialog .saved-icon-option.selected {
+  border: 1.5px solid #0071e3;
+  background: #eef6ff;
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, .13);
+}
+
+#placeDialog .saved-icon-option img {
+  border-radius: 10px;
+}
+
+#placeDialog .icon-delete {
+  top: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  background: rgba(29, 29, 31, .82);
+  font-size: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .16);
+}
+
+#placeDialog .upload-tile {
+  min-height: 78px;
+  grid-template-columns: 38px 1fr;
+  column-gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: #f5f5f7;
+  transition: background .16s ease, border-color .16s ease;
+}
+
+#placeDialog .upload-tile:hover {
+  border-color: rgba(0, 113, 227, .18);
+  background: #eef6ff;
+}
+
+#placeDialog .upload-plus {
+  width: 36px;
+  height: 36px;
+  background: #e5f1ff;
+  color: #0071e3;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+#placeDialog .upload-tile > span:not(.upload-plus) {
+  color: #1d1d1f;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+#placeDialog .upload-tile small,
+#placeDialog .field-help {
+  color: #6e6e73;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+#placeDialog .photo-upload-button {
+  height: 40px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 11px;
+  background: #f5f5f7;
+  color: #0066cc;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#placeDialog .photo-upload-button:hover {
+  background: #e8e8ed;
+}
+
+#placeDialog .photo-preview img {
+  border: 0;
+  border-radius: 14px;
+}
+
+#placeDialog .photo-remove-button {
+  color: #ff3b30;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+#placeDialog .visit-mode-switch {
+  padding: 3px;
+  border: 0;
+  border-radius: 12px;
+  background: #e8e8ed;
+}
+
+#placeDialog .visit-mode-button {
+  height: 36px;
+  padding: 0 15px;
+  border-radius: 9px;
+  color: #6e6e73;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#placeDialog .visit-mode-button.selected {
+  background: #fff;
+  color: #1d1d1f;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+}
+
+#placeDialog .more-details summary {
+  color: #0066cc;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+#placeDialog .dialog-actions {
+  padding: 14px 24px 18px;
+  gap: 10px;
+  border-top: 1px solid rgba(0, 0, 0, .08);
+  background: rgba(255, 255, 255, .94);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+}
+
+#placeDialog .google-primary-button,
+#placeDialog .neutral-button,
+#placeDialog .delete-button {
+  min-width: 88px;
+  height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+#placeDialog .google-primary-button {
+  background: #0071e3;
+}
+
+#placeDialog .google-primary-button:hover {
+  background: #0077ed;
+  box-shadow: none;
+}
+
+#placeDialog .neutral-button {
+  background: #e8e8ed;
+  color: #1d1d1f;
+}
+
+#placeDialog .neutral-button:hover {
+  border: 0;
+  background: #dedee3;
+  color: #1d1d1f;
+}
+
+#placeDialog .delete-button {
+  background: #fff1f0;
+  color: #d70015;
+}
+
+#placeDialog .delete-button:hover {
+  background: #ffe5e3;
+}
+
+@media (max-width: 680px) {
+  #placeDialog {
+    width: calc(100vw - 12px);
+    height: calc(100vh - 12px);
+    max-height: calc(100vh - 12px);
+    border-radius: 20px;
+  }
+
+  #placeDialog .dialog-header {
+    padding: 20px 20px 17px;
+  }
+
+  #placeDialog .dialog-header h2 {
+    font-size: 25px;
+    line-height: 30px;
+  }
+
+  #placeDialog .dialog-scroll {
+    padding: 12px 12px 20px;
+  }
+
+  #placeDialog .form-section {
+    margin-top: 10px;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  #placeDialog .category-input-row {
+    gap: 8px;
+  }
+
+  #placeDialog .secondary-text-button {
+    width: 100%;
+  }
+
+  #placeDialog .icon-library {
+    grid-template-columns: repeat(auto-fill, 54px);
+    gap: 10px;
+  }
+
+  #placeDialog .saved-icon-wrap,
+  #placeDialog .saved-icon-option {
+    width: 54px;
+    height: 54px;
+  }
+
+  #placeDialog .dialog-actions {
+    padding: 12px 16px 16px;
   }
 }

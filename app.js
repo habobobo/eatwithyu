@@ -1460,6 +1460,9 @@ function openPlaceDialog(data, editingId = "") {
 
   renderIconLibrary();
   $("placeDialog").showModal();
+  window.requestAnimationFrame(() => {
+    $("placeName").focus({ preventScroll: true });
+  });
 }
 
 window.editSavedPlace = function (id) {
