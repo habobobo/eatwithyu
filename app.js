@@ -1,5 +1,6 @@
 const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
 const DEFAULT_MAP_TITLE = "eatwithyu";
+const MAP_AVATAR_ICON_ID = "__eatwithyu_map_avatar__";
 const SEARCH_CITY_NAMES = new Set(`
   北京 上海 天津 重庆 香港 澳门 深圳 广州 东莞 佛山 珠海 汕头
   石家庄 太原 呼和浩特 沈阳 大连 长春 哈尔滨 南京 苏州 无锡
@@ -109,6 +110,14 @@ function applyMapIdentity() {
   document.title = mapTitle;
   if ($("categoryDialogKicker")) $("categoryDialogKicker").textContent = mapTitle;
   if ($("placeDialogKicker")) $("placeDialogKicker").textContent = `保存到“${mapTitle}”`;
+}
+
+function mapAvatarIcon() {
+  return savedIcons.find((icon) => icon.id === MAP_AVATAR_ICON_ID) || null;
+}
+
+function categoryLibraryIcons() {
+  return savedIcons.filter((icon) => icon.id !== MAP_AVATAR_ICON_ID);
 }
 
 function applySharedData(data = {}) {
@@ -885,15 +894,28 @@ function renderMapPresets() {
   const host = $("mapPresetList");
   applyMapIdentity();
   const mapInitial = escapeHtml(mapTitle.trim().slice(0, 1).toLocaleUpperCase() || "E");
+  const avatar = mapAvatarIcon();
+  const avatarMedia = avatar?.url
+    ? `<span class="map-avatar-media"><img src="${escapeHtml(avatar.url)}" alt=""></span>`
+    : `<span class="map-avatar-media map-avatar-initial">${mapInitial}</span>`;
+  const avatarControl = canEdit
+    ? `<button id="mapAvatarButton" class="map-preset-icon map-avatar-button" type="button" aria-label="更换地图头像" title="更换地图头像">
+        ${avatarMedia}
+        <span class="map-avatar-edit-mark" aria-hidden="true">
+          <svg viewBox="0 0 20 20"><path d="M4 13.8V16h2.2l7.95-7.95-2.2-2.2L4 13.8Zm11.85-7.45a.6.6 0 0 0 0-.85l-1.35-1.35a.6.6 0 0 0-.85 0l-1.05 1.05 2.2 2.2 1.05-1.05Z"/></svg>
+        </span>
+      </button>`
+    : `<span class="map-preset-icon map-avatar-static" aria-label="${escapeHtml(mapTitle)} 地图头像">${avatarMedia}</span>`;
   host.innerHTML = `
     <div class="map-preset-button active shared-map-card">
-    <span class="map-preset-icon">${mapInitial}</span>
+    ${avatarControl}
     <span class="map-preset-copy">
       <span class="map-preset-title">${escapeHtml(mapTitle)}</span>
       <span id="sharedStatus" class="map-preset-meta" data-state="${escapeHtml(sharedStatusState)}">${escapeHtml(sharedStatusText)}</span>
     </span>
     <span class="map-preset-count">${savedPlaces.length}</span>
     </div>`;
+  $("mapAvatarButton")?.addEventListener("click", () => $("mapAvatarFile").click());
   $("activeMapSummary").textContent = `${currentPlaces().length} 个地点`;
 }
 
@@ -1591,8 +1613,9 @@ function confirmDeleteCategory(event) {
 function renderCategoryIconLibrary() {
   const host = $("categoryIconLibrary");
   host.innerHTML = "";
+  const availableIcons = categoryLibraryIcons();
 
-  if (!savedIcons.length) {
+  if (!availableIcons.length) {
     host.innerHTML = `
       <div class="icon-library-empty">
         还没有可用的 Logo。请先上传一个图片。
@@ -1601,7 +1624,7 @@ function renderCategoryIconLibrary() {
     return;
   }
 
-  savedIcons.forEach((icon) => {
+  availableIcons.forEach((icon) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = `saved-icon-option ${selectedCategoryIconId === icon.id ? "selected" : ""}`;
@@ -2037,6 +2060,23 @@ async function addIconFromFile(file) {
   persistIconLibrary();
 }
 
+async function updateMapAvatarFromFile(file) {
+  const asset = await uploadSharedAsset(file, "icon");
+  const existing = mapAvatarIcon();
+  const nextAvatar = {
+    id: MAP_AVATAR_ICON_ID,
+    name: "地图头像",
+    url: asset.url,
+    fileId: asset.fileId,
+    createdAt: existing?.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  savedIcons = [nextAvatar, ...savedIcons.filter((icon) => icon.id !== MAP_AVATAR_ICON_ID)];
+  renderMapPresets();
+  persistIconLibrary();
+}
+
 $("searchBtn").onclick = searchPoi;
 
 $("poiKeyword").addEventListener("keydown", (event) => {
@@ -2114,6 +2154,27 @@ $("categoryIconFile").onchange = async (event) => {
     setSyncStatus("图标上传失败", "error");
   } finally {
     event.target.value = "";
+  }
+};
+
+$("mapAvatarFile").onchange = async (event) => {
+  const file = event.target.files[0];
+  if (!file || !canEdit) return;
+
+  const avatarButton = $("mapAvatarButton");
+  avatarButton?.classList.add("uploading");
+  avatarButton?.setAttribute("aria-busy", "true");
+
+  try {
+    await updateMapAvatarFromFile(file);
+  } catch (error) {
+    console.error(error);
+    alert(error.message || "地图头像上传失败");
+    setSyncStatus("头像上传失败", "error");
+  } finally {
+    event.target.value = "";
+    avatarButton?.classList.remove("uploading");
+    avatarButton?.removeAttribute("aria-busy");
   }
 };
 

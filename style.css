@@ -2618,3 +2618,109 @@ body.read-only .bottom-hint {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* 可编辑的共享地图头像 */
+.map-avatar-button,
+.map-avatar-static {
+  position: relative;
+  padding: 0;
+  overflow: visible;
+}
+
+.map-avatar-button {
+  border: 0;
+  cursor: pointer;
+}
+
+.map-avatar-media {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #d2e3fc;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+
+.map-avatar-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.map-avatar-initial {
+  color: #1967d2;
+  font-size: inherit;
+  font-weight: 500;
+}
+
+.map-avatar-button:hover .map-avatar-media {
+  transform: scale(1.04);
+  box-shadow: 0 0 0 3px rgba(26,115,232,.16);
+}
+
+.map-avatar-button:focus-visible {
+  outline: none;
+}
+
+.map-avatar-button:focus-visible .map-avatar-media {
+  box-shadow: 0 0 0 3px rgba(26,115,232,.28);
+}
+
+.map-avatar-edit-mark {
+  position: absolute;
+  right: -3px;
+  bottom: -2px;
+  width: 15px;
+  height: 15px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #e8f0fe;
+  border-radius: 50%;
+  background: #1a73e8;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(60,64,67,.28);
+  pointer-events: none;
+  transition: transform .15s ease, background .15s ease;
+}
+
+.map-avatar-edit-mark svg {
+  width: 9px;
+  height: 9px;
+  fill: currentColor;
+}
+
+.map-avatar-button:hover .map-avatar-edit-mark,
+.map-avatar-button:focus-visible .map-avatar-edit-mark {
+  transform: scale(1.08);
+  background: #0b57d0;
+}
+
+.map-avatar-button.uploading {
+  cursor: wait;
+}
+
+.map-avatar-button.uploading .map-avatar-media {
+  opacity: .45;
+}
+
+.map-avatar-button.uploading::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 2px solid rgba(26,115,232,.25);
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: map-avatar-spin .7s linear infinite;
+}
+
+.map-avatar-button.uploading .map-avatar-edit-mark {
+  opacity: 0;
+}
+
+@keyframes map-avatar-spin {
+  to { transform: rotate(360deg); }
+}
