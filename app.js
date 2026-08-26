@@ -657,7 +657,7 @@ function addMarker(place) {
     const recommendation = place.recommendation || {};
     const recommendationHtml = recommendation.title
       ? `
-        <div class="info-recommendation">
+        <section class="info-recommendation" aria-label="推荐菜单">
           <div class="recommendation-list-label">推荐菜单</div>
           <div class="recommendation-list-item ${recommendation.photo ? "" : "no-photo"}">
             <div class="recommendation-copy">
@@ -668,7 +668,7 @@ function addMarker(place) {
               ? `<img class="recommendation-thumbnail" src="${recommendation.photo}" alt="${escapeHtml(recommendation.title)}">`
               : ""}
           </div>
-        </div>
+        </section>
       `
       : "";
 
@@ -681,23 +681,38 @@ function addMarker(place) {
     const visitHtml = visitText
       ? `
         <div class="visit-summary">
-          <span class="visit-summary-icon">✓</span>
-          <span>${visitText}</span>
+          <span class="visit-summary-icon" aria-hidden="true">
+            <svg viewBox="0 0 20 20"><path d="m7.8 13.6-3.4-3.4 1.4-1.4 2 2 6.4-6.4 1.4 1.4-7.8 7.8Z"/></svg>
+          </span>
+          <span class="visit-summary-text">${visitText}</span>
         </div>
       `
       : "";
 
     const content = `
-      <div class="info-card">
-        <h3>${escapeHtml(place.name)}</h3>
-        <p>${escapeHtml(place.category)}${place.address ? " · " + escapeHtml(place.address) : ""}</p>
+      <article class="info-card place-detail-card">
+        <header class="place-detail-header">
+          <h3>${escapeHtml(place.name)}</h3>
+          <div class="place-detail-location">
+            ${place.category ? `<span>${escapeHtml(place.category)}</span>` : ""}
+            ${place.category && place.address ? `<span class="place-detail-separator">·</span>` : ""}
+            ${place.address ? `<span>${escapeHtml(place.address)}</span>` : ""}
+          </div>
+        </header>
         ${visitHtml}
         ${recommendationHtml}
-        ${place.note ? `<p>${escapeHtml(place.note)}</p>` : ""}
-        ${canEdit
-          ? `<button class="google-primary-button" onclick="window.editSavedPlace('${place.id}')">编辑地点</button>`
+        ${place.note
+          ? `<section class="place-note"><div class="place-note-label">备注</div><p>${escapeHtml(place.note)}</p></section>`
           : ""}
-      </div>
+        ${canEdit
+          ? `<div class="place-detail-actions">
+              <button class="place-edit-button" type="button" onclick="window.editSavedPlace('${place.id}')">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 13.8V16h2.2l7.95-7.95-2.2-2.2L4 13.8Zm11.85-7.45a.6.6 0 0 0 0-.85l-1.35-1.35a.6.6 0 0 0-.85 0l-1.05 1.05 2.2 2.2 1.05-1.05Z"/></svg>
+                <span>编辑地点</span>
+              </button>
+            </div>`
+          : ""}
+      </article>
     `;
 
     infoWindow.setContent(content);
