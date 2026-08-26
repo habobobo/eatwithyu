@@ -630,7 +630,12 @@ function markerContent(place) {
   }
 
   const element = document.createElement("div");
-  element.className = "custom-marker";
+  const markerToneClass = place.category === "家"
+    ? "custom-marker-home"
+    : place.category === "单位"
+      ? "custom-marker-work"
+      : "";
+  element.className = `custom-marker ${markerToneClass}`;
 
   const image = document.createElement("img");
   image.src = iconUrl;
@@ -780,17 +785,12 @@ function renderCategoryFilters() {
 
   groups.forEach((data, category) => {
     const active = activeCategories.size === 0 || activeCategories.has(category);
-    const categoryToneClass = category === "家"
-      ? "category-tone-home"
-      : category === "单位"
-        ? "category-tone-work"
-        : "";
     const wrap = document.createElement("div");
     wrap.className = "category-item-wrap";
 
     const item = document.createElement("button");
     item.type = "button";
-    item.className = `category-item ${categoryToneClass} ${active ? "" : "inactive"}`;
+    item.className = `category-item ${active ? "" : "inactive"}`;
 
     const initial = escapeHtml(category.trim().slice(0, 1) || "分");
     item.innerHTML = `
