@@ -2937,3 +2937,31 @@ body.read-only .bottom-hint {
     width: min(292px, calc(100vw - 44px));
   }
 }
+
+/* “家”和“单位”作为生活锚点，以低饱和底色区别于普通分类 */
+.category-item-wrap .category-item.category-tone-home {
+  border-color: #f2d8df;
+  background: #fff1f4;
+}
+
+.category-item-wrap .category-item.category-tone-home:hover,
+.category-item-wrap .category-item.category-tone-home:focus-visible {
+  border-color: #edc7d1;
+  background: #fde7ec;
+}
+
+.category-item-wrap .category-item.category-tone-work {
+  border-color: #d5eadb;
+  background: #eef8f1;
+}
+
+.category-item-wrap .category-item.category-tone-work:hover,
+.category-item-wrap .category-item.category-tone-work:focus-visible {
+  border-color: #c4e1cc;
+  background: #e4f3e8;
+}
+
+.category-item-wrap .category-item.category-tone-home.inactive,
+.category-item-wrap .category-item.category-tone-work.inactive {
+  opacity: .48;
+}
