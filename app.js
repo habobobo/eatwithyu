@@ -139,6 +139,7 @@ function resolveAssetReferences() {
 
   savedPlaces = savedPlaces.map((place) => ({
     ...place,
+    credits: normalizedRestaurantCredits(place.credits),
     iconUrl: place.iconId
       ? iconsById.get(place.iconId)?.url || ""
       : place.iconUrl || ""
@@ -280,6 +281,7 @@ function sharedPayload() {
         // Logo 只属于分类。地点不再保存一份可独立修改的图标。
         iconId: "",
         iconUrl: "",
+        credits: normalizedRestaurantCredits(place.credits),
         recommendation: place.recommendation
           ? {
               ...place.recommendation,
@@ -607,6 +609,40 @@ function escapeHtml(value = "") {
   })[character]);
 }
 
+function normalizedRestaurantCredits(value) {
+  return window.RestaurantCredits?.normalize(value) || [];
+}
+
+function restaurantCreditsForCandidate(candidate) {
+  return window.RestaurantCredits?.forCandidate(candidate || {}) || [];
+}
+
+function restaurantCreditLogosMarkup(credits, interactive = false) {
+  const normalized = normalizedRestaurantCredits(credits);
+  if (!normalized.length) return "";
+
+  const logos = normalized.map((credit) => {
+    const system = window.RestaurantCredits?.systems?.[credit.system];
+    if (!system) return "";
+    const image = `<img src="${escapeHtml(system.icon)}" alt="">`;
+    if (!interactive) {
+      return `<span class="restaurant-credit-logo restaurant-credit-logo-${escapeHtml(credit.system)}" aria-hidden="true">${image}</span>`;
+    }
+
+    return `
+      <button
+        class="restaurant-credit-logo restaurant-credit-logo-${escapeHtml(credit.system)} is-interactive"
+        type="button"
+        aria-label="${escapeHtml(credit.label)}"
+        data-credit-tooltip="${escapeHtml(credit.label)}"
+      >${image}</button>
+    `;
+  }).join("");
+
+  if (!logos) return "";
+  return `<span class="restaurant-credit-logos ${interactive ? "is-detail" : "is-search"}" aria-label="餐厅荣誉">${logos}</span>`;
+}
+
 function formatVisitDate(dateValue) {
   if (!dateValue) return "";
 
@@ -694,10 +730,14 @@ function addMarker(place) {
       `
       : "";
 
+    const detailCredits = restaurantCreditsForCandidate(place);
     const content = `
       <article class="info-card place-detail-card">
         <header class="place-detail-header">
-          <h3>${escapeHtml(place.name)}</h3>
+          <div class="place-detail-title-row">
+            <h3>${escapeHtml(place.name)}</h3>
+            ${restaurantCreditLogosMarkup(detailCredits, true)}
+          </div>
           <div class="place-detail-location">
             ${place.category ? `<span>${escapeHtml(place.category)}</span>` : ""}
             ${place.category && place.address ? `<span class="place-detail-separator">·</span>` : ""}
@@ -1479,6 +1519,13 @@ async function searchPoi() {
         address: searchResultAddress(poi),
         location
       });
+      const resultCredits = restaurantCreditsForCandidate(existingPlace || {
+        ...poi,
+        poiId: poi.id || "",
+        address: searchResultAddress(poi),
+        location
+      });
+      const resultCreditLogos = restaurantCreditLogosMarkup(resultCredits);
       const marker = existingPlace
         ? savedSearchHighlight(existingPlace)
         : new AMap.Marker({
@@ -1511,8 +1558,9 @@ async function searchPoi() {
             <span class="result-saved-check" aria-hidden="true">✓</span>
           </span>
           <div class="item-copy">
-            <div class="item-title">
-              ${escapeHtml(poi.name)}
+            <div class="item-title restaurant-title-line">
+              <span class="restaurant-title-text">${escapeHtml(poi.name)}</span>
+              ${resultCreditLogos}
               <span class="saved-result-badge">${savedStateText}</span>
             </div>
             <div class="item-meta">${escapeHtml(searchResultAddress(poi))}</div>
@@ -1522,7 +1570,10 @@ async function searchPoi() {
       } else {
         item.innerHTML = `
         <div class="item-copy">
-          <div class="item-title">${escapeHtml(poi.name)}</div>
+          <div class="item-title restaurant-title-line">
+            <span class="restaurant-title-text">${escapeHtml(poi.name)}</span>
+            ${resultCreditLogos}
+          </div>
           <div class="item-meta">${escapeHtml(searchResultAddress(poi))}</div>
         </div>
         <span class="search-result-action">${canEdit ? "收藏到地图" : "查看位置"}</span>
@@ -1863,6 +1914,9 @@ function savePlace(event) {
   }
 
   const editingId = $("placeId").value;
+  const existingPlace = editingId
+    ? savedPlaces.find((item) => item.id === editingId)
+    : null;
   const recommendationTitle = $("recommendationTitle").value.trim();
 
   const place = {
@@ -1879,6 +1933,14 @@ function savePlace(event) {
     latitude: Number($("latitude").value),
     iconId: "",
     iconUrl: "",
+    credits: restaurantCreditsForCandidate({
+      ...(existingPlace || {}),
+      poiId: $("poiId").value,
+      name: $("placeName").value.trim(),
+      address: $("placeAddress").value.trim(),
+      longitude: Number($("longitude").value),
+      latitude: Number($("latitude").value)
+    }),
     isMarked: true,
     recommendation: recommendationTitle
       ? {
@@ -2236,5 +2298,24 @@ $("copyEditorLinkBtn").onclick = () => {
 };
 
 $("exportBackupBtn").onclick = exportData;
+
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest?.(".restaurant-credit-logo.is-interactive");
+  document.querySelectorAll(".restaurant-credit-logo.tooltip-visible").forEach((logo) => {
+    if (logo !== trigger) logo.classList.remove("tooltip-visible");
+  });
+
+  if (!trigger) return;
+  event.preventDefault();
+  event.stopPropagation();
+  trigger.classList.toggle("tooltip-visible");
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  document.querySelectorAll(".restaurant-credit-logo.tooltip-visible").forEach((logo) => {
+    logo.classList.remove("tooltip-visible");
+  });
+});
 
 bootstrapSharedMap().then(loadAmap);
