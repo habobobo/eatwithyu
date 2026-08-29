@@ -1,0 +1,5968 @@
+{
+  "lists": [
+    {
+      "year": 2024,
+      "city": "北京",
+      "cityId": 2,
+      "rankId": 122,
+      "sceneId": 189,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=2&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:42.867Z",
+      "count": 134,
+      "resolvedCount": 127,
+      "unresolvedShopIds": [
+        "1692558667",
+        "1988604904",
+        "1709626877",
+        "22789291",
+        "579615361",
+        "579743009",
+        "516092"
+      ],
+      "shops": [
+        {
+          "shopId": "120111632",
+          "shopUuid": "HaMZOo0KTta0t1ld",
+          "name": "伊豆野菜村（合景·摩方店）",
+          "region": "崇文门",
+          "category": "日式火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "111772419",
+          "shopUuid": "HaLpW5Gz2VP7YZ3M",
+          "name": "萃華楼（新世界旗舰店）",
+          "region": "崇文门",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "654201886",
+          "shopUuid": "k5TD8TqnOD1023Q1",
+          "name": "八爷涮肉（故宫总店）",
+          "region": "王府井/东单",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "21411786",
+          "shopUuid": "G3ZxMJTDLITGsxLX",
+          "name": "南门涮肉（东单店）",
+          "region": "王府井/东单",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "23512515",
+          "shopUuid": "GaWSkX23Ca2P0AIV",
+          "name": "河沿肉饼Beijing Pie（锡拉胡同店）",
+          "region": "王府井/东单",
+          "category": "京菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1900186",
+          "shopUuid": "k7rJ58mrC02ZaCu5",
+          "name": "陈记卤煮小肠",
+          "region": "前门/大栅栏",
+          "category": "老北京小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "6024228",
+          "shopUuid": "H5HYSVuQ1jvrCIgi",
+          "name": "尹三豆汁（天坛店）",
+          "region": "天坛",
+          "category": "老北京小吃",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "56992289",
+          "shopUuid": "l2cxQJKxUaaD5bl8",
+          "name": "郭记小街麻辣烫（南小街总店）",
+          "region": "朝阳门商圈",
+          "category": "麻辣烫",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "83622334",
+          "shopUuid": "k1Oc3ODpU78DQ2Bu",
+          "name": "先金达餐厅（法华寺街店）",
+          "region": "天坛",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "2363059",
+          "shopUuid": "G9B5lBAWimhGRPnh",
+          "name": "北京宜宾招待所（南翠花街店）",
+          "region": "和平门",
+          "category": "川菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "5138355",
+          "shopUuid": "k8AU1sQHf5EHqlZK",
+          "name": "SUSU·苏苏（四合院创始店）",
+          "region": "东四商圈",
+          "category": "越南菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "21836994",
+          "shopUuid": "H2m1mDT88YHwzGNk",
+          "name": "硬舌酒肉（西单店）",
+          "region": "西单",
+          "category": "烧烤烤串",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1710911924",
+          "shopUuid": "H7tZgiP2etQxhgBP",
+          "name": "肉问屋·元气一番烧肉（北京总店）",
+          "region": "西单",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "6337899",
+          "shopUuid": "EjFNyvrynZ6DIhCw",
+          "name": "沣元春饼馆（幸福巷店）",
+          "region": "天坛",
+          "category": "老北京小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "509615",
+          "shopUuid": "H8ACmIpjYCRmHzBL",
+          "name": "东四民芳餐厅（朝阳门店）",
+          "region": "朝阳门商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "124237960",
+          "shopUuid": "H6spl79dPFmVWycC",
+          "name": "姥姥家春饼店（西单大悦城店）",
+          "region": "西单",
+          "category": "老北京小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "649565703",
+          "shopUuid": "FNLFbsIwhJSpB2zV",
+          "name": "墨纪Mojí墨西哥餐厅（西单大悦城店）",
+          "region": "西单",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "510993",
+          "shopUuid": "G4lo8oTWMHzPIL7h",
+          "name": "申德勒加油站西餐厅（日坛路总店）",
+          "region": "建外大街",
+          "category": "西餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1997656",
+          "shopUuid": "G67RavRbwWqxbq1k",
+          "name": "炒豆合作社（东四总店）",
+          "region": "东四商圈",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "19639132",
+          "shopUuid": "H5YDGzifOJTV1CB2",
+          "name": "日坛涮肉（日坛公园店）",
+          "region": "朝外大街",
+          "category": "老北京火锅",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "512489",
+          "shopUuid": "k6qgMjDQExfT75tR",
+          "name": "多味居（剪子巷店）",
+          "region": "东四商圈",
+          "category": "云南菜|滇菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "92936301",
+          "shopUuid": "H4jNv570UpVH41Wv",
+          "name": "关熹寿喜锅专门店（朝阳门店）",
+          "region": "朝外大街",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "130321956",
+          "shopUuid": "H1QcmBJF1yBUxpsA",
+          "name": "六日都烤牛内脏专门店（总店）",
+          "region": "朝外大街",
+          "category": "融合烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1776633075",
+          "shopUuid": "l92ZIGUbElExekli",
+          "name": "来个烧饼（西四店）",
+          "region": "西四",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5493867",
+          "shopUuid": "l3AK2xTtKoddz7SD",
+          "name": "四季民福烤鸭店（东四十条店）",
+          "region": "东四十条",
+          "category": "烤鸭",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "22910780",
+          "shopUuid": "k75NsyovPY2ROV5x",
+          "name": "彭记铁锅肥肠（东四总店）",
+          "region": "北新桥/簋街",
+          "category": "火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "9954774",
+          "shopUuid": "G2MvdP48mWmjSMYO",
+          "name": "三色莲花印度餐厅 3colorlotus Indian restaurant（国贸店）",
+          "region": "国贸/建外",
+          "category": "印度菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "4697793",
+          "shopUuid": "l6tLI3Lh0joxFoqf",
+          "name": "老坑记·香港经典粤菜馆",
+          "region": "三里屯/工体",
+          "category": "粤菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "513426",
+          "shopUuid": "l9WDaQFRazpx1UrH",
+          "name": "准噶尔·新疆菜（龙潭店）",
+          "region": "光明楼/龙潭湖",
+          "category": "新疆菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1586415154",
+          "shopUuid": "Gak5jn0Zq0nnLRrK",
+          "name": "木槿源（尚都店）",
+          "region": "朝外大街",
+          "category": "韩式小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "8948136",
+          "shopUuid": "jSMa7OsbguHPNsTR",
+          "name": "鈴木食堂（北新桥店）",
+          "region": "北新桥/簋街",
+          "category": "日本料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "587704847",
+          "shopUuid": "H5dJKWca77yRiimD",
+          "name": "Tapas by Alba（鼓楼店）",
+          "region": "南锣鼓巷/鼓楼东大街",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "510660",
+          "shopUuid": "G1n4EbtMWqCQrx4S",
+          "name": "胡大饭馆 24h（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "96012626",
+          "shopUuid": "H11a6UzHyH3n2hsT",
+          "name": "老吉堂上海本帮菜（工体店）",
+          "region": "三里屯/工体",
+          "category": "本帮菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1371593948",
+          "shopUuid": "l4JOsEIKYRCLp7Em",
+          "name": "CAPARESH開府莱舍（国贸银泰店）",
+          "region": "国贸/建外",
+          "category": "意大利菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "97355983",
+          "shopUuid": "G2RYQwEVIdIcOQUr",
+          "name": "晓莉肉饼（成贤街店）",
+          "region": "安定门商圈",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "22439161",
+          "shopUuid": "H1D1Xypc6Ow5SDiG",
+          "name": "北平三兄弟涮肉（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "老北京火锅",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "4117270",
+          "shopUuid": "G5u1Bn20O6a3o5X0",
+          "name": "老井俄式餐厅",
+          "region": "东直门商圈",
+          "category": "俄罗斯菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "8291516",
+          "shopUuid": "l1MNeHgCskgs6qiN",
+          "name": "牛街清真满恒記（平安里西大街店）",
+          "region": "西城区",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1161348965",
+          "shopUuid": "G5uiFIv6motWB6FB",
+          "name": "街边儿牛肉串（双井店）",
+          "region": "双井",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5477290",
+          "shopUuid": "l9DkQvTfUBmF1RxX",
+          "name": "鸟屯（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "日本料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1834597292",
+          "shopUuid": "l3wqsBnEYIjyDC7l",
+          "name": "野风筝Brewpub（安定门店）",
+          "region": "安定门商圈",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "6439092",
+          "shopUuid": "H941b6LwevF1PBqv",
+          "name": "潇湘阁（三里屯SOHO店）",
+          "region": "三里屯/工体",
+          "category": "湘菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "508104",
+          "shopUuid": "ka1UmbZHGO2SdddK",
+          "name": "老西安饭庄（新街口南大街店）",
+          "region": "新街口商圈",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "66717084",
+          "shopUuid": "G8IrRqD4r5kql04A",
+          "name": "悠航SLOWBOAT（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "123924025",
+          "shopUuid": "k1cKqNxd7iicyX2H",
+          "name": "聚德楼饭庄·果木烤鸭·京鲁菜（劲松店）",
+          "region": "劲松/潘家园",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "744304778",
+          "shopUuid": "G7AlZ6ir6UGsSRM2",
+          "name": "阿咚哥厦门姜母鸭（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "福建菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1938940506",
+          "shopUuid": "GaVBmK90gxZjH3au",
+          "name": "友乐园涮肉坊（年少时光店）",
+          "region": "方庄/蒲黄榆",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "6027383",
+          "shopUuid": "H5B4OsRxDyVni3Oj",
+          "name": "Q MEX 库迈墨西哥餐吧（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "903900963",
+          "shopUuid": "l6dNXsa9rWPef2tI",
+          "name": "新京熹·北京涮肉（三里屯耀莱店）",
+          "region": "三里屯/工体",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "8878704",
+          "shopUuid": "l7F7wWC2wuZEFVwA",
+          "name": "THE TACO BAR（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "507911",
+          "shopUuid": "l4aBUFU50FCF5eyf",
+          "name": "太婆天府山珍酒楼（复兴门店）",
+          "region": "复兴门",
+          "category": "菌菇火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "8077519",
+          "shopUuid": "k6MlcIXvoq93bwyn",
+          "name": "烹然四季椰子鸡火锅（团结湖总店）",
+          "region": "朝阳公园/团结湖",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5188952",
+          "shopUuid": "G5leUTaSm4qGOalp",
+          "name": "淮扬府（安定门店）",
+          "region": "安定门商圈",
+          "category": "淮扬菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "97459298",
+          "shopUuid": "k4p80WKMvj0GDT40",
+          "name": "八旗烤肉（新街口店）",
+          "region": "新街口商圈",
+          "category": "炙子烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "512058",
+          "shopUuid": "H7DEHCc6zdC0s8Fo",
+          "name": "老熟人烤肉城（西罗园店）",
+          "region": "洋桥/木樨园",
+          "category": "韩式烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "2191453",
+          "shopUuid": "k9fWrOn5PzvPzBwd",
+          "name": "乔外婆（东铁营店）",
+          "region": "方庄/蒲黄榆",
+          "category": "干锅/香锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4276155",
+          "shopUuid": "k1oTzSbnSQT8WiLM",
+          "name": "小街猪手（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "云南火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1616050815",
+          "shopUuid": "G3u70Ui2imKbxzAf",
+          "name": "平安锅贴（水碓子店）",
+          "region": "朝阳公园/团结湖",
+          "category": "生煎/锅贴",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "69774328",
+          "shopUuid": "l59zPi4hQQNZTJ9Y",
+          "name": "泰合院（京饮华天商场店）",
+          "region": "月坛商圈",
+          "category": "泰国菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "18985052",
+          "shopUuid": "G896qtkjJluWfES5",
+          "name": "羊大福烤全羊·炭烤羊腿（方庄店）",
+          "region": "方庄/蒲黄榆",
+          "category": "烤羊腿",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "508347",
+          "shopUuid": "G7cBURJc2L7WbKNZ",
+          "name": "暹罗泰·泰国餐厅（新源西里店）",
+          "region": "亮马桥/三元桥",
+          "category": "泰国菜",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "66276178",
+          "shopUuid": "G3jqOKHidE7IeCRo",
+          "name": "清真·鸦儿李记·涮肉（和平里店）",
+          "region": "和平里/国展中心",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "132143508",
+          "shopUuid": "la2daTbiq1hC2sZs",
+          "name": "西庭·秀色Turkish Feast（新源里店）",
+          "region": "亮马桥/三元桥",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1729841947",
+          "shopUuid": "k50cGsnmpsBdpZET",
+          "name": "鳥.吉祥寺",
+          "region": "左家庄商圈",
+          "category": "日式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "58397181",
+          "shopUuid": "l4rqGdbBSRD9uXsD",
+          "name": "勇盛牛肉面（红庙店）",
+          "region": "大望路",
+          "category": "面馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "6587521",
+          "shopUuid": "E12CTpZeBrpKHepA",
+          "name": "懒人盐府人家·自贡大麻鱼（安贞店）",
+          "region": "安贞商圈",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "17792860",
+          "shopUuid": "G4t7GdAWrAXuPXs0",
+          "name": "羊大爷涮肉（亮马桥总店）",
+          "region": "亮马桥/三元桥",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "512217",
+          "shopUuid": "H7xle9A5wPmnZo6P",
+          "name": "柴氏风味斋（甘家口店）",
+          "region": "航天桥",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "569179",
+          "shopUuid": "k3vUk1jmpEWpifau",
+          "name": "汗腾格里·风味餐厅（新疆驻京办店）",
+          "region": "西直门/动物园",
+          "category": "新疆菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1425935950",
+          "shopUuid": "G3VBzhQejokmBrs2",
+          "name": "粤京熹·手工顺德菜（总店）",
+          "region": "百子湾",
+          "category": "顺德菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "102321469",
+          "shopUuid": "GaN8Ss7ad2ssEZbA",
+          "name": "粤食佳（十里河店）",
+          "region": "十里河",
+          "category": "粤菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "3178141",
+          "shopUuid": "k781X33s8eEclUhe",
+          "name": "燕郊烧鸽子（和众店）",
+          "region": "百子湾",
+          "category": "东北菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "128064916",
+          "shopUuid": "l4k1qZ8YiPzQ4S9O",
+          "name": "沁旺达餐厅（华睦店）",
+          "region": "六里桥/丽泽桥",
+          "category": "福建菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "94032730",
+          "shopUuid": "l8mZaUXS5987b0ee",
+          "name": "七星园蒸汽海鲜·老川菜（慈云寺店）",
+          "region": "慈云寺/八里庄",
+          "category": "海鲜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1100080410",
+          "shopUuid": "l3cT5htTRh1x2s6l",
+          "name": "KŌNG胶东小馆（凤凰汇店）",
+          "region": "亮马桥/三元桥",
+          "category": "鲁菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "13668932",
+          "shopUuid": "H382aIermcb9s9Wf",
+          "name": "虎兵卫鳗白烧总本店（霄云路总店）",
+          "region": "亮马桥/三元桥",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "4211342",
+          "shopUuid": "G5iNXLrbifLjG5I8",
+          "name": "金谷园饺子馆（北邮总店）",
+          "region": "牡丹园/北太平庄",
+          "category": "饺子",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "129942888",
+          "shopUuid": "G91VrQH06SeA0DWJ",
+          "name": "烤五行·烧烤烤串（石佛营店）",
+          "region": "石佛营",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "67898358",
+          "shopUuid": "l1UISZRsVtnd18zM",
+          "name": "蜗牛小馆醉乡民谣云南菜（惠新西里店）",
+          "region": "对外经贸",
+          "category": "云南菜|滇菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "511586",
+          "shopUuid": "H7OeBKsa1qnreghA",
+          "name": "新疆巴州金丝特餐厅（大钟寺店）",
+          "region": "大钟寺",
+          "category": "新疆菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1469232271",
+          "shopUuid": "k2eLf0oPWdKVscC4",
+          "name": "鹤一烤肉自助餐厅（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "自助餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "510875",
+          "shopUuid": "G8EZWa5nwjQvQCDt",
+          "name": "基辅罗斯餐厅（翠微店）",
+          "region": "公主坟/万寿路",
+          "category": "俄罗斯菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "715562322",
+          "shopUuid": "G8fiiY9gXho4aCHC",
+          "name": "廣州順德菜館（牡丹园店）",
+          "region": "牡丹园/北太平庄",
+          "category": "顺德菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5860213",
+          "shopUuid": "H7xwszcIySPeDUG7",
+          "name": "PHO爺·越南料理（牡丹园越风尚店）",
+          "region": "牡丹园/北太平庄",
+          "category": "越南菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "513604",
+          "shopUuid": "k6Myr1ttLWr9bcKx",
+          "name": "北平楼·烤鸭·北京菜（牡丹园店）",
+          "region": "牡丹园/北太平庄",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "123162674",
+          "shopUuid": "G5IwJkv46Ie2NW0P",
+          "name": "Ponte 意大利餐厅",
+          "region": "酒仙桥商圈",
+          "category": "意大利菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1344144996",
+          "shopUuid": "l8gyGhatmGtHFgfT",
+          "name": "肥福排档（北京总店）",
+          "region": "对外经贸",
+          "category": "粤菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "3324427",
+          "shopUuid": "l4tHvJ2eb8nKqsd3",
+          "name": "利桥顺酒楼（北洼路店）",
+          "region": "航天桥",
+          "category": "地方菜系",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "1072234735",
+          "shopUuid": "k4YJaCZ2oRxAGrir",
+          "name": "二胖家铁锅炖大鹅（青年路店）",
+          "region": "青年路",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "568990",
+          "shopUuid": "H21xISBWSiIqytph",
+          "name": "川军本色（双榆树双安店）",
+          "region": "人民大学",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1732660205",
+          "shopUuid": "k2StS5uvVeCKLSQC",
+          "name": "小大董·烤鸭（朝阳大悦城店）",
+          "region": "朝阳大悦城",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "8037794",
+          "shopUuid": "H9QjQHkJsHqDQGT5",
+          "name": "东北串串香铁板烧（北京欢乐谷店）",
+          "region": "北京欢乐谷",
+          "category": "日式铁板烧",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "97914469",
+          "shopUuid": "k1G4TIScBxlCSSAg",
+          "name": "常记蚝味鲜·烧烤海鲜大排档（总店）",
+          "region": "酒仙桥商圈",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "586312",
+          "shopUuid": "G315o8280uwJDkzW",
+          "name": "品味羊蝎子火锅（双榆树店）",
+          "region": "双榆树",
+          "category": "羊蝎子火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "23110880",
+          "shopUuid": "Ecs0fJWN2VMHMXQj",
+          "name": "万红路羊汤烧饼店",
+          "region": "酒仙桥商圈",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "131324374",
+          "shopUuid": "G5KEmwxakeyIsR6k",
+          "name": "真食净香居·内蒙烧麦（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "68196503",
+          "shopUuid": "k4tnGt1lsgtmoMen",
+          "name": "鲜牛记潮汕牛肉火锅（亚运村鸟巢店）",
+          "region": "亚运村商圈",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "23658039",
+          "shopUuid": "j6rTOedDbGNsLVFd",
+          "name": "Bada kitchen 和风洋食（中关村店）",
+          "region": "中关村商圈",
+          "category": "日本料理",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "122786256",
+          "shopUuid": "H5Sx3139IB4ev8Rn",
+          "name": "回味宫·清真宁夏菜·宁夏滩羊手抓（亚运村店）",
+          "region": "小营",
+          "category": "西北民间菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "516347",
+          "shopUuid": "H3dpXWK9LvUZF6tb",
+          "name": "郁陵岛炭火烤肉（恩济庄店）",
+          "region": "航天桥",
+          "category": "韩式烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "74597797",
+          "shopUuid": "H3EAVj3ZVetOXaaB",
+          "name": "重八牛府（花乡奥莱店）",
+          "region": "花乡/新发地",
+          "category": "重庆火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1951665352",
+          "shopUuid": "l29pTj2sTVULMLJF",
+          "name": "齐齐哈尔小炉匠炭火烤肉（海淀南路店）",
+          "region": "人民大学",
+          "category": "融合烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "37928249",
+          "shopUuid": "H7R85GXqIwtDA8Rd",
+          "name": "湖鱼湖·蓉亭食贝（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "8053676",
+          "shopUuid": "H9nPDTxsEWANeJ7Z",
+          "name": "绥兴盛（큰집 설렁탕）",
+          "region": "望京",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "625982373",
+          "shopUuid": "H20FrTRI6kbXbgTu",
+          "name": "芈重山老火锅（五道口店）",
+          "region": "五道口",
+          "category": "重庆火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1998391",
+          "shopUuid": "Ha28TpTe3G69sjVv",
+          "name": "三泉冷面（旺角店）",
+          "region": "望京",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1321563409",
+          "shopUuid": "Gaipr7ra8qhHt6A3",
+          "name": "爱阁艺（望京店）",
+          "region": "望京",
+          "category": "韩式料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "13864416",
+          "shopUuid": "G1ibuoenXYL4vhJw",
+          "name": "酒鬼金居酒屋のんべい（学清路店）",
+          "region": "五道口",
+          "category": "日本料理",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "111871865",
+          "shopUuid": "ihhCHRO9ZnSY6B7c",
+          "name": "牛麒荟潮汕牛肉火锅（双清路店）",
+          "region": "五道口",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "2198290",
+          "shopUuid": "l6Aa6D3RWPJtjwn0",
+          "name": "滇大池云南菜·蒸汽石锅鱼（望京诚盈店）",
+          "region": "望京",
+          "category": "云南菜|滇菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "107796596",
+          "shopUuid": "l9S00nX7IO87EPXW",
+          "name": "胜博殿日式炸猪排（西红门店）",
+          "region": "西红门",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "69227413",
+          "shopUuid": "H9W0p76akeVCerPG",
+          "name": "大江铁板豆腐（张仪村路店）",
+          "region": "卢沟桥商圈",
+          "category": "小吃",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1261508045",
+          "shopUuid": "k46fHt0LjEnr2dzR",
+          "name": "贤记啫煲广东菜馆（鲁谷路店）",
+          "region": "鲁谷商圈",
+          "category": "广州菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "2242489",
+          "shopUuid": "k1FjS8TefuA57vZZ",
+          "name": "安诚居干锅鸭头（八角店）",
+          "region": "古城/八角",
+          "category": "干锅/香锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1985719794",
+          "shopUuid": "k9QlxPTVlHZ9lxEA",
+          "name": "隆意涮肉（通州店）",
+          "region": "果园",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "2834458",
+          "shopUuid": "i65QV1KUTnPeGvWV",
+          "name": "千汇丰渝州干锅鸭头（翠屏店）",
+          "region": "果园",
+          "category": "干锅/香锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "13804577",
+          "shopUuid": "G6cCe4X0XZuRPGCF",
+          "name": "滩羊铺子南北疆特色汇（门头沟店）",
+          "region": "门头沟城区",
+          "category": "新疆菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "126945000",
+          "shopUuid": "k9994g5DU3p6kc0M",
+          "name": "一燃烧肉（土桥店）",
+          "region": "土桥",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "18229660",
+          "shopUuid": "l5jXXDwnM5PbZB93",
+          "name": "百花人家（门城水岸店）",
+          "region": "五里坨商圈",
+          "category": "农家菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "22802884",
+          "shopUuid": "k4qvY1rycZFBJaD5",
+          "name": "昌顺马记小吃店（昌盛园店）",
+          "region": "昌平镇",
+          "category": "小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1419688862",
+          "shopUuid": "k1Mu3RdQNBBjYfnt",
+          "name": "群生大院（顺义店）",
+          "region": "南彩镇商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "59046630",
+          "shopUuid": "H8umXwX543AbCcUe",
+          "name": "江中捕灶台鱼（怀柔店）",
+          "region": "怀柔城区",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "9077386",
+          "shopUuid": "kamTjaSdHRPK85hE",
+          "name": "金子小院",
+          "region": "神堂峪",
+          "category": "农家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "9018874",
+          "shopUuid": "l4La7IcLQ1oY41mk",
+          "name": "龙聚源大公鸡粘卷子·金海湖水库鱼",
+          "region": "平谷城区",
+          "category": "农家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "111575918",
+          "shopUuid": "l4s2bpZlZ4tNT3Eg",
+          "name": "永顺客栈临河餐厅",
+          "region": "司马台长城",
+          "category": "私房菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "128059880",
+          "shopUuid": "k9vkMnc54mgg6aqu",
+          "name": "邻家客栈-沿河餐厅",
+          "region": "司马台长城",
+          "category": "家常菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        }
+      ]
+    },
+    {
+      "year": 2024,
+      "city": "深圳",
+      "cityId": 7,
+      "rankId": 122,
+      "sceneId": 189,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=7&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:43.549Z",
+      "count": 77,
+      "resolvedCount": 72,
+      "unresolvedShopIds": [
+        "1348172460",
+        "1037351004",
+        "1732350709",
+        "1799377727",
+        "976116723"
+      ],
+      "shops": [
+        {
+          "shopId": "22165279",
+          "shopUuid": "G8FpiMKPshlqbGBH",
+          "name": "火桶1971（购物公园店）",
+          "region": "购物公园",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "130323308",
+          "shopUuid": "G2OGQWLr5TlqJ1we",
+          "name": "黄晓猫剁椒大鱼头（福田店）",
+          "region": "购物公园",
+          "category": "湘菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1035191097",
+          "shopUuid": "l3ogNJcPOQ8E3mKT",
+          "name": "何止料理（福田中心贰店）",
+          "region": "购物公园",
+          "category": "日式简餐/快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1761123904",
+          "shopUuid": "G60vdBzcRVw1PUyz",
+          "name": "鮨政·Omakase（福田平安金融中心店）",
+          "region": "购物公园",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "743345607",
+          "shopUuid": "k2soEBWFR1YayqOI",
+          "name": "小炳胜（卓悦中心店）",
+          "region": "购物公园",
+          "category": "粤菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "2557804",
+          "shopUuid": "H6FX3U3Cy2XOtazA",
+          "name": "大唐靓汤私房菜（红荔西路店）",
+          "region": "景田",
+          "category": "私房菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "826299715",
+          "shopUuid": "k7I9JmQn08ZdgPdu",
+          "name": "明洞串城·烧烤·延边朝鲜族烧烤串专门店（景田店）",
+          "region": "景田",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "98232541",
+          "shopUuid": "G12G7MuKSkg7PRML",
+          "name": "榕意·川味之美（深业上城店）",
+          "region": "福田中心-市民中心",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "98274564",
+          "shopUuid": "H5ImCCjQtQ2pq4zk",
+          "name": "星怡会（深业上城店）",
+          "region": "福田中心-市民中心",
+          "category": "新加坡菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1934555787",
+          "shopUuid": "l8vBHPz3PsJT67ME",
+          "name": "淘米捞·米汤脆鲩鱼火锅（福田皇岗店）",
+          "region": "皇岗/水围",
+          "category": "鱼火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "91061763",
+          "shopUuid": "H72h5pzOwhi6uKU9",
+          "name": "胡哥烤肥牛（梅林总店）",
+          "region": "梅林商圈",
+          "category": "融合烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4661819",
+          "shopUuid": "k1yMqG4tQ5L6hDPe",
+          "name": "胡须佬鸡煲四季火锅店（皇岗总店）",
+          "region": "皇岗/水围",
+          "category": "本地鸡窝火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1245266179",
+          "shopUuid": "l72MMsjFrL2MXuFB",
+          "name": "北村韩食迹·活鳗烤肉·朝鲜族料理（梅林店）",
+          "region": "梅林商圈",
+          "category": "韩式料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "19651292",
+          "shopUuid": "GaoGmcYG3uHADDiy",
+          "name": "新一味普宁肠粉王（梅林店）",
+          "region": "梅林商圈",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1890595956",
+          "shopUuid": "k8pSOpuupSNgOeXu",
+          "name": "巴二代·江湖菜·肥肠芋儿鸡（梅林店）",
+          "region": "梅林商圈",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "130928271",
+          "shopUuid": "G6izGX1xf7QR30WC",
+          "name": "卖鱼佬砂锅粥",
+          "region": "梅林商圈",
+          "category": "小吃快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "58443184",
+          "shopUuid": "l5XvSvLC2LQUuVi6",
+          "name": "冰村大叔·煲仔粥糖水店（梅林居店）",
+          "region": "梅林商圈",
+          "category": "小吃快餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "123898948",
+          "shopUuid": "l8ckwHlszWL4XLbn",
+          "name": "有章牛杂（石厦店）",
+          "region": "新洲/石厦",
+          "category": "快餐简餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "93356268",
+          "shopUuid": "H5aOZmZ4OYl3inwB",
+          "name": "I HOLIC（中航城君尚店）",
+          "region": "华强北商圈",
+          "category": "比萨",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "111515699",
+          "shopUuid": "H4fBLuq5Ir0Olsqf",
+          "name": "蘩楼（华强北总店）",
+          "region": "华强北商圈",
+          "category": "粤式茶点",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "91384804",
+          "shopUuid": "H9wTWeNGqXU2DaPs",
+          "name": "成都瓜串串（水围1368店）",
+          "region": "皇岗/水围",
+          "category": "串串香",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "68543142",
+          "shopUuid": "Hagy5l5qC2SN1nbv",
+          "name": "润园四季椰子鸡火锅（卓悦汇店）",
+          "region": "梅林商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "5295816",
+          "shopUuid": "G7DHINbIuXKf47Z8",
+          "name": "西北领头羊·清真餐厅·团建聚会",
+          "region": "梅林商圈",
+          "category": "新疆菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522982",
+          "shopUuid": "H1wk7x4zzKnlTbPz",
+          "name": "潮泰牛肉火锅 · 创于1992年（车公庙店）",
+          "region": "车公庙",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "123694505",
+          "shopUuid": "kay8VILQsPXW3DoK",
+          "name": "香火肥肠（福田店）",
+          "region": "沙头",
+          "category": "火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "610703677",
+          "shopUuid": "Fzpezze8doJG7K29",
+          "name": "犀先生·烧肉（福田店）",
+          "region": "上沙/下沙",
+          "category": "融合烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522364",
+          "shopUuid": "l6egZ9AX6p9IFp0l",
+          "name": "川香楼酒家",
+          "region": "华强北商圈",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "522526",
+          "shopUuid": "l7Cj0pcyqSmHBXUS",
+          "name": "大树脚云南菜（东园路店）",
+          "region": "iN城市广场",
+          "category": "云南菜|滇菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522056",
+          "shopUuid": "H7ESTdGxCkevHKQo",
+          "name": "豪林居·潮汕菜·海鲜·生腌",
+          "region": "八卦岭/园岭",
+          "category": "潮汕菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1176510857",
+          "shopUuid": "k4SonArlptJgfGW9",
+          "name": "湘椒（侨香店）",
+          "region": "香蜜湖商圈",
+          "category": "湘菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5721939",
+          "shopUuid": "l548Zn0fLe5Nyt69",
+          "name": "香港新发烧腊茶餐厅（书城店）",
+          "region": "宝安南路沿线",
+          "category": "茶餐厅",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "122228669",
+          "shopUuid": "GaP70x5tOVnDEZrV",
+          "name": "新起点脆肉鲩火锅（宝安南路店）",
+          "region": "笋岗商圈",
+          "category": "鱼火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "127000254",
+          "shopUuid": "G8u4RbRfPY98k0PE",
+          "name": "山禾田·日料小屋（罗湖店）",
+          "region": "国贸",
+          "category": "日本料理",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "1176074271",
+          "shopUuid": "k6JfBseUdoFQ7mZS",
+          "name": "昌记隆江猪脚饭（白石龙店）",
+          "region": "梅林关",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1920983402",
+          "shopUuid": "H7trocJY9Bm1MXUG",
+          "name": "鹏小馆·深圳特色小馆（华侨城店）",
+          "region": "华侨城",
+          "category": "特色菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1530729922",
+          "shopUuid": "G9r0O2T0XCZHB2Hv",
+          "name": "鲜潭蒸汽石锅鱼（欢乐海岸店）",
+          "region": "欢乐海岸",
+          "category": "云南菜|滇菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "8979516",
+          "shopUuid": "EeySGWnQ9wOcPdcr",
+          "name": "潮悦牛肉火锅店（西丽龙井店）",
+          "region": "西丽商圈",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1957027641",
+          "shopUuid": "k80wvugvOpacmRxO",
+          "name": "翠湖广东乡下菜（龙井店）",
+          "region": "龙井",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "110639920",
+          "shopUuid": "l5p4lSCOhOYWqSay",
+          "name": "巴汗羊肉串烧烤店",
+          "region": "布心/太白路",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "113860276",
+          "shopUuid": "l8LacTWWTyjkAXKq",
+          "name": "潮德阿水牛肉火锅（深圳总店）",
+          "region": "白石洲",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "19254721",
+          "shopUuid": "k1IdTpUsYtICQvBr",
+          "name": "周螺记螺蛳粉",
+          "region": "坂田/杨美",
+          "category": "小吃快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1603318930",
+          "shopUuid": "F4zyAYnFvjKui5N7",
+          "name": "鸟沢TORISAWĀ（万象天地店）",
+          "region": "科技园",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1399067831",
+          "shopUuid": "idXPnLGLi5aXX6GZ",
+          "name": "农畉LONFOOD（万象天地店）",
+          "region": "科技园",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "93740867",
+          "shopUuid": "k2I9yYeWFSRIEevv",
+          "name": "誉八仙粤菜（万象天地店）",
+          "region": "科技园",
+          "category": "粤菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "15864379",
+          "shopUuid": "G60mxXZofc6VEufD",
+          "name": "电白鸭粥店",
+          "region": "西丽商圈",
+          "category": "小吃快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1127790306",
+          "shopUuid": "l7IQqtckkPVjgiVB",
+          "name": "小火璽",
+          "region": "南山中心区",
+          "category": "椰子鸡火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "130814114",
+          "shopUuid": "labMcuA7t7z7xsKI",
+          "name": "79号渔船海鲜饭店（科技园店）",
+          "region": "科技园",
+          "category": "海鲜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "130617450",
+          "shopUuid": "k6XuySLF1JAbENK0",
+          "name": "汶和记粥底火锅·团建聚餐（南山总店）",
+          "region": "南头",
+          "category": "火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1820695036",
+          "shopUuid": "k9ZFGpMFbgCcEz9J",
+          "name": "姊妹豆花（南海明珠店）",
+          "region": "桃园",
+          "category": "小吃快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "16915842",
+          "shopUuid": "k3kXzkjWTMuHNfCr",
+          "name": "牛王庙（龙华花园店）",
+          "region": "龙华商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "76409903",
+          "shopUuid": "l8DPr60pwLgsGb58",
+          "name": "成都钟姐钵钵鸡（南山店）",
+          "region": "南油",
+          "category": "小吃快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "57880853",
+          "shopUuid": "G9TSD2JvdLtA7fdm",
+          "name": "江味龙虾馆·裸蓝龙虾（南山店）",
+          "region": "南山中心区",
+          "category": "小龙虾",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "98320322",
+          "shopUuid": "H2pkjl05wFFpowgN",
+          "name": "潮香四海·家传潮汕菜（南山店）",
+          "region": "南油",
+          "category": "潮汕菜",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "588688330",
+          "shopUuid": "l2QVzT4DbWOmuEz5",
+          "name": "牛百鲜牛腩煲·牛肉火锅（深圳总店）",
+          "region": "桃园",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "16643245",
+          "shopUuid": "EViHob6xqWNq9X6p",
+          "name": "雪乡情东北菜（登良旗舰店）",
+          "region": "南油",
+          "category": "东北菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "4590400",
+          "shopUuid": "H2gg5E262vyew7ou",
+          "name": "嘉华小吃（蛇口市场店）",
+          "region": "蛇口商圈",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "867511258",
+          "shopUuid": "k6jmt9v0yGLkRUFO",
+          "name": "中山壹鸽",
+          "region": "蛇口商圈",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1933268543",
+          "shopUuid": "k4yoME5D5A3N4Hhn",
+          "name": "老顾客煲仔饭（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "67004035",
+          "shopUuid": "l5Vv5I6mDYdy2AIK",
+          "name": "Tony's Kitchen（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "6024560",
+          "shopUuid": "G2IfGDUxOVvdONuc",
+          "name": "百年果林椰子鸡（宝安总店）",
+          "region": "新安商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1152046488",
+          "shopUuid": "l1djuijXnD07bZfZ",
+          "name": "渝月川菜（勤诚达店）",
+          "region": "新安商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "13707523",
+          "shopUuid": "l7vP1uebJ4g8p2g1",
+          "name": "冬阴功泰国菜（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "泰国菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1188610208",
+          "shopUuid": "l2DI4PL8UcOO1z8p",
+          "name": "湘田田·湖南土菜（新安店）",
+          "region": "新安商圈",
+          "category": "湘菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "126639350",
+          "shopUuid": "k3n0mGHM7rfF7pwJ",
+          "name": "金稻园砂锅粥（海上世界店）",
+          "region": "蛇口商圈",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "1843728328",
+          "shopUuid": "l3Q1IrNbLV8kRaGO",
+          "name": "悦满楼·西关名点·湛江名菜（航空综合大厦店）",
+          "region": "新安商圈",
+          "category": "粤式茶点",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1740840611",
+          "shopUuid": "G9b0wvrrTdXls63g",
+          "name": "谭厨中山传家菜.乳鸽.脆鲩鱼（海上世界店）",
+          "region": "蛇口商圈",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "128087017",
+          "shopUuid": "k7hEwpDFgSnwQq7p",
+          "name": "川胖子美蛙鱼头（公园路店）",
+          "region": "新安商圈",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "70133256",
+          "shopUuid": "H46rl3Rw9civ16qv",
+          "name": "天宝兄弟（前海壹方城店）",
+          "region": "宝安中心区",
+          "category": "湘菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "6178557",
+          "shopUuid": "H14rW8MrLSzbDjD5",
+          "name": "新西园饮食店",
+          "region": "西乡",
+          "category": "小吃快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "110552310",
+          "shopUuid": "l4GTYGrrHP0esRaw",
+          "name": "陈鹏鹏潮汕菜（宝安机场店T3·352号登机口店）",
+          "region": "宝安国际机场",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "998635173",
+          "shopUuid": "l3AbZECJEPq6XZXo",
+          "name": "Meat吃肉·牛排馆（万科里店）",
+          "region": "龙岗中心城区",
+          "category": "牛排",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        },
+        {
+          "shopId": "10622901",
+          "shopUuid": "k9XE6p4wIyuaZOYQ",
+          "name": "先记烧鹅王·本地粤菜（福永店）",
+          "region": "福永",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2024年新上榜"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "city": "北京",
+      "cityId": 2,
+      "rankId": 125,
+      "sceneId": 250,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=2&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:44.832Z",
+      "count": 141,
+      "resolvedCount": 139,
+      "unresolvedShopIds": [
+        "1988604904",
+        "24508697"
+      ],
+      "shops": [
+        {
+          "shopId": "120111632",
+          "shopUuid": "HaMZOo0KTta0t1ld",
+          "name": "伊豆野菜村（合景·摩方店）",
+          "region": "崇文门",
+          "category": "日式火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "654201886",
+          "shopUuid": "k5TD8TqnOD1023Q1",
+          "name": "八爷涮肉（故宫总店）",
+          "region": "王府井/东单",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "21411786",
+          "shopUuid": "G3ZxMJTDLITGsxLX",
+          "name": "南门涮肉（东单店）",
+          "region": "王府井/东单",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "83432959",
+          "shopUuid": "G73e3sxhFmgI7LWa",
+          "name": "局气烤鸭·露台餐厅（前门店）",
+          "region": "前门/大栅栏",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "23512515",
+          "shopUuid": "GaWSkX23Ca2P0AIV",
+          "name": "河沿肉饼Beijing Pie（锡拉胡同店）",
+          "region": "王府井/东单",
+          "category": "京菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1900186",
+          "shopUuid": "k7rJ58mrC02ZaCu5",
+          "name": "陈记卤煮小肠",
+          "region": "前门/大栅栏",
+          "category": "老北京小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "6024228",
+          "shopUuid": "H5HYSVuQ1jvrCIgi",
+          "name": "尹三豆汁（天坛店）",
+          "region": "天坛",
+          "category": "老北京小吃",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "1596276547",
+          "shopUuid": "H4cHVrgjbxw3rEtA",
+          "name": "方砖厂69号炸酱面（北京站店）",
+          "region": "建国门/北京站",
+          "category": "炸酱面",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "92797732",
+          "shopUuid": "H1yOvn0RtActNwDp",
+          "name": "静一餐厅·湖北菜（前门创始店）",
+          "region": "前门/大栅栏",
+          "category": "湖北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2340799",
+          "shopUuid": "l61pPIe2F5l9vqFV",
+          "name": "明园餐厅",
+          "region": "建国门/北京站",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2363059",
+          "shopUuid": "G9B5lBAWimhGRPnh",
+          "name": "北京宜宾招待所（南翠花街店）",
+          "region": "和平门",
+          "category": "川菜馆",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "21836994",
+          "shopUuid": "H2m1mDT88YHwzGNk",
+          "name": "硬舌酒肉（西单店）",
+          "region": "西单",
+          "category": "烧烤烤串",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "514279",
+          "shopUuid": "G9h38FbLsz1UTBB6",
+          "name": "刘记炙子烤肉（虎坊桥店）",
+          "region": "虎坊桥",
+          "category": "炙子烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "6337899",
+          "shopUuid": "EjFNyvrynZ6DIhCw",
+          "name": "沣元春饼馆（幸福巷店）",
+          "region": "天坛",
+          "category": "老北京小吃",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "509615",
+          "shopUuid": "H8ACmIpjYCRmHzBL",
+          "name": "东四民芳餐厅（朝阳门店）",
+          "region": "朝阳门商圈",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "54994613",
+          "shopUuid": "k6jNibmXqxGLCCiD",
+          "name": "京东程记肉饼店（幸福北里小区店）",
+          "region": "光明楼/龙潭湖",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "16986009",
+          "shopUuid": "k84jMsDayUX6ej1u",
+          "name": "实成吉烧饼铺",
+          "region": "东四商圈",
+          "category": "老北京小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "510993",
+          "shopUuid": "G4lo8oTWMHzPIL7h",
+          "name": "申德勒加油站西餐厅（日坛路总店）",
+          "region": "建外大街",
+          "category": "西餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1997656",
+          "shopUuid": "G67RavRbwWqxbq1k",
+          "name": "炒豆合作社（东四总店）",
+          "region": "东四商圈",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "19639132",
+          "shopUuid": "H5YDGzifOJTV1CB2",
+          "name": "日坛涮肉（日坛公园店）",
+          "region": "朝外大街",
+          "category": "老北京火锅",
+          "inRankYear": 9,
+          "inRankYearText": "连续9年上榜"
+        },
+        {
+          "shopId": "512489",
+          "shopUuid": "k6qgMjDQExfT75tR",
+          "name": "多味居（剪子巷店）",
+          "region": "东四商圈",
+          "category": "云南菜|滇菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "507896",
+          "shopUuid": "H9127aL3E6ENfMmT",
+          "name": "煲煲好（朝阳门店）",
+          "region": "工人体育场",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4045882",
+          "shopUuid": "k8WjUTkJ23fj3D82",
+          "name": "恭敬李麻辣香锅（陶然亭店）",
+          "region": "菜市口/陶然亭",
+          "category": "干锅/香锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "507977594",
+          "shopUuid": "l7EkDjba7TjWb54z",
+          "name": "清真·鸦儿李记·涮肉（天坛龙潭湖店）",
+          "region": "天坛",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "92936301",
+          "shopUuid": "H4jNv570UpVH41Wv",
+          "name": "关熹寿喜锅专门店（朝阳门店）",
+          "region": "朝外大街",
+          "category": "日本料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "130321956",
+          "shopUuid": "H1QcmBJF1yBUxpsA",
+          "name": "六日都烤牛内脏专门店（总店）",
+          "region": "朝外大街",
+          "category": "融合烤肉",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "5493867",
+          "shopUuid": "l3AK2xTtKoddz7SD",
+          "name": "四季民福烤鸭店（东四十条店）",
+          "region": "东四十条",
+          "category": "烤鸭",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "6232012",
+          "shopUuid": "G5kG50SuUVbfRGg2",
+          "name": "真地道京味府·鲜橙烤鸭·北京菜（朝外大街东大桥店）",
+          "region": "朝外大街",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "507576",
+          "shopUuid": "G6BpdpfZxE8rftOK",
+          "name": "满福楼·清真涮肉·老字号（侨福店）",
+          "region": "东大桥",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4697793",
+          "shopUuid": "l6tLI3Lh0joxFoqf",
+          "name": "老坑记·香港经典粤菜馆",
+          "region": "三里屯/工体",
+          "category": "粤菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "513426",
+          "shopUuid": "l9WDaQFRazpx1UrH",
+          "name": "准噶尔·新疆菜（龙潭店）",
+          "region": "光明楼/龙潭湖",
+          "category": "新疆菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "587704847",
+          "shopUuid": "H5dJKWca77yRiimD",
+          "name": "Tapas by Alba（鼓楼店）",
+          "region": "南锣鼓巷/鼓楼东大街",
+          "category": "西餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "507755",
+          "shopUuid": "H4oNDo2mNxMjjEFa",
+          "name": "花家怡园（四合院总店）",
+          "region": "北新桥/簋街",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "510660",
+          "shopUuid": "G1n4EbtMWqCQrx4S",
+          "name": "胡大饭馆 24h（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "川菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "96012626",
+          "shopUuid": "H11a6UzHyH3n2hsT",
+          "name": "老吉堂上海本帮菜（工体店）",
+          "region": "三里屯/工体",
+          "category": "本帮菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "509358",
+          "shopUuid": "l2gp8LTnCv5XDk9v",
+          "name": "馅老满（安定门店）",
+          "region": "安定门商圈",
+          "category": "饺子",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "514983",
+          "shopUuid": "k5IApzyUQShq3KYZ",
+          "name": "新新湘菜馆（新中街二条店）",
+          "region": "东直门商圈",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1371593948",
+          "shopUuid": "l4JOsEIKYRCLp7Em",
+          "name": "CAPARESH開府莱舍（国贸银泰店）",
+          "region": "国贸/建外",
+          "category": "意大利菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1572144789",
+          "shopUuid": "H4KoaCtUKRxhw2nl",
+          "name": "羊城美食·粤菜鸡煲（工体店）",
+          "region": "三里屯/工体",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "24611776",
+          "shopUuid": "Haq11l4wwmJjGZTh",
+          "name": "北三条胡同打卤面馆（雍和宫店）",
+          "region": "北新桥/簋街",
+          "category": "炸酱面",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "3008536",
+          "shopUuid": "k6Zc1z1rvnZQc8Ae",
+          "name": "蜗牛的家埃蒙小镇旅行主题精酿云南菜餐厅（方家胡同店）",
+          "region": "雍和宫/地坛",
+          "category": "云南菜|滇菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "97355983",
+          "shopUuid": "G2RYQwEVIdIcOQUr",
+          "name": "晓莉肉饼（成贤街店）",
+          "region": "安定门商圈",
+          "category": "快餐简餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "21998562",
+          "shopUuid": "Ha8aZQhqlyFaXRR4",
+          "name": "格鲁·秀色Georgia’s Feast",
+          "region": "北新桥/簋街",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "22439161",
+          "shopUuid": "H1D1Xypc6Ow5SDiG",
+          "name": "北平三兄弟涮肉（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "老北京火锅",
+          "inRankYear": 9,
+          "inRankYearText": "连续9年上榜"
+        },
+        {
+          "shopId": "4117270",
+          "shopUuid": "G5u1Bn20O6a3o5X0",
+          "name": "老井俄式餐厅",
+          "region": "东直门商圈",
+          "category": "俄罗斯菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "543993154",
+          "shopUuid": "k55dUMvfGLXbAY01",
+          "name": "旺顺阁1999（财富购物中心店）",
+          "region": "国贸/建外",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "8291516",
+          "shopUuid": "l1MNeHgCskgs6qiN",
+          "name": "牛街清真满恒記（平安里西大街店）",
+          "region": "西城区",
+          "category": "老北京火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "69318553",
+          "shopUuid": "H3oUnWW4SE4MWRHu",
+          "name": "重庆老街小面（安定门店）",
+          "region": "安定门商圈",
+          "category": "面馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1161348965",
+          "shopUuid": "G5uiFIv6motWB6FB",
+          "name": "街边儿牛肉串（双井店）",
+          "region": "双井",
+          "category": "烤串",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "5477290",
+          "shopUuid": "l9DkQvTfUBmF1RxX",
+          "name": "鸟屯（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "日本料理",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "4542860",
+          "shopUuid": "H5Slf8q3JTPu5hvO",
+          "name": "安妮意大利餐厅（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "意大利菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "112289056",
+          "shopUuid": "l6Nwrvxtp4J6lUNO",
+          "name": "粉灯牛腩牛杂煲·鸡煲（双井店）",
+          "region": "双井",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "14151950",
+          "shopUuid": "G6ZeWBpqJ1IAzRLL",
+          "name": "葫芦娃牛板筋火锅（鼓楼店）",
+          "region": "后海/什刹海",
+          "category": "火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "66717084",
+          "shopUuid": "G8IrRqD4r5kql04A",
+          "name": "悠航SLOWBOAT（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1934093473",
+          "shopUuid": "H6F9e5R3yyRmN74I",
+          "name": "湘寻辣访（三里屯SOHO店）",
+          "region": "三里屯/工体",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "744304778",
+          "shopUuid": "G7AlZ6ir6UGsSRM2",
+          "name": "阿咚哥厦门姜母鸭（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "福建菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1938940506",
+          "shopUuid": "GaVBmK90gxZjH3au",
+          "name": "友乐园涮肉坊（年少时光店）",
+          "region": "方庄/蒲黄榆",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "750961339",
+          "shopUuid": "H3hyl2jpJzgKFvvM",
+          "name": "春台Spring Patio（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "特色菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "8878704",
+          "shopUuid": "l7F7wWC2wuZEFVwA",
+          "name": "THE TACO BAR（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "3224647",
+          "shopUuid": "G5vJAKAGc4qkrVq4",
+          "name": "张妈妈特色川味馆（鼓楼店）",
+          "region": "后海/什刹海",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "5860979",
+          "shopUuid": "G364nqNTXCuyjWEv",
+          "name": "鼎香润（什刹海德胜门店）",
+          "region": "后海/什刹海",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "507911",
+          "shopUuid": "l4aBUFU50FCF5eyf",
+          "name": "太婆天府山珍酒楼（复兴门店）",
+          "region": "复兴门",
+          "category": "菌菇火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "920185541",
+          "shopUuid": "H1gy4vdb1JbW0xRR",
+          "name": "闽中闽·福建菜（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "福建菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2477131",
+          "shopUuid": "G4O9EF0DEUC8VujX",
+          "name": "永和鲜浆（阜成门店）",
+          "region": "阜成门",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "5188952",
+          "shopUuid": "G5leUTaSm4qGOalp",
+          "name": "淮扬府（安定门店）",
+          "region": "安定门商圈",
+          "category": "淮扬菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "97459298",
+          "shopUuid": "k4p80WKMvj0GDT40",
+          "name": "八旗烤肉（新街口店）",
+          "region": "新街口商圈",
+          "category": "炙子烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "512058",
+          "shopUuid": "H7DEHCc6zdC0s8Fo",
+          "name": "老熟人烤肉城（西罗园店）",
+          "region": "洋桥/木樨园",
+          "category": "韩式烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4276155",
+          "shopUuid": "k1oTzSbnSQT8WiLM",
+          "name": "小街猪手（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "云南火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1616050815",
+          "shopUuid": "G3u70Ui2imKbxzAf",
+          "name": "平安锅贴（水碓子店）",
+          "region": "朝阳公园/团结湖",
+          "category": "生煎/锅贴",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "69774328",
+          "shopUuid": "l59zPi4hQQNZTJ9Y",
+          "name": "泰合院（京饮华天商场店）",
+          "region": "月坛商圈",
+          "category": "泰国菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "508347",
+          "shopUuid": "G7cBURJc2L7WbKNZ",
+          "name": "暹罗泰·泰国餐厅（新源西里店）",
+          "region": "亮马桥/三元桥",
+          "category": "泰国菜",
+          "inRankYear": 9,
+          "inRankYearText": "连续9年上榜"
+        },
+        {
+          "shopId": "511945",
+          "shopUuid": "k5If6x936eirh4i2",
+          "name": "湘肠香火锅店（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "19572795",
+          "shopUuid": "k1cWKtyjHd7cmVGN",
+          "name": "何贤记（瑞辰国际中心店）",
+          "region": "朝阳公园/团结湖",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "97674093",
+          "shopUuid": "H4hwl1kaOXgiNUmm",
+          "name": "一坐一忘云南菜（北京skp店）",
+          "region": "大望路",
+          "category": "云南菜|滇菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "132143508",
+          "shopUuid": "la2daTbiq1hC2sZs",
+          "name": "西庭·秀色Turkish Feast（新源里店）",
+          "region": "亮马桥/三元桥",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1729841947",
+          "shopUuid": "k50cGsnmpsBdpZET",
+          "name": "鳥.吉祥寺",
+          "region": "左家庄商圈",
+          "category": "日式料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4543652",
+          "shopUuid": "l8Ns3XmzVJ00ur7a",
+          "name": "106餐厅北京菜.烤鸭（十里河店）",
+          "region": "十里河",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "58397181",
+          "shopUuid": "l4rqGdbBSRD9uXsD",
+          "name": "勇盛牛肉面（红庙店）",
+          "region": "大望路",
+          "category": "面馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "2937730",
+          "shopUuid": "G6rvFfec7obElO6X",
+          "name": "大得涮肉（三元桥店）",
+          "region": "亮马桥/三元桥",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1581618869",
+          "shopUuid": "k3Fg1yDRj9Mo3gKl",
+          "name": "磁器铜锅涮肉（西直门·动物园店）",
+          "region": "西直门/动物园",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "94776821",
+          "shopUuid": "ka1uSBZY548vGiHy",
+          "name": "匠牛饺子·酱牛肉·饺子馆（顺源街店）",
+          "region": "亮马桥/三元桥",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "6587521",
+          "shopUuid": "E12CTpZeBrpKHepA",
+          "name": "懒人盐府人家·自贡大麻鱼（安贞店）",
+          "region": "安贞商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "17792860",
+          "shopUuid": "G4t7GdAWrAXuPXs0",
+          "name": "羊大爷涮肉（亮马桥总店）",
+          "region": "亮马桥/三元桥",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "21320170",
+          "shopUuid": "G904AVjiMtorQqwe",
+          "name": "德和斋（甜水园店）",
+          "region": "甜水园",
+          "category": "面馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "13831613",
+          "shopUuid": "k3ULDpF7zfVxy8Mw",
+          "name": "铁TETSU·虎铁（龙宝大厦店）",
+          "region": "亮马桥/三元桥",
+          "category": "日式面条",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "98907307",
+          "shopUuid": "H8Vm61ZhdTmwL9BG",
+          "name": "鑫勺居招牌酱骨（交大店）",
+          "region": "北下关商圈",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "102321469",
+          "shopUuid": "GaN8Ss7ad2ssEZbA",
+          "name": "粤食佳（十里河店）",
+          "region": "十里河",
+          "category": "粤菜馆",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "8944402",
+          "shopUuid": "F74ZtaUhxXHQ5M5D",
+          "name": "小六酱肉（新街口外大街3号院店）",
+          "region": "牡丹园/北太平庄",
+          "category": "熟食熏酱",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "128064916",
+          "shopUuid": "l4k1qZ8YiPzQ4S9O",
+          "name": "沁旺达餐厅（华睦店）",
+          "region": "六里桥/丽泽桥",
+          "category": "福建菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "94032730",
+          "shopUuid": "l8mZaUXS5987b0ee",
+          "name": "七星园蒸汽海鲜·老川菜（慈云寺店）",
+          "region": "慈云寺/八里庄",
+          "category": "海鲜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "799037535",
+          "shopUuid": "k6j1A6Do7A5OE9YF",
+          "name": "小大董·烤鸭（丽泽店）",
+          "region": "丽泽桥/丰管路",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "13668932",
+          "shopUuid": "H382aIermcb9s9Wf",
+          "name": "虎兵卫鳗白烧总本店（霄云路总店）",
+          "region": "亮马桥/三元桥",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "509521",
+          "shopUuid": "l7kMBed9oZwM2Sjv",
+          "name": "玉华台饭庄（裕中西里小区店）",
+          "region": "牡丹园/北太平庄",
+          "category": "淮扬菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4211342",
+          "shopUuid": "G5iNXLrbifLjG5I8",
+          "name": "金谷园饺子馆（北邮总店）",
+          "region": "牡丹园/北太平庄",
+          "category": "饺子",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "17853103",
+          "shopUuid": "l9KCTB8YSwGGMd4d",
+          "name": "卷卷春饼小馆•东北小炒（四道口店）",
+          "region": "北下关商圈",
+          "category": "老北京小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4125116",
+          "shopUuid": "k387gYgPr3hlZDDc",
+          "name": "姥姥家春饼店（八里庄店）",
+          "region": "十里堡",
+          "category": "老北京小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "10017644",
+          "shopUuid": "l1MP4iajFkKfHlo5",
+          "name": "南街北巷家里饭",
+          "region": "十里堡",
+          "category": "私房菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "129942888",
+          "shopUuid": "G91VrQH06SeA0DWJ",
+          "name": "烤五行·烧烤烤串（石佛营店）",
+          "region": "石佛营",
+          "category": "烤串",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "511586",
+          "shopUuid": "H7OeBKsa1qnreghA",
+          "name": "新疆巴州金丝特餐厅（大钟寺店）",
+          "region": "大钟寺",
+          "category": "新疆菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "513604",
+          "shopUuid": "k6Myr1ttLWr9bcKx",
+          "name": "北平楼·烤鸭·北京菜（牡丹园店）",
+          "region": "牡丹园/北太平庄",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4013473",
+          "shopUuid": "G6TvkyvB5EE9lj4b",
+          "name": "小牛海记潮汕牛肉店（牡丹园店）",
+          "region": "牡丹园/北太平庄",
+          "category": "牛羊肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "123162674",
+          "shopUuid": "G5IwJkv46Ie2NW0P",
+          "name": "Ponte 意大利餐厅",
+          "region": "酒仙桥商圈",
+          "category": "意大利菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "3324427",
+          "shopUuid": "l4tHvJ2eb8nKqsd3",
+          "name": "利桥顺酒楼（北洼路店）",
+          "region": "航天桥",
+          "category": "地方菜系",
+          "inRankYear": 9,
+          "inRankYearText": "连续9年上榜"
+        },
+        {
+          "shopId": "1072234735",
+          "shopUuid": "k4YJaCZ2oRxAGrir",
+          "name": "二胖家铁锅炖大鹅（青年路店）",
+          "region": "青年路",
+          "category": "东北菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "568990",
+          "shopUuid": "H21xISBWSiIqytph",
+          "name": "川军本色（双榆树双安店）",
+          "region": "人民大学",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "67186437",
+          "shopUuid": "l387qiG8b0DK3NAJ",
+          "name": "甲丁堤岸打边炉（将台店）",
+          "region": "酒仙桥商圈",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "97914469",
+          "shopUuid": "k1G4TIScBxlCSSAg",
+          "name": "常记蚝味鲜·烧烤海鲜大排档（总店）",
+          "region": "酒仙桥商圈",
+          "category": "烤串",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "586312",
+          "shopUuid": "G315o8280uwJDkzW",
+          "name": "品味羊蝎子火锅（双榆树店）",
+          "region": "双榆树",
+          "category": "羊蝎子火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "23110880",
+          "shopUuid": "Ecs0fJWN2VMHMXQj",
+          "name": "万红路羊汤烧饼店",
+          "region": "酒仙桥商圈",
+          "category": "小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "131324374",
+          "shopUuid": "G5KEmwxakeyIsR6k",
+          "name": "真食净香居·内蒙烧麦（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1879621",
+          "shopUuid": "G58n1esUzNPbR6N5",
+          "name": "钱塘花园·宁波菜",
+          "region": "双榆树",
+          "category": "浙菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "516347",
+          "shopUuid": "H3dpXWK9LvUZF6tb",
+          "name": "郁陵岛炭火烤肉（恩济庄店）",
+          "region": "航天桥",
+          "category": "韩式烤肉",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1798428731",
+          "shopUuid": "l3Lf2lwGV9uJP6AY",
+          "name": "山之川铁板烧自助（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "自助餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "74597797",
+          "shopUuid": "H3EAVj3ZVetOXaaB",
+          "name": "重八牛府（花乡奥莱店）",
+          "region": "花乡/新发地",
+          "category": "重庆火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1646888507",
+          "shopUuid": "EK50DpAVNHEU2U8o",
+          "name": "京华楼饭庄（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1980615340",
+          "shopUuid": "k5f8Uwv1KvB6DJQH",
+          "name": "KŌNG胶东小馆（华熙店）",
+          "region": "五棵松",
+          "category": "鲁菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "122850801",
+          "shopUuid": "G3pvJZDiaSWXxLoq",
+          "name": "龙人居·水煮鱼（五道口店）",
+          "region": "五道口",
+          "category": "酸菜鱼/水煮鱼",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2401177",
+          "shopUuid": "H7l10Y9yZxxv8Ill",
+          "name": "羲和雅苑·北京烤鸭（中关村店）",
+          "region": "中关村商圈",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "111871865",
+          "shopUuid": "ihhCHRO9ZnSY6B7c",
+          "name": "牛麒荟潮汕牛肉火锅（双清路店）",
+          "region": "五道口",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2198290",
+          "shopUuid": "l6Aa6D3RWPJtjwn0",
+          "name": "滇大池云南菜·蒸汽石锅鱼（望京诚盈店）",
+          "region": "望京",
+          "category": "云南菜|滇菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1703571414",
+          "shopUuid": "k3QhLtW0VBdlPkix",
+          "name": "黑叔美式餐吧·汉堡·牛排·啤酒（北京西红门店）",
+          "region": "西红门",
+          "category": "西式快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1261508045",
+          "shopUuid": "k46fHt0LjEnr2dzR",
+          "name": "贤记啫煲广东菜馆（鲁谷路店）",
+          "region": "鲁谷商圈",
+          "category": "广州菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5652570",
+          "shopUuid": "k9NjvhiH43LtGmgK",
+          "name": "懒人业余餐厅（崔各庄店）",
+          "region": "马泉营",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2242489",
+          "shopUuid": "k1FjS8TefuA57vZZ",
+          "name": "安诚居干锅鸭头（八角店）",
+          "region": "古城/八角",
+          "category": "干锅/香锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "619434325",
+          "shopUuid": "H2ULOl9xcnlIkpjD",
+          "name": "丰惠轩手擀面",
+          "region": "香山/植物园",
+          "category": "面馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1985719794",
+          "shopUuid": "k9QlxPTVlHZ9lxEA",
+          "name": "隆意涮肉（通州店）",
+          "region": "果园",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2834458",
+          "shopUuid": "i65QV1KUTnPeGvWV",
+          "name": "千汇丰渝州干锅鸭头（翠屏店）",
+          "region": "果园",
+          "category": "干锅/香锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "515325",
+          "shopUuid": "k8jxxeyRB7amGfC9",
+          "name": "万荣烤鸭店·北京菜（回龙观店）",
+          "region": "回龙观商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "101935831",
+          "shopUuid": "k7RojXV9Rmv735Vk",
+          "name": "同香荟",
+          "region": "国展",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "13804577",
+          "shopUuid": "G6cCe4X0XZuRPGCF",
+          "name": "滩羊铺子南北疆特色汇（门头沟店）",
+          "region": "门头沟城区",
+          "category": "新疆菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "5101897",
+          "shopUuid": "k670muA3zcQghPDU",
+          "name": "鸽子窝（梨园店）",
+          "region": "梨园商圈",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "513269",
+          "shopUuid": "G7ux3qRRgPUDIoZz",
+          "name": "福寿斋·老北京铜锅涮肉·烤鸭（顺义总店）",
+          "region": "后沙峪",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "6831952",
+          "shopUuid": "Fg25mGOHePmxYVJK",
+          "name": "北平人家•北京烤鸭（小汤山店）",
+          "region": "小汤山镇商圈",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "22704833",
+          "shopUuid": "FUldRuNipZkQiNjG",
+          "name": "老杨家清真菜（阳坊店）",
+          "region": "昌平区",
+          "category": "特色菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "22802884",
+          "shopUuid": "k4qvY1rycZFBJaD5",
+          "name": "昌顺马记小吃店（昌盛园店）",
+          "region": "昌平镇",
+          "category": "小吃",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "130919182",
+          "shopUuid": "k79CREz2rYvuaniI",
+          "name": "群生大院（怀柔店）",
+          "region": "红螺寺",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "107179765",
+          "shopUuid": "l9iwv2utnHwjPyrd",
+          "name": "妫水人家（石光长城店）",
+          "region": "延庆区",
+          "category": "农家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1463133428",
+          "shopUuid": "H5D1vdFXhupvRd23",
+          "name": "金麦渔村·铁锅灶台鱼·活鱼现杀",
+          "region": "密云水库",
+          "category": "农家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "9636040",
+          "shopUuid": "H2SIOxXqftySfJx9",
+          "name": "姥家大锅台水库渔家",
+          "region": "密云水库",
+          "category": "农家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        }
+      ]
+    },
+    {
+      "year": 2025,
+      "city": "深圳",
+      "cityId": 7,
+      "rankId": 125,
+      "sceneId": 250,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=7&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:45.781Z",
+      "count": 84,
+      "resolvedCount": 83,
+      "unresolvedShopIds": [
+        "1348172460"
+      ],
+      "shops": [
+        {
+          "shopId": "130323308",
+          "shopUuid": "G2OGQWLr5TlqJ1we",
+          "name": "黄晓猫剁椒大鱼头（福田店）",
+          "region": "购物公园",
+          "category": "湘菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "852772832",
+          "shopUuid": "G54STDcBBgJUclcB",
+          "name": "Hot Charcoal柴可·炭火料理",
+          "region": "福田中心-岗厦",
+          "category": "牛排",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "743345607",
+          "shopUuid": "k2soEBWFR1YayqOI",
+          "name": "小炳胜（卓悦中心店）",
+          "region": "购物公园",
+          "category": "粤菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "2047114",
+          "shopUuid": "G6lKNSnNf4ePasgl",
+          "name": "金稻园砂锅粥（福中店）",
+          "region": "福田中心-市民中心",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "894088376",
+          "shopUuid": "H8xfg0RHSWU8REYu",
+          "name": "汤膳·脆皮爽鸡煲（景诚园综合楼店）",
+          "region": "景田",
+          "category": "本地鸡窝火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1934555787",
+          "shopUuid": "l8vBHPz3PsJT67ME",
+          "name": "淘米捞·米汤脆鲩鱼火锅（福田皇岗店）",
+          "region": "皇岗/水围",
+          "category": "鱼火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "23445824",
+          "shopUuid": "iK2JbZUzkbfkcGO5",
+          "name": "新沙烧烤·炭烤鲜牛肉（新沙路店）",
+          "region": "新洲/石厦",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4661819",
+          "shopUuid": "k1yMqG4tQ5L6hDPe",
+          "name": "胡须佬鸡煲四季火锅店（皇岗总店）",
+          "region": "皇岗/水围",
+          "category": "本地鸡窝火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "125278836",
+          "shopUuid": "iMbUS6QyU7Fe26K8",
+          "name": "丫丫水饺（华茂苑店）",
+          "region": "梅林商圈",
+          "category": "饺子",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1245266179",
+          "shopUuid": "l72MMsjFrL2MXuFB",
+          "name": "北村韩食迹·活鳗烤肉·朝鲜族料理（梅林店）",
+          "region": "梅林商圈",
+          "category": "韩式料理",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1890595956",
+          "shopUuid": "k8pSOpuupSNgOeXu",
+          "name": "巴二代·江湖菜·肥肠芋儿鸡（梅林店）",
+          "region": "梅林商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1127304199",
+          "shopUuid": "k9TIqrrXi7mCbazZ",
+          "name": "大良海记粥底火锅（福田店）",
+          "region": "新洲/石厦",
+          "category": "火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "591237054",
+          "shopUuid": "k5WTkESgjedJdC0n",
+          "name": "雪乡之味咱家东北菜（新洲店）",
+          "region": "新洲/石厦",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "127048139",
+          "shopUuid": "l4kPWxImTv3Rmfk1",
+          "name": "合气屋·糖果居酒屋（上海宾馆店）",
+          "region": "华强北商圈",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "58443184",
+          "shopUuid": "l5XvSvLC2LQUuVi6",
+          "name": "冰村大叔·煲仔粥糖水店（梅林居店）",
+          "region": "梅林商圈",
+          "category": "小吃快餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "123898948",
+          "shopUuid": "l8ckwHlszWL4XLbn",
+          "name": "有章牛杂（石厦店）",
+          "region": "新洲/石厦",
+          "category": "快餐简餐",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "6463317",
+          "shopUuid": "k8Q5I8Og1HqCQxlU",
+          "name": "爱家味·烤羊排（水围店）",
+          "region": "皇岗/水围",
+          "category": "烤羊腿",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "521889",
+          "shopUuid": "HakXpSw1QvLJlP8G",
+          "name": "老大昌酒楼有限公司",
+          "region": "华强南",
+          "category": "江浙菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "91622150",
+          "shopUuid": "G2BCJderUjTbJtG3",
+          "name": "呐咪傣园·云南菜（石厦店）",
+          "region": "新洲/石厦",
+          "category": "云南菜|滇菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "93356268",
+          "shopUuid": "H5aOZmZ4OYl3inwB",
+          "name": "I HOLIC（中航城君尚店）",
+          "region": "华强北商圈",
+          "category": "比萨",
+          "inRankYear": 7,
+          "inRankYearText": "连续7年上榜"
+        },
+        {
+          "shopId": "111515699",
+          "shopUuid": "H4fBLuq5Ir0Olsqf",
+          "name": "蘩楼（华强北总店）",
+          "region": "华强北商圈",
+          "category": "粤式茶点",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "129787497",
+          "shopUuid": "H46kw5M3Q9kHwVNL",
+          "name": "洪哥白塔牛肉粿条汤（梅林中康路第十分店）",
+          "region": "梅林商圈",
+          "category": "美食",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "125360089",
+          "shopUuid": "kaD1K5T6kcuPqx5b",
+          "name": "恋上乐山小吃（水围恒春园店）",
+          "region": "皇岗/水围",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "68543142",
+          "shopUuid": "Hagy5l5qC2SN1nbv",
+          "name": "润园四季椰子鸡火锅（卓悦汇店）",
+          "region": "梅林商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5295816",
+          "shopUuid": "G7DHINbIuXKf47Z8",
+          "name": "西北领头羊·清真餐厅·团建聚会",
+          "region": "梅林商圈",
+          "category": "新疆菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "593798663",
+          "shopUuid": "G3Q16RLDy4hDcI8D",
+          "name": "森顺碳烤肉·活烤鳗鱼（华强北总店）",
+          "region": "华强北商圈",
+          "category": "韩式烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "93976586",
+          "shopUuid": "la1bM4gGClIzaDo2",
+          "name": "顺德公·广东猪肚鸡（车公庙总店）",
+          "region": "车公庙",
+          "category": "猪肚鸡火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "18716575",
+          "shopUuid": "G5cdavtxnlQ45KOx",
+          "name": "Bollywood宝莱坞·印度料理（华强北店）",
+          "region": "华强北商圈",
+          "category": "印度菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "120010554",
+          "shopUuid": "H6MhfZDsbyDJiojw",
+          "name": "酒京烤宴·融合烤肉（下沙店）",
+          "region": "上沙/下沙",
+          "category": "融合烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "610703677",
+          "shopUuid": "Fzpezze8doJG7K29",
+          "name": "犀先生·烧肉（福田店）",
+          "region": "上沙/下沙",
+          "category": "融合烤肉",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "522364",
+          "shopUuid": "l6egZ9AX6p9IFp0l",
+          "name": "川香楼酒家",
+          "region": "华强北商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522605",
+          "shopUuid": "FtP5iaaIiKHUEJRI",
+          "name": "荔园小馆（园岭新村二期店）",
+          "region": "八卦岭/园岭",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "522056",
+          "shopUuid": "H7ESTdGxCkevHKQo",
+          "name": "豪林居·潮汕菜·海鲜·生腌",
+          "region": "八卦岭/园岭",
+          "category": "潮汕菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "3133756",
+          "shopUuid": "k13wxwY4wam7KoJ0",
+          "name": "谭厨中山传家菜.乳鸽.脆鲩鱼（红岭店）",
+          "region": "KKMAll/京基100大厦",
+          "category": "粤菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1505156496",
+          "shopUuid": "Fxe3d4rTgioQFrX7",
+          "name": "榕边干蒸鲜排骨·啫啫煲·顺德地标美食（泥岗店）",
+          "region": "银湖/泥岗",
+          "category": "顺德菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "122228669",
+          "shopUuid": "GaP70x5tOVnDEZrV",
+          "name": "新起点脆肉鲩火锅（宝安南路店）",
+          "region": "笋岗商圈",
+          "category": "鱼火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1475857120",
+          "shopUuid": "k9iyJfNUHSkIc8vV",
+          "name": "老郑家东北春饼（笋岗店）",
+          "region": "笋岗商圈",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "102045492",
+          "shopUuid": "k5OaZabb0UsRLJJg",
+          "name": "京味张·北京烤鸭（罗湖国贸spring店）",
+          "region": "国贸",
+          "category": "北京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "127000254",
+          "shopUuid": "G8u4RbRfPY98k0PE",
+          "name": "山禾田·日料小屋（罗湖店）",
+          "region": "国贸",
+          "category": "日本料理",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "1176074271",
+          "shopUuid": "k6JfBseUdoFQ7mZS",
+          "name": "昌记隆江猪脚饭（白石龙店）",
+          "region": "梅林关",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "626646190",
+          "shopUuid": "Ecm2dJsv7pbn7Xeu",
+          "name": "巡味顺德菜（欢乐海岸购物中心店）",
+          "region": "欢乐海岸",
+          "category": "顺德菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "73560655",
+          "shopUuid": "G5KukD8513H4Kh5O",
+          "name": "清真·耶丽米娅新疆主题餐厅（联城店）",
+          "region": "东门商业圈",
+          "category": "新疆菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "2369572",
+          "shopUuid": "l3xjGu2BBBnGlVdH",
+          "name": "香港新发烧腊茶餐厅（凤凰店）",
+          "region": "罗湖区政府",
+          "category": "茶餐厅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1823177375",
+          "shopUuid": "H8EHcH0ylgRqMg1f",
+          "name": "老川味江油肥肠（龙岗光雅园店）",
+          "region": "五和/民营市场",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "8979516",
+          "shopUuid": "EeySGWnQ9wOcPdcr",
+          "name": "潮悦牛肉火锅店（西丽龙井店）",
+          "region": "西丽商圈",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1957027641",
+          "shopUuid": "k80wvugvOpacmRxO",
+          "name": "翠湖广东乡下菜（龙井店）",
+          "region": "龙井",
+          "category": "粤菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "110639920",
+          "shopUuid": "l5p4lSCOhOYWqSay",
+          "name": "巴汗羊肉串烧烤店",
+          "region": "布心/太白路",
+          "category": "烤串",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "113860276",
+          "shopUuid": "l8LacTWWTyjkAXKq",
+          "name": "潮德阿水牛肉火锅（深圳总店）",
+          "region": "白石洲",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "19254721",
+          "shopUuid": "k1IdTpUsYtICQvBr",
+          "name": "周螺记螺蛳粉",
+          "region": "坂田/杨美",
+          "category": "小吃快餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "93777038",
+          "shopUuid": "G7Mu8w2BHcx2G19D",
+          "name": "江南厨子（万象天地店）",
+          "region": "科技园",
+          "category": "苏浙菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "130716964",
+          "shopUuid": "Ga2O5ZOVObhngb54",
+          "name": "大馥·烧肉丼饭（万象天地店）",
+          "region": "科技园",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "15864379",
+          "shopUuid": "G60mxXZofc6VEufD",
+          "name": "电白鸭粥店",
+          "region": "西丽商圈",
+          "category": "小吃快餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "502021488",
+          "shopUuid": "H5EtM8YmZyAUUuD6",
+          "name": "一个锅（海岸城店）",
+          "region": "南山中心区",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "130814114",
+          "shopUuid": "labMcuA7t7z7xsKI",
+          "name": "79号渔船海鲜饭店（科技园店）",
+          "region": "科技园",
+          "category": "海鲜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "130617450",
+          "shopUuid": "k6XuySLF1JAbENK0",
+          "name": "汶和记粥底火锅·团建聚餐（南山总店）",
+          "region": "南头",
+          "category": "火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1525810029",
+          "shopUuid": "G39OpEWQq9cQP54K",
+          "name": "洪大厨鸡煲（南山店）",
+          "region": "海岸城/保利",
+          "category": "火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1820695036",
+          "shopUuid": "k9ZFGpMFbgCcEz9J",
+          "name": "姊妹豆花（南海明珠店）",
+          "region": "桃园",
+          "category": "小吃快餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1804345427",
+          "shopUuid": "k1QXPTMSvpig8nus",
+          "name": "鳗次郎·鳗鱼专门店（深圳首店）",
+          "region": "南山中心区",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "16915842",
+          "shopUuid": "k3kXzkjWTMuHNfCr",
+          "name": "牛王庙（龙华花园店）",
+          "region": "龙华商圈",
+          "category": "川菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "17946844",
+          "shopUuid": "k9hjpqKDkltoUMB1",
+          "name": "對面川菜馆",
+          "region": "南头",
+          "category": "川菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "102377355",
+          "shopUuid": "k6ZzHN3lnN2ZcoXz",
+          "name": "冬阴功泰国菜（南山店）",
+          "region": "南头",
+          "category": "泰国菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "17198912",
+          "shopUuid": "H9BL5rNcOXQo96Fq",
+          "name": "丹东特色烤肉（学府路一部店）",
+          "region": "南头",
+          "category": "融合烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "98320322",
+          "shopUuid": "H2pkjl05wFFpowgN",
+          "name": "潮香四海·家传潮汕菜（南山店）",
+          "region": "南油",
+          "category": "潮汕菜",
+          "inRankYear": 7,
+          "inRankYearText": "连续7年上榜"
+        },
+        {
+          "shopId": "524523",
+          "shopUuid": "G4sPRLM9Fy2YY3ym",
+          "name": "芙蓉楼·健康湘菜（南山常兴店）",
+          "region": "桃园",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1956328",
+          "shopUuid": "G2TGJXlARTKq41Yj",
+          "name": "好好味面家（桃园店）",
+          "region": "桃园",
+          "category": "粥粉面",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1623638261",
+          "shopUuid": "l9pN2AQkUSMXE0nZ",
+          "name": "胖明粉馆（南山店）",
+          "region": "桃园",
+          "category": "粥粉面",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "588688330",
+          "shopUuid": "l2QVzT4DbWOmuEz5",
+          "name": "牛百鲜牛腩煲·牛肉火锅（深圳总店）",
+          "region": "桃园",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "16643245",
+          "shopUuid": "EViHob6xqWNq9X6p",
+          "name": "雪乡情东北菜（登良旗舰店）",
+          "region": "南油",
+          "category": "东北菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "101892937",
+          "shopUuid": "E5ilhoc1ZtR7b5sR",
+          "name": "佳俊八宝牛杂",
+          "region": "蛇口商圈",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "4590400",
+          "shopUuid": "H2gg5E262vyew7ou",
+          "name": "嘉华小吃（蛇口市场店）",
+          "region": "蛇口商圈",
+          "category": "小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1933268543",
+          "shopUuid": "k4yoME5D5A3N4Hhn",
+          "name": "老顾客煲仔饭（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "6024560",
+          "shopUuid": "G2IfGDUxOVvdONuc",
+          "name": "百年果林椰子鸡（宝安总店）",
+          "region": "新安商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "19797325",
+          "shopUuid": "k76uENFNQsrMTuxV",
+          "name": "华洋酒楼·广式茶点·湛江美食",
+          "region": "蛇口商圈",
+          "category": "粤菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1043497537",
+          "shopUuid": "k2kxbryCaCv3Jm6i",
+          "name": "头牌小厨·宝安大排档（宝安店）",
+          "region": "新安商圈",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1188610208",
+          "shopUuid": "l2DI4PL8UcOO1z8p",
+          "name": "湘田田·湖南土菜（新安店）",
+          "region": "新安商圈",
+          "category": "湘菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1843728328",
+          "shopUuid": "l3Q1IrNbLV8kRaGO",
+          "name": "悦满楼·西关名点·湛江名菜（航空综合大厦店）",
+          "region": "新安商圈",
+          "category": "粤式茶点",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "5182401",
+          "shopUuid": "G7o1Sxwv5TeFzTD8",
+          "name": "常润·椰子鸡火锅（望海店）",
+          "region": "蛇口商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "1398783316",
+          "shopUuid": "H2qLJf6wN2U0PQPX",
+          "name": "菉雅苑·湛江菜（前海卓越INTOWN店）",
+          "region": "前海",
+          "category": "粤菜",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "128087017",
+          "shopUuid": "k7hEwpDFgSnwQq7p",
+          "name": "川胖子美蛙鱼头（公园路店）",
+          "region": "新安商圈",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1176500844",
+          "shopUuid": "G44NlIy0QLh3hTO4",
+          "name": "gaga（深圳龙岗万科广场店）",
+          "region": "万科广场/世贸",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "998635173",
+          "shopUuid": "l3AbZECJEPq6XZXo",
+          "name": "Meat吃肉·牛排馆（万科里店）",
+          "region": "龙岗中心城区",
+          "category": "牛排",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1662824739",
+          "shopUuid": "H4G8Hy79OTjuG1R2",
+          "name": "嘻嘻蝦馆·油焖大虾·香辣蟹（万科里店）",
+          "region": "龙岗中心城区",
+          "category": "小龙虾",
+          "inRankYear": 1,
+          "inRankYearText": "2025年新上榜"
+        },
+        {
+          "shopId": "10622901",
+          "shopUuid": "k9XE6p4wIyuaZOYQ",
+          "name": "先记烧鹅王·本地粤菜（福永店）",
+          "region": "福永",
+          "category": "粤菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "city": "北京",
+      "cityId": 2,
+      "rankId": 136,
+      "sceneId": 325,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=2&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:46.997Z",
+      "count": 146,
+      "resolvedCount": 145,
+      "unresolvedShopIds": [
+        "1988604904"
+      ],
+      "shops": [
+        {
+          "shopId": "120111632",
+          "shopUuid": "HaMZOo0KTta0t1ld",
+          "name": "伊豆野菜村（合景·摩方店）",
+          "region": "崇文门",
+          "category": "日式火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "111772419",
+          "shopUuid": "HaLpW5Gz2VP7YZ3M",
+          "name": "萃華楼（新世界旗舰店）",
+          "region": "崇文门",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "17969122",
+          "shopUuid": "k2aUrXizWLKt04rh",
+          "name": "潮粥荟·潮汕砂锅粥（新世界店）",
+          "region": "崇文门",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "654201886",
+          "shopUuid": "k5TD8TqnOD1023Q1",
+          "name": "八爷涮肉（故宫总店）",
+          "region": "王府井/东单",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1351216584",
+          "shopUuid": "l7Jk19K80R9KHCqJ",
+          "name": "甬府小鲜（北京apm店）",
+          "region": "王府井/东单",
+          "category": "浙菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "23512515",
+          "shopUuid": "GaWSkX23Ca2P0AIV",
+          "name": "河沿肉饼Beijing Pie（锡拉胡同店）",
+          "region": "王府井/东单",
+          "category": "京菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "1900186",
+          "shopUuid": "k7rJ58mrC02ZaCu5",
+          "name": "陈记卤煮小肠",
+          "region": "前门/大栅栏",
+          "category": "老北京小吃",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1596276547",
+          "shopUuid": "H4cHVrgjbxw3rEtA",
+          "name": "方砖厂69号炸酱面（北京站店）",
+          "region": "建国门/北京站",
+          "category": "炸酱面",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2340799",
+          "shopUuid": "l61pPIe2F5l9vqFV",
+          "name": "明园餐厅",
+          "region": "建国门/北京站",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2363059",
+          "shopUuid": "G9B5lBAWimhGRPnh",
+          "name": "北京宜宾招待所（南翠花街店）",
+          "region": "和平门",
+          "category": "川菜馆",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "3038050",
+          "shopUuid": "l6JodCwie0ekQlvY",
+          "name": "串府（四合院店）",
+          "region": "东四商圈",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "21836994",
+          "shopUuid": "H2m1mDT88YHwzGNk",
+          "name": "硬舌酒肉（西单店）",
+          "region": "西单",
+          "category": "烧烤烤串",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "77017268",
+          "shopUuid": "H5GiaUPobH61e2CC",
+          "name": "老北京馅饼粥（西单店）",
+          "region": "西单",
+          "category": "小吃快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "514279",
+          "shopUuid": "G9h38FbLsz1UTBB6",
+          "name": "刘记炙子烤肉（虎坊桥店）",
+          "region": "虎坊桥",
+          "category": "炙子烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "6337899",
+          "shopUuid": "EjFNyvrynZ6DIhCw",
+          "name": "沣元春饼馆（幸福巷店）",
+          "region": "天坛",
+          "category": "老北京小吃",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "509615",
+          "shopUuid": "H8ACmIpjYCRmHzBL",
+          "name": "东四民芳餐厅（朝阳门店）",
+          "region": "朝阳门商圈",
+          "category": "京菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "54994613",
+          "shopUuid": "k6jNibmXqxGLCCiD",
+          "name": "京东程记肉饼店（幸福北里小区店）",
+          "region": "光明楼/龙潭湖",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "510993",
+          "shopUuid": "G4lo8oTWMHzPIL7h",
+          "name": "申德勒加油站西餐厅（日坛路总店）",
+          "region": "建外大街",
+          "category": "西餐",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "1962331",
+          "shopUuid": "l3sSQBazHO6vODhU",
+          "name": "管氏翅吧（地安门店）",
+          "region": "地安门",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "19639132",
+          "shopUuid": "H5YDGzifOJTV1CB2",
+          "name": "日坛涮肉（日坛公园店）",
+          "region": "朝外大街",
+          "category": "老北京火锅",
+          "inRankYear": 10,
+          "inRankYearText": "连续10年上榜"
+        },
+        {
+          "shopId": "512489",
+          "shopUuid": "k6qgMjDQExfT75tR",
+          "name": "多味居（剪子巷店）",
+          "region": "东四商圈",
+          "category": "云南菜|滇菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "511003",
+          "shopUuid": "H3IQH9eLmQuyHeZV",
+          "name": "南门涮肉（天坛南门店）",
+          "region": "天坛",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "507896",
+          "shopUuid": "H9127aL3E6ENfMmT",
+          "name": "煲煲好（朝阳门店）",
+          "region": "工人体育场",
+          "category": "粤菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4045882",
+          "shopUuid": "k8WjUTkJ23fj3D82",
+          "name": "恭敬李麻辣香锅（陶然亭店）",
+          "region": "菜市口/陶然亭",
+          "category": "干锅/香锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "507764",
+          "shopUuid": "k1tNphyb45WOZerZ",
+          "name": "沪江香满楼（东四十条店）",
+          "region": "东四商圈",
+          "category": "本帮菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "92936301",
+          "shopUuid": "H4jNv570UpVH41Wv",
+          "name": "关熹寿喜锅专门店（朝阳门店）",
+          "region": "朝外大街",
+          "category": "日本料理",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "130321956",
+          "shopUuid": "H1QcmBJF1yBUxpsA",
+          "name": "六日都烤牛内脏专门店（总店）",
+          "region": "朝外大街",
+          "category": "融合烤肉",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "16003775",
+          "shopUuid": "k2ylh3k8wrsQHZDA",
+          "name": "真地道京味府·鲜橙烤鸭·北京菜（西单·复兴门店）",
+          "region": "西单",
+          "category": "北京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "5493867",
+          "shopUuid": "l3AK2xTtKoddz7SD",
+          "name": "四季民福烤鸭店（东四十条店）",
+          "region": "东四十条",
+          "category": "烤鸭",
+          "inRankYear": 7,
+          "inRankYearText": "连续7年上榜"
+        },
+        {
+          "shopId": "507576",
+          "shopUuid": "G6BpdpfZxE8rftOK",
+          "name": "满福楼·清真涮肉·老字号（侨福店）",
+          "region": "东大桥",
+          "category": "老北京火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "9954774",
+          "shopUuid": "G2MvdP48mWmjSMYO",
+          "name": "三色莲花印度餐厅 3colorlotus Indian restaurant（国贸店）",
+          "region": "国贸/建外",
+          "category": "印度菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "22806308",
+          "shopUuid": "G9VwkrHORDQkQMpr",
+          "name": "胖妹面庄（香饵胡同店）",
+          "region": "北新桥/簋街",
+          "category": "面馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "4697793",
+          "shopUuid": "l6tLI3Lh0joxFoqf",
+          "name": "老坑记·香港经典粤菜馆",
+          "region": "三里屯/工体",
+          "category": "粤菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "513426",
+          "shopUuid": "l9WDaQFRazpx1UrH",
+          "name": "准噶尔·新疆菜（龙潭店）",
+          "region": "光明楼/龙潭湖",
+          "category": "新疆菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "1586415154",
+          "shopUuid": "Gak5jn0Zq0nnLRrK",
+          "name": "木槿源（尚都店）",
+          "region": "朝外大街",
+          "category": "韩式小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "8966326",
+          "shopUuid": "l26Ug6Juq0vDxPDc",
+          "name": "龙门跳私家炙子烤肉（交道口店）",
+          "region": "南锣鼓巷/鼓楼东大街",
+          "category": "炙子烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "587704847",
+          "shopUuid": "H5dJKWca77yRiimD",
+          "name": "Tapas by Alba（鼓楼店）",
+          "region": "南锣鼓巷/鼓楼东大街",
+          "category": "西餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "507755",
+          "shopUuid": "H4oNDo2mNxMjjEFa",
+          "name": "花家怡园（四合院总店）",
+          "region": "北新桥/簋街",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "510660",
+          "shopUuid": "G1n4EbtMWqCQrx4S",
+          "name": "胡大饭馆 24h（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "川菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "96012626",
+          "shopUuid": "H11a6UzHyH3n2hsT",
+          "name": "老吉堂上海本帮菜（工体店）",
+          "region": "三里屯/工体",
+          "category": "本帮菜",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "509358",
+          "shopUuid": "l2gp8LTnCv5XDk9v",
+          "name": "馅老满（安定门店）",
+          "region": "安定门商圈",
+          "category": "饺子",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2415742",
+          "shopUuid": "k1rAQnk6io9enUX4",
+          "name": "牛街大绿包烤羊腿（牛街总店）",
+          "region": "牛街商圈",
+          "category": "烤羊腿",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "514983",
+          "shopUuid": "k5IApzyUQShq3KYZ",
+          "name": "新新湘菜馆（新中街二条店）",
+          "region": "东直门商圈",
+          "category": "湘菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "513329",
+          "shopUuid": "Enk0gTkqu0Cyj7Ch",
+          "name": "聚宝源（牛街创始店）",
+          "region": "牛街商圈",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1371593948",
+          "shopUuid": "l4JOsEIKYRCLp7Em",
+          "name": "CAPARESH開府莱舍（国贸银泰店）",
+          "region": "国贸/建外",
+          "category": "意大利菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1488486350",
+          "shopUuid": "H6DrvKx59S7l7P5t",
+          "name": "新京熹·北京涮肉（白塔寺店）",
+          "region": "阜成门",
+          "category": "老北京火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "97355983",
+          "shopUuid": "G2RYQwEVIdIcOQUr",
+          "name": "晓莉肉饼（成贤街店）",
+          "region": "安定门商圈",
+          "category": "快餐简餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "75186951",
+          "shopUuid": "laWVO20iHmr8wlEo",
+          "name": "湘爱（工体店）",
+          "region": "工人体育场",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "21998562",
+          "shopUuid": "Ha8aZQhqlyFaXRR4",
+          "name": "格鲁·秀色Georgia’s Feast",
+          "region": "北新桥/簋街",
+          "category": "西餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "22439161",
+          "shopUuid": "H1D1Xypc6Ow5SDiG",
+          "name": "北平三兄弟涮肉（簋街总店）",
+          "region": "北新桥/簋街",
+          "category": "老北京火锅",
+          "inRankYear": 10,
+          "inRankYearText": "连续10年上榜"
+        },
+        {
+          "shopId": "4117270",
+          "shopUuid": "G5u1Bn20O6a3o5X0",
+          "name": "老井俄式餐厅",
+          "region": "东直门商圈",
+          "category": "俄罗斯菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "96441483",
+          "shopUuid": "GaLvmTNhT80CWTEO",
+          "name": "拾久（东三环中路店）",
+          "region": "双井",
+          "category": "烤鸭",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "543993154",
+          "shopUuid": "k55dUMvfGLXbAY01",
+          "name": "旺顺阁1999（财富购物中心店）",
+          "region": "国贸/建外",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "8291516",
+          "shopUuid": "l1MNeHgCskgs6qiN",
+          "name": "牛街清真满恒記（平安里西大街店）",
+          "region": "西城区",
+          "category": "老北京火锅",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "1161348965",
+          "shopUuid": "G5uiFIv6motWB6FB",
+          "name": "街边儿牛肉串（双井店）",
+          "region": "双井",
+          "category": "烤串",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "5477290",
+          "shopUuid": "l9DkQvTfUBmF1RxX",
+          "name": "鸟屯（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "日本料理",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "6232395",
+          "shopUuid": "l13vtQBNv47PsZAH",
+          "name": "珍滋味海鲜粥火锅（工体店）",
+          "region": "三里屯/工体",
+          "category": "海鲜火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "4542860",
+          "shopUuid": "H5Slf8q3JTPu5hvO",
+          "name": "安妮意大利餐厅（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "意大利菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "75151158",
+          "shopUuid": "G6Ft75ybFJD8Vp68",
+          "name": "满姐饺子（德胜门店）",
+          "region": "新街口商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "515074",
+          "shopUuid": "HaSvBEWrhyrt7vea",
+          "name": "国华酒楼（右内店）",
+          "region": "右安门商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "112289056",
+          "shopUuid": "l6Nwrvxtp4J6lUNO",
+          "name": "粉灯牛腩牛杂煲·鸡煲（双井店）",
+          "region": "双井",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "508104",
+          "shopUuid": "ka1UmbZHGO2SdddK",
+          "name": "老西安饭庄（新街口南大街店）",
+          "region": "新街口商圈",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "66717084",
+          "shopUuid": "G8IrRqD4r5kql04A",
+          "name": "悠航SLOWBOAT（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "123924025",
+          "shopUuid": "k1cKqNxd7iicyX2H",
+          "name": "聚德楼饭庄·果木烤鸭·京鲁菜（劲松店）",
+          "region": "劲松/潘家园",
+          "category": "京菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1934093473",
+          "shopUuid": "H6F9e5R3yyRmN74I",
+          "name": "湘寻辣访（三里屯SOHO店）",
+          "region": "三里屯/工体",
+          "category": "湘菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "744304778",
+          "shopUuid": "G7AlZ6ir6UGsSRM2",
+          "name": "阿咚哥厦门姜母鸭（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "福建菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "5190291",
+          "shopUuid": "H9pg0h5sUKKasNTz",
+          "name": "威海味海鲜（京广桥好世界商场店）",
+          "region": "国贸/建外",
+          "category": "海鲜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1938940506",
+          "shopUuid": "GaVBmK90gxZjH3au",
+          "name": "友乐园涮肉坊（年少时光店）",
+          "region": "方庄/蒲黄榆",
+          "category": "老北京火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "750961339",
+          "shopUuid": "H3hyl2jpJzgKFvvM",
+          "name": "春台Spring Patio（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "特色菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "8878704",
+          "shopUuid": "l7F7wWC2wuZEFVwA",
+          "name": "THE TACO BAR（三里屯店）",
+          "region": "三里屯/工体",
+          "category": "西餐",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "5724122",
+          "shopUuid": "EOFC7iP1YkX7ygmT",
+          "name": "门框胡同百年卤煮（新街口店）",
+          "region": "西直门/动物园",
+          "category": "老北京小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "507911",
+          "shopUuid": "l4aBUFU50FCF5eyf",
+          "name": "太婆天府山珍酒楼（复兴门店）",
+          "region": "复兴门",
+          "category": "菌菇火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "920185541",
+          "shopUuid": "H1gy4vdb1JbW0xRR",
+          "name": "闽中闽·福建菜（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "福建菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "2477131",
+          "shopUuid": "G4O9EF0DEUC8VujX",
+          "name": "永和鲜浆（阜成门店）",
+          "region": "阜成门",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1906260215",
+          "shopUuid": "kajQIRgRSjrFl5xr",
+          "name": "元古雲境",
+          "region": "三里屯/工体",
+          "category": "创意菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "5188952",
+          "shopUuid": "G5leUTaSm4qGOalp",
+          "name": "淮扬府（安定门店）",
+          "region": "安定门商圈",
+          "category": "淮扬菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "512058",
+          "shopUuid": "H7DEHCc6zdC0s8Fo",
+          "name": "老熟人烤肉城（西罗园店）",
+          "region": "洋桥/木樨园",
+          "category": "韩式烤肉",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "3566815",
+          "shopUuid": "G23nlB9SwcFIW26v",
+          "name": "三味缘干锅牛蛙·火锅（车公庄店）",
+          "region": "阜成门",
+          "category": "四川火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "4276155",
+          "shopUuid": "k1oTzSbnSQT8WiLM",
+          "name": "小街猪手（团结湖店）",
+          "region": "朝阳公园/团结湖",
+          "category": "云南火锅",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "69774328",
+          "shopUuid": "l59zPi4hQQNZTJ9Y",
+          "name": "泰合院（京饮华天商场店）",
+          "region": "月坛商圈",
+          "category": "泰国菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "508347",
+          "shopUuid": "G7cBURJc2L7WbKNZ",
+          "name": "暹罗泰·泰国餐厅（新源西里店）",
+          "region": "亮马桥/三元桥",
+          "category": "泰国菜",
+          "inRankYear": 10,
+          "inRankYearText": "连续10年上榜"
+        },
+        {
+          "shopId": "728806036",
+          "shopUuid": "E7flI4mINsuMZFRf",
+          "name": "九本居酒屋（大望路店）",
+          "region": "大望路",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "97674093",
+          "shopUuid": "H4hwl1kaOXgiNUmm",
+          "name": "一坐一忘云南菜（北京skp店）",
+          "region": "大望路",
+          "category": "云南菜|滇菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "132143508",
+          "shopUuid": "la2daTbiq1hC2sZs",
+          "name": "西庭·秀色Turkish Feast（新源里店）",
+          "region": "亮马桥/三元桥",
+          "category": "西餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1729841947",
+          "shopUuid": "k50cGsnmpsBdpZET",
+          "name": "鳥.吉祥寺",
+          "region": "左家庄商圈",
+          "category": "日式料理",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "58397181",
+          "shopUuid": "l4rqGdbBSRD9uXsD",
+          "name": "勇盛牛肉面（红庙店）",
+          "region": "大望路",
+          "category": "面馆",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "98199585",
+          "shopUuid": "H2sZa78VqZFzsy8u",
+          "name": "穆塞菲霖新疆餐厅（平乐园店）",
+          "region": "双井",
+          "category": "新疆菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "15950071",
+          "shopUuid": "j8FUkQLkRrPlfymq",
+          "name": "广东美食·潮汕味道（十里河店）",
+          "region": "十里河",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "94776821",
+          "shopUuid": "ka1uSBZY548vGiHy",
+          "name": "匠牛饺子·酱牛肉·饺子馆（顺源街店）",
+          "region": "亮马桥/三元桥",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "508186",
+          "shopUuid": "l4SRjLVoAW204uQC",
+          "name": "郁陵岛炭火烤肉（牛王庙店）",
+          "region": "亮马桥/三元桥",
+          "category": "韩式烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "17792860",
+          "shopUuid": "G4t7GdAWrAXuPXs0",
+          "name": "羊大爷涮肉（亮马桥总店）",
+          "region": "亮马桥/三元桥",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "512217",
+          "shopUuid": "H7xle9A5wPmnZo6P",
+          "name": "柴氏风味斋（甘家口店）",
+          "region": "航天桥",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1157715832",
+          "shopUuid": "l4i2IT5Z8w3YUHIu",
+          "name": "辽食府·渡口煲酷（德外大街店）",
+          "region": "德外大街",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "102321469",
+          "shopUuid": "GaN8Ss7ad2ssEZbA",
+          "name": "粤食佳（十里河店）",
+          "region": "十里河",
+          "category": "粤菜馆",
+          "inRankYear": 6,
+          "inRankYearText": "连续6年上榜"
+        },
+        {
+          "shopId": "3178141",
+          "shopUuid": "k781X33s8eEclUhe",
+          "name": "燕郊烧鸽子（和众店）",
+          "region": "百子湾",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "128064916",
+          "shopUuid": "l4k1qZ8YiPzQ4S9O",
+          "name": "沁旺达餐厅（华睦店）",
+          "region": "六里桥/丽泽桥",
+          "category": "福建菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "94032730",
+          "shopUuid": "l8mZaUXS5987b0ee",
+          "name": "七星园蒸汽海鲜·老川菜（慈云寺店）",
+          "region": "慈云寺/八里庄",
+          "category": "海鲜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "799037535",
+          "shopUuid": "k6j1A6Do7A5OE9YF",
+          "name": "小大董·烤鸭（丽泽店）",
+          "region": "丽泽桥/丰管路",
+          "category": "烤鸭",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "13668932",
+          "shopUuid": "H382aIermcb9s9Wf",
+          "name": "虎兵卫鳗白烧总本店（霄云路总店）",
+          "region": "亮马桥/三元桥",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 7,
+          "inRankYearText": "连续7年上榜"
+        },
+        {
+          "shopId": "509521",
+          "shopUuid": "l7kMBed9oZwM2Sjv",
+          "name": "玉华台饭庄（裕中西里小区店）",
+          "region": "牡丹园/北太平庄",
+          "category": "淮扬菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "4211342",
+          "shopUuid": "G5iNXLrbifLjG5I8",
+          "name": "金谷园饺子馆（北邮总店）",
+          "region": "牡丹园/北太平庄",
+          "category": "饺子",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "4125116",
+          "shopUuid": "k387gYgPr3hlZDDc",
+          "name": "姥姥家春饼店（八里庄店）",
+          "region": "十里堡",
+          "category": "老北京小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "10017644",
+          "shopUuid": "l1MP4iajFkKfHlo5",
+          "name": "南街北巷家里饭",
+          "region": "十里堡",
+          "category": "私房菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "92407264",
+          "shopUuid": "l4xWHdEzfu3Omzk6",
+          "name": "小渝府的串（北下关店）",
+          "region": "北下关商圈",
+          "category": "小吃快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "511586",
+          "shopUuid": "H7OeBKsa1qnreghA",
+          "name": "新疆巴州金丝特餐厅（大钟寺店）",
+          "region": "大钟寺",
+          "category": "新疆菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "5860213",
+          "shopUuid": "H7xwszcIySPeDUG7",
+          "name": "PHO爺·越南料理（牡丹园越风尚店）",
+          "region": "牡丹园/北太平庄",
+          "category": "越南菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "513604",
+          "shopUuid": "k6Myr1ttLWr9bcKx",
+          "name": "北平楼·烤鸭·北京菜（牡丹园店）",
+          "region": "牡丹园/北太平庄",
+          "category": "京菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "123162674",
+          "shopUuid": "G5IwJkv46Ie2NW0P",
+          "name": "Ponte 意大利餐厅",
+          "region": "酒仙桥商圈",
+          "category": "意大利菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "512841",
+          "shopUuid": "k6PnvMIU6F3Gukzo",
+          "name": "鸿毛饺子（紫竹桥店）",
+          "region": "紫竹桥",
+          "category": "饺子",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "3324427",
+          "shopUuid": "l4tHvJ2eb8nKqsd3",
+          "name": "利桥顺酒楼（北洼路店）",
+          "region": "航天桥",
+          "category": "地方菜系",
+          "inRankYear": 10,
+          "inRankYearText": "连续10年上榜"
+        },
+        {
+          "shopId": "1072234735",
+          "shopUuid": "k4YJaCZ2oRxAGrir",
+          "name": "二胖家铁锅炖大鹅（青年路店）",
+          "region": "青年路",
+          "category": "东北菜",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "568990",
+          "shopUuid": "H21xISBWSiIqytph",
+          "name": "川军本色（双榆树双安店）",
+          "region": "人民大学",
+          "category": "川菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "18098302",
+          "shopUuid": "G5Z6HDEGYx9FrduB",
+          "name": "马艾萨·将台路牛拉",
+          "region": "酒仙桥商圈",
+          "category": "面馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "67186437",
+          "shopUuid": "l387qiG8b0DK3NAJ",
+          "name": "甲丁堤岸打边炉（将台店）",
+          "region": "酒仙桥商圈",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "58385229",
+          "shopUuid": "G1EXCmVtLx2lY47I",
+          "name": "苏帮袁Sue Cuisine（将台店）",
+          "region": "酒仙桥商圈",
+          "category": "淮扬菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1540189993",
+          "shopUuid": "l5FEJjJiSAZ7Wp60",
+          "name": "三清潭烧鹅（颐堤港店）",
+          "region": "酒仙桥商圈",
+          "category": "粤菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "97914469",
+          "shopUuid": "k1G4TIScBxlCSSAg",
+          "name": "常记蚝味鲜·烧烤海鲜大排档（总店）",
+          "region": "酒仙桥商圈",
+          "category": "烤串",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "586312",
+          "shopUuid": "G315o8280uwJDkzW",
+          "name": "品味羊蝎子火锅（双榆树店）",
+          "region": "双榆树",
+          "category": "羊蝎子火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "23110880",
+          "shopUuid": "Ecs0fJWN2VMHMXQj",
+          "name": "万红路羊汤烧饼店",
+          "region": "酒仙桥商圈",
+          "category": "小吃",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "131324374",
+          "shopUuid": "G5KEmwxakeyIsR6k",
+          "name": "真食净香居·内蒙烧麦（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "快餐简餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "68196503",
+          "shopUuid": "k4tnGt1lsgtmoMen",
+          "name": "鲜牛记潮汕牛肉火锅（亚运村鸟巢店）",
+          "region": "亚运村商圈",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1879621",
+          "shopUuid": "G58n1esUzNPbR6N5",
+          "name": "钱塘花园·宁波菜",
+          "region": "双榆树",
+          "category": "浙菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "74597797",
+          "shopUuid": "H3EAVj3ZVetOXaaB",
+          "name": "重八牛府（花乡奥莱店）",
+          "region": "花乡/新发地",
+          "category": "重庆火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1646888507",
+          "shopUuid": "EK50DpAVNHEU2U8o",
+          "name": "京华楼饭庄（亚运村店）",
+          "region": "亚运村商圈",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1980615340",
+          "shopUuid": "k5f8Uwv1KvB6DJQH",
+          "name": "KŌNG胶东小馆（华熙店）",
+          "region": "五棵松",
+          "category": "鲁菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "122850801",
+          "shopUuid": "G3pvJZDiaSWXxLoq",
+          "name": "龙人居·水煮鱼（五道口店）",
+          "region": "五道口",
+          "category": "酸菜鱼/水煮鱼",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "568070",
+          "shopUuid": "k38t899rlC6EOgON",
+          "name": "香猪坊（望京二店）",
+          "region": "望京",
+          "category": "韩式烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "2723980",
+          "shopUuid": "Haka81OFpmFRr07W",
+          "name": "爱江山（西四环店）",
+          "region": "远大路",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "2401177",
+          "shopUuid": "H7l10Y9yZxxv8Ill",
+          "name": "羲和雅苑·北京烤鸭（中关村店）",
+          "region": "中关村商圈",
+          "category": "烤鸭",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1412661800",
+          "shopUuid": "l8O2e0a6czeHVGB6",
+          "name": "桂香黄辣丁（望京SOHOT1商场店）",
+          "region": "望京",
+          "category": "地方菜系",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "111871865",
+          "shopUuid": "ihhCHRO9ZnSY6B7c",
+          "name": "牛麒荟潮汕牛肉火锅（双清路店）",
+          "region": "五道口",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "19144626",
+          "shopUuid": "l17rfhqZZh8MjpZN",
+          "name": "蔡记表哥羊鸡火锅（来广营店）",
+          "region": "北苑家园",
+          "category": "打边炉/港式火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "2198290",
+          "shopUuid": "l6Aa6D3RWPJtjwn0",
+          "name": "滇大池云南菜·蒸汽石锅鱼（望京诚盈店）",
+          "region": "望京",
+          "category": "云南菜|滇菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "111944498",
+          "shopUuid": "G2TeLktnZLU0HfPg",
+          "name": "宛平李记小吃（东关街店）",
+          "region": "卢沟桥商圈",
+          "category": "小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "5652570",
+          "shopUuid": "k9NjvhiH43LtGmgK",
+          "name": "懒人业余餐厅（崔各庄店）",
+          "region": "马泉营",
+          "category": "川菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "1985719794",
+          "shopUuid": "k9QlxPTVlHZ9lxEA",
+          "name": "隆意涮肉（通州店）",
+          "region": "果园",
+          "category": "老北京火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "2834458",
+          "shopUuid": "i65QV1KUTnPeGvWV",
+          "name": "千汇丰渝州干锅鸭头（翠屏店）",
+          "region": "果园",
+          "category": "干锅/香锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "13804577",
+          "shopUuid": "G6cCe4X0XZuRPGCF",
+          "name": "滩羊铺子南北疆特色汇（门头沟店）",
+          "region": "门头沟城区",
+          "category": "新疆菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "22704833",
+          "shopUuid": "FUldRuNipZkQiNjG",
+          "name": "老杨家清真菜（阳坊店）",
+          "region": "昌平区",
+          "category": "特色菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "22802884",
+          "shopUuid": "k4qvY1rycZFBJaD5",
+          "name": "昌顺马记小吃店（昌盛园店）",
+          "region": "昌平镇",
+          "category": "小吃",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "59046630",
+          "shopUuid": "H8umXwX543AbCcUe",
+          "name": "江中捕灶台鱼（怀柔店）",
+          "region": "怀柔城区",
+          "category": "东北菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "130919182",
+          "shopUuid": "k79CREz2rYvuaniI",
+          "name": "群生大院（怀柔店）",
+          "region": "红螺寺",
+          "category": "京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "107179765",
+          "shopUuid": "l9iwv2utnHwjPyrd",
+          "name": "妫水人家（石光长城店）",
+          "region": "延庆区",
+          "category": "农家菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "97260068",
+          "shopUuid": "k3Ni7fjBEIxUMY4Z",
+          "name": "旧县羊蝎子（南菜园世园会店）",
+          "region": "延庆城区",
+          "category": "羊蝎子火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "9636040",
+          "shopUuid": "H2SIOxXqftySfJx9",
+          "name": "姥家大锅台水库渔家",
+          "region": "密云水库",
+          "category": "农家菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        }
+      ]
+    },
+    {
+      "year": 2026,
+      "city": "深圳",
+      "cityId": 7,
+      "rankId": 136,
+      "sceneId": 325,
+      "publicSourceUrl": "https://plat.dianping.com/app/femember-musteat-web/musteat-rank?cityid=7&ranktype=3",
+      "retrievedAt": "2026-08-29T07:14:47.949Z",
+      "count": 85,
+      "resolvedCount": 85,
+      "unresolvedShopIds": [],
+      "shops": [
+        {
+          "shopId": "22165279",
+          "shopUuid": "G8FpiMKPshlqbGBH",
+          "name": "火桶1971（购物公园店）",
+          "region": "购物公园",
+          "category": "韩式料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "130323308",
+          "shopUuid": "G2OGQWLr5TlqJ1we",
+          "name": "黄晓猫剁椒大鱼头（福田店）",
+          "region": "购物公园",
+          "category": "湘菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "4227164",
+          "shopUuid": "FmdsCc1x6zlFBVbp",
+          "name": "珍味汤馆·潮汕家乡菜（购物公园店）",
+          "region": "购物公园",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "941606564",
+          "shopUuid": "G5QZyGpmjm0YuTSp",
+          "name": "鲜潭蒸汽石锅鱼（卓悦中心店）",
+          "region": "福田中心-岗厦",
+          "category": "云南菜|滇菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "124528749",
+          "shopUuid": "FjgZuc1jq1CMgCOe",
+          "name": "Petit Oyster叫嚎（平安金融中心店）",
+          "region": "购物公园",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "701313316",
+          "shopUuid": "k10a316QvrkLqEDt",
+          "name": "pLeace2必乐时（福田卓悦中心店）",
+          "region": "福田中心-岗厦",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "2047114",
+          "shopUuid": "G6lKNSnNf4ePasgl",
+          "name": "金稻园砂锅粥（福中店）",
+          "region": "福田中心-市民中心",
+          "category": "粤菜馆",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "894088376",
+          "shopUuid": "H8xfg0RHSWU8REYu",
+          "name": "汤膳·脆皮爽鸡煲（景诚园综合楼店）",
+          "region": "景田",
+          "category": "本地鸡窝火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "98274564",
+          "shopUuid": "H5ImCCjQtQ2pq4zk",
+          "name": "星怡会（深业上城店）",
+          "region": "福田中心-市民中心",
+          "category": "新加坡菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "22005853",
+          "shopUuid": "iQjJGIxaRvelmjOd",
+          "name": "坤记兄弟牛肉店（皇岗一店）",
+          "region": "皇岗/水围",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "4661819",
+          "shopUuid": "k1yMqG4tQ5L6hDPe",
+          "name": "胡须佬鸡煲四季火锅店（皇岗总店）",
+          "region": "皇岗/水围",
+          "category": "本地鸡窝火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1245266179",
+          "shopUuid": "l72MMsjFrL2MXuFB",
+          "name": "北村韩食迹·活鳗烤肉·朝鲜族料理（梅林店）",
+          "region": "梅林商圈",
+          "category": "韩式料理",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1453899190",
+          "shopUuid": "E13TIhDgLpOzDhQL",
+          "name": "香港祥正飯店·正宗灣仔50年海鲜老字号",
+          "region": "皇岗/水围",
+          "category": "大排档",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "130928271",
+          "shopUuid": "G6izGX1xf7QR30WC",
+          "name": "卖鱼佬砂锅粥",
+          "region": "梅林商圈",
+          "category": "小吃快餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "93356268",
+          "shopUuid": "H5aOZmZ4OYl3inwB",
+          "name": "I HOLIC（中航城君尚店）",
+          "region": "华强北商圈",
+          "category": "比萨",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "111515699",
+          "shopUuid": "H4fBLuq5Ir0Olsqf",
+          "name": "蘩楼（华强北总店）",
+          "region": "华强北商圈",
+          "category": "粤式茶点",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "129787497",
+          "shopUuid": "H46kw5M3Q9kHwVNL",
+          "name": "洪哥白塔牛肉粿条汤（梅林中康路第十分店）",
+          "region": "梅林商圈",
+          "category": "美食",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "125360089",
+          "shopUuid": "kaD1K5T6kcuPqx5b",
+          "name": "恋上乐山小吃（水围恒春园店）",
+          "region": "皇岗/水围",
+          "category": "小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "68543142",
+          "shopUuid": "Hagy5l5qC2SN1nbv",
+          "name": "润园四季椰子鸡火锅（卓悦汇店）",
+          "region": "梅林商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1446402123",
+          "shopUuid": "H8cVCt9pVi4BEU2p",
+          "name": "肉祭烧肉一番（卓悦汇店）",
+          "region": "梅林商圈",
+          "category": "融合烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "5295816",
+          "shopUuid": "G7DHINbIuXKf47Z8",
+          "name": "西北领头羊·清真餐厅·团建聚会",
+          "region": "梅林商圈",
+          "category": "新疆菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "123471444",
+          "shopUuid": "ioiRphZf0R8WF6Gx",
+          "name": "肥韬茶餐厅（深圳总店）",
+          "region": "华强北商圈",
+          "category": "茶餐厅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "593798663",
+          "shopUuid": "G3Q16RLDy4hDcI8D",
+          "name": "森顺碳烤肉·活烤鳗鱼（华强北总店）",
+          "region": "华强北商圈",
+          "category": "韩式烤肉",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "93976586",
+          "shopUuid": "la1bM4gGClIzaDo2",
+          "name": "顺德公·广东猪肚鸡（车公庙总店）",
+          "region": "车公庙",
+          "category": "猪肚鸡火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522364",
+          "shopUuid": "l6egZ9AX6p9IFp0l",
+          "name": "川香楼酒家",
+          "region": "华强北商圈",
+          "category": "川菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "69350358",
+          "shopUuid": "H1Yla1SrIGhblsrW",
+          "name": "本源食集 日式烧肉·炉端烧（东海缤纷店）",
+          "region": "车公庙",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "77245738",
+          "shopUuid": "G9G1339MCYmufr3T",
+          "name": "辉记炭烧海鲜大排档·老字号（福田店）",
+          "region": "iN城市广场",
+          "category": "烤串",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "522605",
+          "shopUuid": "FtP5iaaIiKHUEJRI",
+          "name": "荔园小馆（园岭新村二期店）",
+          "region": "八卦岭/园岭",
+          "category": "快餐简餐",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "522056",
+          "shopUuid": "H7ESTdGxCkevHKQo",
+          "name": "豪林居·潮汕菜·海鲜·生腌",
+          "region": "八卦岭/园岭",
+          "category": "潮汕菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "122228669",
+          "shopUuid": "GaP70x5tOVnDEZrV",
+          "name": "新起点脆肉鲩火锅（宝安南路店）",
+          "region": "笋岗商圈",
+          "category": "鱼火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "102045492",
+          "shopUuid": "k5OaZabb0UsRLJJg",
+          "name": "京味张·北京烤鸭（罗湖国贸spring店）",
+          "region": "国贸",
+          "category": "北京菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "77454221",
+          "shopUuid": "G7mwu91VHHFIwxUh",
+          "name": "和气居酒屋（罗湖店）",
+          "region": "国贸",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "21370317",
+          "shopUuid": "Ga7KV0OYblkITeYs",
+          "name": "大阪烧肉BAKA一代（国贸商住大厦店）",
+          "region": "国贸",
+          "category": "日式烧烤/烤肉",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "127000254",
+          "shopUuid": "G8u4RbRfPY98k0PE",
+          "name": "山禾田·日料小屋（罗湖店）",
+          "region": "国贸",
+          "category": "日本料理",
+          "inRankYear": 7,
+          "inRankYearText": "连续7年上榜"
+        },
+        {
+          "shopId": "1176074271",
+          "shopUuid": "k6JfBseUdoFQ7mZS",
+          "name": "昌记隆江猪脚饭（白石龙店）",
+          "region": "梅林关",
+          "category": "快餐简餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "2369572",
+          "shopUuid": "l3xjGu2BBBnGlVdH",
+          "name": "香港新发烧腊茶餐厅（凤凰店）",
+          "region": "罗湖区政府",
+          "category": "茶餐厅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "8979516",
+          "shopUuid": "EeySGWnQ9wOcPdcr",
+          "name": "潮悦牛肉火锅店（西丽龙井店）",
+          "region": "西丽商圈",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1957027641",
+          "shopUuid": "k80wvugvOpacmRxO",
+          "name": "翠湖广东乡下菜（龙井店）",
+          "region": "龙井",
+          "category": "粤菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "113860276",
+          "shopUuid": "l8LacTWWTyjkAXKq",
+          "name": "潮德阿水牛肉火锅（深圳总店）",
+          "region": "白石洲",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "93777038",
+          "shopUuid": "G7Mu8w2BHcx2G19D",
+          "name": "江南厨子（万象天地店）",
+          "region": "科技园",
+          "category": "苏浙菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "93740867",
+          "shopUuid": "k2I9yYeWFSRIEevv",
+          "name": "誉八仙粤菜（万象天地店）",
+          "region": "科技园",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "628196050",
+          "shopUuid": "Gacik3e5tuDIxruW",
+          "name": "东海渔庄·湘粤融合餐厅（南山店）",
+          "region": "科技园",
+          "category": "海鲜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "15864379",
+          "shopUuid": "G60mxXZofc6VEufD",
+          "name": "电白鸭粥店",
+          "region": "西丽商圈",
+          "category": "小吃快餐",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1266166768",
+          "shopUuid": "l1tG8RvTM8wCdLGI",
+          "name": "文记虾一跳（深圳龙华店）",
+          "region": "龙华商圈",
+          "category": "小龙虾",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1127790306",
+          "shopUuid": "l7IQqtckkPVjgiVB",
+          "name": "小火璽",
+          "region": "南山中心区",
+          "category": "椰子鸡火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "502021488",
+          "shopUuid": "H5EtM8YmZyAUUuD6",
+          "name": "一个锅（海岸城店）",
+          "region": "南山中心区",
+          "category": "韩式料理",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "130814114",
+          "shopUuid": "labMcuA7t7z7xsKI",
+          "name": "79号渔船海鲜饭店（科技园店）",
+          "region": "科技园",
+          "category": "海鲜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "122486153",
+          "shopUuid": "Ga4veelf7SMlwuER",
+          "name": "小炳胜（海岸城店）",
+          "region": "海岸城/保利",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "505945251",
+          "shopUuid": "G8FzwrNzH3SSnU4f",
+          "name": "费大厨辣椒炒肉（海岸城店）",
+          "region": "海岸城/保利",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "130617450",
+          "shopUuid": "k6XuySLF1JAbENK0",
+          "name": "汶和记粥底火锅·团建聚餐（南山总店）",
+          "region": "南头",
+          "category": "火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1525810029",
+          "shopUuid": "G39OpEWQq9cQP54K",
+          "name": "洪大厨鸡煲（南山店）",
+          "region": "海岸城/保利",
+          "category": "火锅",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "16915842",
+          "shopUuid": "k3kXzkjWTMuHNfCr",
+          "name": "牛王庙（龙华花园店）",
+          "region": "龙华商圈",
+          "category": "川菜馆",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "110365996",
+          "shopUuid": "k27mJJxlFBfOz4Nu",
+          "name": "韩国炸酱面·友利家超市",
+          "region": "南山中心区",
+          "category": "韩式小吃",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "102377355",
+          "shopUuid": "k6ZzHN3lnN2ZcoXz",
+          "name": "冬阴功泰国菜（南山店）",
+          "region": "南头",
+          "category": "泰国菜",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "21118014",
+          "shopUuid": "EycFYoBhlOOJqd0t",
+          "name": "同仁四季椰子鸡（南山LOFT店）",
+          "region": "南头",
+          "category": "椰子鸡火锅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "742125735",
+          "shopUuid": "G7FJK4HS9dp0bq3L",
+          "name": "家里头·潮汕味道（亿利达村店）",
+          "region": "南山中心区",
+          "category": "潮汕菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "97816134",
+          "shopUuid": "l1hkvzguneyJvRDV",
+          "name": "合气屋·糖果居酒屋（南山店）",
+          "region": "南山中心区",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "57880853",
+          "shopUuid": "G9TSD2JvdLtA7fdm",
+          "name": "江味龙虾馆·裸蓝龙虾（南山店）",
+          "region": "南山中心区",
+          "category": "小龙虾",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "90510736",
+          "shopUuid": "H1ROuDCm8znFLy6F",
+          "name": "四方面荘（常丰花园店）",
+          "region": "桃园",
+          "category": "粥粉面",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "19366525",
+          "shopUuid": "laMMsQcCHWte16xW",
+          "name": "荞上人•炭烤活鳗•日本料理（南山店）",
+          "region": "南山中心区",
+          "category": "日本料理",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "98320322",
+          "shopUuid": "H2pkjl05wFFpowgN",
+          "name": "潮香四海·家传潮汕菜（南山店）",
+          "region": "南油",
+          "category": "潮汕菜",
+          "inRankYear": 8,
+          "inRankYearText": "连续8年上榜"
+        },
+        {
+          "shopId": "1623638261",
+          "shopUuid": "l9pN2AQkUSMXE0nZ",
+          "name": "胖明粉馆（南山店）",
+          "region": "桃园",
+          "category": "粥粉面",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "588688330",
+          "shopUuid": "l2QVzT4DbWOmuEz5",
+          "name": "牛百鲜牛腩煲·牛肉火锅（深圳总店）",
+          "region": "桃园",
+          "category": "潮汕牛肉火锅",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1217663131",
+          "shopUuid": "l4hxqfGMWW6PjyRa",
+          "name": "小煵记·深圳本地菜（南新店）",
+          "region": "南山中心区",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "16643245",
+          "shopUuid": "EViHob6xqWNq9X6p",
+          "name": "雪乡情东北菜（登良旗舰店）",
+          "region": "南油",
+          "category": "东北菜",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "101892937",
+          "shopUuid": "E5ilhoc1ZtR7b5sR",
+          "name": "佳俊八宝牛杂",
+          "region": "蛇口商圈",
+          "category": "小吃",
+          "inRankYear": 2,
+          "inRankYearText": "连续2年上榜"
+        },
+        {
+          "shopId": "5198572",
+          "shopUuid": "H8FaCN9FEW9RVYiE",
+          "name": "Emily’s Cafe（半岛城邦店）",
+          "region": "蛇口商圈",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "4590400",
+          "shopUuid": "H2gg5E262vyew7ou",
+          "name": "嘉华小吃（蛇口市场店）",
+          "region": "蛇口商圈",
+          "category": "小吃",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "867511258",
+          "shopUuid": "k6jmt9v0yGLkRUFO",
+          "name": "中山壹鸽",
+          "region": "蛇口商圈",
+          "category": "快餐简餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1933268543",
+          "shopUuid": "k4yoME5D5A3N4Hhn",
+          "name": "老顾客煲仔饭（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "快餐简餐",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "6024560",
+          "shopUuid": "G2IfGDUxOVvdONuc",
+          "name": "百年果林椰子鸡（宝安总店）",
+          "region": "新安商圈",
+          "category": "椰子鸡火锅",
+          "inRankYear": 5,
+          "inRankYearText": "连续5年上榜"
+        },
+        {
+          "shopId": "16921181",
+          "shopUuid": "k2dad9VPtuPEVv3P",
+          "name": "中山脆肉鲩（新圳东路店）",
+          "region": "新安商圈",
+          "category": "其他中餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1557253646",
+          "shopUuid": "G5aRZfUgrpPBtoZ5",
+          "name": "Bunco By Abidin",
+          "region": "蛇口商圈",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1188610208",
+          "shopUuid": "l2DI4PL8UcOO1z8p",
+          "name": "湘田田·湖南土菜（新安店）",
+          "region": "新安商圈",
+          "category": "湘菜",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "1843728328",
+          "shopUuid": "l3Q1IrNbLV8kRaGO",
+          "name": "悦满楼·西关名点·湛江名菜（航空综合大厦店）",
+          "region": "新安商圈",
+          "category": "粤式茶点",
+          "inRankYear": 4,
+          "inRankYearText": "连续4年上榜"
+        },
+        {
+          "shopId": "65767116",
+          "shopUuid": "G76Mnl6b00zTKzag",
+          "name": "BAIA 巴亚",
+          "region": "海上世界",
+          "category": "西餐",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "524732",
+          "shopUuid": "GayaYQ7q9gMhinYO",
+          "name": "客家汇·客家传承菜（海上世界店）",
+          "region": "蛇口商圈",
+          "category": "客家菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1272284399",
+          "shopUuid": "H4bSGXSBwH0POYf0",
+          "name": "钵小样·湖南钵子菜（华南城店）",
+          "region": "平湖商圈",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "128087017",
+          "shopUuid": "k7hEwpDFgSnwQq7p",
+          "name": "川胖子美蛙鱼头（公园路店）",
+          "region": "新安商圈",
+          "category": "川菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        },
+        {
+          "shopId": "1939147",
+          "shopUuid": "H4fegiye3V6K0mgj",
+          "name": "潮荣海鲜大饭店（宝安总店）",
+          "region": "翻身",
+          "category": "粤菜馆",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "8996976",
+          "shopUuid": "k95mT9e66JmRFf6V",
+          "name": "拾号牛扒（熙龙湾店）",
+          "region": "宝安中心区",
+          "category": "牛排",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1492773552",
+          "shopUuid": "G1nxENlsS7Cr0JW1",
+          "name": "百泰和·手工粤菜（蛇口店）",
+          "region": "蛇口商圈",
+          "category": "私房菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "1379304004",
+          "shopUuid": "iCaRUYor50cyLMlU",
+          "name": "于双蔡南家·湖南长沙菜（宝安大仟里店）",
+          "region": "西乡",
+          "category": "湘菜",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "9223193",
+          "shopUuid": "jDpoO56dGT5fJF8S",
+          "name": "如意轩茶餐厅（爱联大运店）",
+          "region": "大运",
+          "category": "茶餐厅",
+          "inRankYear": 1,
+          "inRankYearText": "2026年新上榜"
+        },
+        {
+          "shopId": "10622901",
+          "shopUuid": "k9XE6p4wIyuaZOYQ",
+          "name": "先记烧鹅王·本地粤菜（福永店）",
+          "region": "福永",
+          "category": "粤菜馆",
+          "inRankYear": 3,
+          "inRankYearText": "连续3年上榜"
+        }
+      ]
+    }
+  ]
+}
