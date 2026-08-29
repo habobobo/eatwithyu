@@ -35,7 +35,7 @@
   });
 
   // 这里只收录已经逐店核验过的分店，避免把品牌荣誉误套到同名的其他门店。
-  const CATALOG = Object.freeze([
+  const LEGACY_CATALOG = [
     Object.freeze({
       names: Object.freeze([
         "CAPARESH開府莱舍(国贸银泰店)",
@@ -72,7 +72,13 @@
         })
       ])
     })
-  ]);
+  ];
+
+  const VERIFIED_CATALOG = Array.isArray(global.RestaurantCreditCatalogData?.catalog)
+    ? global.RestaurantCreditCatalogData.catalog
+    : [];
+  const CATALOG = Object.freeze([...VERIFIED_CATALOG, ...LEGACY_CATALOG]);
+  const VERIFIED_ENTRIES = new Set(VERIFIED_CATALOG);
 
   function normalizeText(value) {
     return String(value || "")
@@ -85,6 +91,43 @@
     const key = String(value || "").trim();
     return SYSTEM_ALIASES[key] || "";
   }
+
+  function normalizeRestaurantBase(value) {
+    const withoutBranch = String(value || "").replace(/[（(][^（）()]{1,32}[）)]\s*$/u, "");
+    return normalizeText(withoutBranch)
+      .replace(/(?:云南|潮汕|客家|江西|浙江|川|湘|粤)?(?:菜馆|小馆|饭店|餐厅|酒家|私房菜|菜)$/u, "");
+  }
+
+  function restaurantNameParts(value) {
+    const text = String(value || "").trim();
+    const branchMatch = text.match(/^(.*?)[（(]([^（）()]{1,40})[）)]\s*$/u);
+    const branch = branchMatch
+      ? normalizeText(branchMatch[2])
+        .replace(/^(?:北京市?|深圳市?)/u, "")
+        .replace(/(?:旗舰)?店$/u, "")
+        .replace(/大街/gu, "街")
+      : "";
+    return {
+      base: normalizeRestaurantBase(branchMatch ? branchMatch[1] : text),
+      branch
+    };
+  }
+
+  const VERIFIED_BASE_COUNTS = (() => {
+    const branchesByCityAndBase = new Map();
+    VERIFIED_CATALOG.forEach((entry) => {
+      const city = normalizeText(entry.city);
+      entry.names.map(restaurantNameParts).filter((parts) => parts.base).forEach((parts) => {
+        const key = `${city}|${parts.base}`;
+        if (!branchesByCityAndBase.has(key)) branchesByCityAndBase.set(key, new Set());
+        if (parts.branch) branchesByCityAndBase.get(key).add(parts.branch);
+      });
+    });
+    return new Map([...branchesByCityAndBase].map(([key, branches]) => [
+      key,
+      Math.max(1, branches.size)
+    ]));
+  })();
 
   function generatedLabel(credit) {
     const yearPrefix = credit.year ? `${credit.year}年` : "";
@@ -133,11 +176,29 @@
 
   function normalize(value) {
     const bySystem = new Map();
-    (Array.isArray(value) ? value : []).forEach((item) => {
+    (Array.isArray(value) ? value : [])
+      .flatMap((item) => Array.isArray(item?.honors) ? item.honors : [item])
+      .forEach((item) => {
       const credit = normalizeCredit(item);
-      if (credit && !bySystem.has(credit.system)) bySystem.set(credit.system, credit);
+      if (!credit) return;
+      if (!bySystem.has(credit.system)) bySystem.set(credit.system, []);
+      const honors = bySystem.get(credit.system);
+      const identity = [credit.year, credit.distinction, credit.label].join("|");
+      if (!honors.some((item) => [item.year, item.distinction, item.label].join("|") === identity)) {
+        honors.push(credit);
+      }
     });
-    return SYSTEM_ORDER.map((system) => bySystem.get(system)).filter(Boolean);
+
+    return SYSTEM_ORDER.map((system) => {
+      const honors = bySystem.get(system);
+      if (!honors?.length) return null;
+      honors.sort((a, b) => (b.year || 0) - (a.year || 0) || a.label.localeCompare(b.label, "zh-CN"));
+      return {
+        ...honors[0],
+        honors,
+        label: honors.map((honor) => honor.label).join("\n")
+      };
+    }).filter(Boolean);
   }
 
   function candidateAddress(candidate) {
@@ -156,11 +217,30 @@
 
     const candidateName = normalizeText(candidate?.name);
     if (!candidateName) return false;
-    const nameMatches = entry.names.some((name) => normalizeText(name) === candidateName);
-    if (!nameMatches) return false;
-
+    const exactNameMatches = entry.names.some((name) => normalizeText(name) === candidateName);
     const city = normalizeText(entry.city);
-    return !city || normalizeText(candidateAddress(candidate)).includes(city);
+    const candidateCityMatches = !city || normalizeText(candidateAddress(candidate)).includes(city);
+    if (exactNameMatches) return candidateCityMatches;
+
+    const candidateParts = restaurantNameParts(candidate?.name);
+    const branchNameMatches = candidateParts.base && candidateParts.branch && entry.names.some((name) => {
+      const entryParts = restaurantNameParts(name);
+      return entryParts.base === candidateParts.base && entryParts.branch && (
+        entryParts.branch === candidateParts.branch ||
+        entryParts.branch.includes(candidateParts.branch) ||
+        candidateParts.branch.includes(entryParts.branch)
+      );
+    });
+    if (branchNameMatches) return candidateCityMatches;
+
+    const candidateBase = candidateParts.base;
+    const uniqueVerifiedBaseMatches = VERIFIED_ENTRIES.has(entry) && candidateBase && entry.names.some((name) => {
+      const entryBase = normalizeRestaurantBase(name);
+      return entryBase === candidateBase && VERIFIED_BASE_COUNTS.get(`${city}|${entryBase}`) === 1;
+    });
+    const nameMatches = exactNameMatches || uniqueVerifiedBaseMatches;
+    if (!nameMatches) return false;
+    return candidateCityMatches;
   }
 
   function forCandidate(candidate) {
@@ -175,9 +255,12 @@
     systems: SYSTEMS,
     order: SYSTEM_ORDER,
     catalog: CATALOG,
+    audits: global.RestaurantCreditCatalogData?.audits || [],
     normalize,
     forCandidate,
     generatedLabel,
-    normalizeText
+    normalizeText,
+    normalizeRestaurantBase,
+    restaurantNameParts
   });
 })(typeof window === "undefined" ? globalThis : window);

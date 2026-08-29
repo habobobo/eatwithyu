@@ -3081,6 +3081,7 @@ body.read-only .bottom-hint {
 .restaurant-credit-logo.is-interactive::after {
   content: attr(data-credit-tooltip);
   bottom: calc(100% + 9px);
+  width: max-content;
   max-width: min(220px, calc(100vw - 40px));
   padding: 7px 10px;
   border: 1px solid rgba(255, 255, 255, .12);
@@ -3093,8 +3094,8 @@ body.read-only .bottom-hint {
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.35;
-  text-align: center;
-  white-space: nowrap;
+  text-align: left;
+  white-space: pre-line;
   transform: translate(-50%, 5px);
 }
 

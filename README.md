@@ -105,3 +105,16 @@ python3 -m http.server 8000
 ```
 
 访问 `http://localhost:8000`。CloudBase 尚未配置时，网页会回退为读取 `maps/beijing.json` 的公开只读地图。
+
+## 餐厅荣誉数据
+
+搜索结果与已收藏地点详情会按具体城市和分店显示米其林、大众点评必吃榜等荣誉。当前内置北京、深圳 2024–2026 年榜单；同一体系跨年份只显示一个 logo，详情气泡逐年列出结果。
+
+重新拉取大众点评仍公开保留的历史索引并生成浏览器数据：
+
+```bash
+node scripts/fetch-dianping-must-eat.mjs
+node scripts/build-restaurant-credits.mjs
+```
+
+深圳的首版米其林指南是 2026 版，因此不存在 2024、2025 深圳米其林城市版名单。大众点评历史索引会在商户彻底下线后删除条目；`credits-data.js` 的 `audits` 同时记录发布数量和当前逐店可核验数量，不用猜测条目补足发布数字。
