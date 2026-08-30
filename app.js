@@ -558,8 +558,8 @@ function initMap() {
     resizeEnable: true,
     doubleClickZoom: false,
 
-    // 只保留地图背景、道路和建筑，隐藏高德默认 POI 点及其图标
-  features: ["bg", "road", "building"]
+    // 保留高德底图标注，让地铁站等公共交通信息正常显示。
+    features: ["bg", "road", "building", "point"]
   });
 
   map.addControl(new AMap.Scale());
