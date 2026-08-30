@@ -2,7 +2,7 @@
 window.MAP_CONFIG = {
   key: "8d1b2bd1dd0d99fc6ea30323e7f9fdb2",
   securityJsCode: "8e7665410865854721fa9e7f151bf868",
-  defaultCenter: [116.397428, 39.90923], // 北京
+  defaultCenter: [114.057868, 22.543099], // 深圳
   defaultZoom: 12
 };
 
