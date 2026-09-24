@@ -2,9 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260829a" />
+  <link rel="stylesheet" href="./style.css?v=20260924a" />
 </head>
 <body>
   <div id="app">
@@ -245,35 +246,20 @@
         </section>
 
         <section class="form-section recommendation-section">
-          <div class="section-heading">
+          <div class="section-heading recommendation-section-heading">
             <div>
               <h3>推荐菜单</h3>
-              <p>可记录这家店最值得推荐的一道菜或一个项目。</p>
+              <p>最多记录 10 道推荐菜，每道都可以单独添加描述和照片。</p>
             </div>
+            <button id="addRecommendationBtn" class="recommendation-add-button" type="button">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M9.25 3.5h1.5v5.75h5.75v1.5h-5.75v5.75h-1.5v-5.75H3.5v-1.5h5.75V3.5Z"/>
+              </svg>
+              <span>添加推荐菜</span>
+            </button>
           </div>
-
-          <label class="form-field">
-            <span>标题</span>
-            <input id="recommendationTitle" maxlength="80" placeholder="例如：招牌烤鸭" />
-          </label>
-
-          <label class="form-field">
-            <span>描述</span>
-            <textarea id="recommendationDescription" rows="3" maxlength="300" placeholder="口味、分量、价格或推荐理由"></textarea>
-          </label>
-
-          <div class="form-field">
-            <span>照片</span>
-            <div id="recommendationPhotoPreview" class="photo-preview hidden">
-              <img id="recommendationPhotoImage" alt="推荐项目照片预览" />
-              <button id="removeRecommendationPhotoBtn" type="button" class="photo-remove-button">删除照片</button>
-            </div>
-            <label class="photo-upload-button">
-              <input id="recommendationPhotoFile" type="file" accept="image/png,image/jpeg,image/webp" />
-              <span>上传照片</span>
-            </label>
-            <small class="field-help">上传照片或填写描述后，标题将成为必填项。</small>
-          </div>
+          <div id="recommendationList" class="recommendation-editor-list"></div>
+          <div id="recommendationLimitHint" class="recommendation-limit-hint" aria-live="polite"></div>
         </section>
 
         <section class="form-section visit-section">
@@ -340,6 +326,6 @@
   <script src="./config.js?v=20260830a"></script>
   <script src="./credits-data.js?v=20260829a"></script>
   <script src="./credits.js?v=20260829a"></script>
-  <script src="./app.js?v=20260830a"></script>
+  <script src="./app.js?v=20260924a"></script>
 </body>
 </html>

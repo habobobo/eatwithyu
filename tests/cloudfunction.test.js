@@ -169,11 +169,12 @@ async function run() {
       places: [{
         id: "place-1",
         name: "测试餐厅",
-        recommendation: {
-          title: "测试菜",
+        recommendations: Array.from({ length: 11 }, (_, index) => ({
+          title: `测试菜 ${index + 1}`,
+          description: `推荐理由 ${index + 1}`,
           photo: uploaded.url,
           photoFileId: uploaded.fileId
-        }
+        }))
       }],
       categories: [],
       icons: []
@@ -182,10 +183,15 @@ async function run() {
   assert.equal(firstSave.version, 1);
   assert.equal(firstSave.title, "eatwithyu");
   assert.equal(documents.get("beijing").title, "eatwithyu");
+  assert.equal(documents.get("beijing").data.places[0].recommendations.length, 10);
+  assert.equal(documents.get("beijing").data.places[0].recommendations[9].title, "测试菜 10");
+  assert.ok(documents.get("beijing").data.places[0].recommendations.every((item) => item.photo === ""));
   assert.equal(documents.get("beijing").data.places[0].recommendation.photo, "");
   assert.equal(JSON.stringify(documents.get("beijing")).includes(editorToken), false);
 
   const hydrated = await mapFunction.main({ action: "get", mapId: "beijing" });
+  assert.equal(hydrated.data.places[0].recommendations.length, 10);
+  assert.ok(hydrated.data.places[0].recommendations.every((item) => item.photo === uploaded.url));
   assert.equal(hydrated.data.places[0].recommendation.photo, uploaded.url);
 
   const conflict = await mapFunction.main({

@@ -9,6 +9,7 @@ const assets = app.storage.from(ASSET_BUCKET);
 const DEFAULT_MAP_ID = process.env.MAP_ID || "beijing";
 const MAP_TITLE = process.env.MAP_TITLE || "eatwithyu";
 const MAX_MAP_BYTES = 4.5 * 1024 * 1024;
+const MAX_RECOMMENDATIONS = 10;
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST,OPTIONS",
@@ -90,6 +91,26 @@ function emptyMapData() {
   return { places: [], categories: [], icons: [] };
 }
 
+function normalizeRecommendations(place = {}) {
+  const source = Array.isArray(place.recommendations) && place.recommendations.length
+    ? place.recommendations
+    : place.recommendation
+      ? [place.recommendation]
+      : [];
+
+  return source
+    .filter((item) => item && typeof item === "object")
+    .slice(0, MAX_RECOMMENDATIONS)
+    .map((item) => ({
+      ...item,
+      title: String(item.title || "").slice(0, 80),
+      description: String(item.description || "").slice(0, 300),
+      photo: item.photoFileId ? "" : item.photo || "",
+      photoFileId: String(item.photoFileId || "")
+    }))
+    .filter((item) => item.title || item.description || item.photo || item.photoFileId);
+}
+
 function normalizeMapData(input) {
   const data = input && typeof input === "object" ? input : {};
   const normalized = {
@@ -113,18 +134,15 @@ function normalizeMapData(input) {
     ...category,
     iconUrl: category.iconId ? "" : category.iconUrl || ""
   }));
-  normalized.places = normalized.places.map((place) => ({
-    ...place,
-    iconUrl: place.iconId ? "" : place.iconUrl || "",
-    recommendation: place.recommendation
-      ? {
-          ...place.recommendation,
-          photo: place.recommendation.photoFileId
-            ? ""
-            : place.recommendation.photo || ""
-        }
-      : null
-  }));
+  normalized.places = normalized.places.map((place) => {
+    const recommendations = normalizeRecommendations(place);
+    return {
+      ...place,
+      iconUrl: place.iconId ? "" : place.iconUrl || "",
+      recommendations,
+      recommendation: recommendations[0] || null
+    };
+  });
 
   const json = JSON.stringify(normalized);
   if (Buffer.byteLength(json, "utf8") > MAX_MAP_BYTES) {
@@ -139,7 +157,9 @@ function collectFileIds(data) {
     if (icon.fileId) fileIds.add(icon.fileId);
   });
   data.places.forEach((place) => {
-    if (place.recommendation?.photoFileId) fileIds.add(place.recommendation.photoFileId);
+    normalizeRecommendations(place).forEach((recommendation) => {
+      if (recommendation.photoFileId) fileIds.add(recommendation.photoFileId);
+    });
   });
   return [...fileIds];
 }
@@ -165,17 +185,19 @@ async function hydratePublicAssetUrls(storedData) {
     ...icon,
     url: icon.fileId ? lookup.get(icon.fileId) || "" : icon.url || ""
   }));
-  data.places = data.places.map((place) => ({
-    ...place,
-    recommendation: place.recommendation
-      ? {
-          ...place.recommendation,
-          photo: place.recommendation.photoFileId
-            ? lookup.get(place.recommendation.photoFileId) || ""
-            : place.recommendation.photo || ""
-        }
-      : null
-  }));
+  data.places = data.places.map((place) => {
+    const recommendations = normalizeRecommendations(place).map((recommendation) => ({
+      ...recommendation,
+      photo: recommendation.photoFileId
+        ? lookup.get(recommendation.photoFileId) || ""
+        : recommendation.photo || ""
+    }));
+    return {
+      ...place,
+      recommendations,
+      recommendation: recommendations[0] || null
+    };
+  });
   return data;
 }
 

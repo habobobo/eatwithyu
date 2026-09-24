@@ -1,6 +1,10 @@
 const SHARED_MAP_FALLBACK_FILE = "./maps/beijing.json";
 const DEFAULT_MAP_TITLE = "eatwithyu";
 const MAP_AVATAR_ICON_ID = "__eatwithyu_map_avatar__";
+const MAX_RECOMMENDATIONS = 10;
+const DETAILED_POI_MIN_ZOOM = 14;
+const CLEAN_BASE_MAP_FEATURES = ["bg", "road", "building"];
+const DETAILED_BASE_MAP_FEATURES = [...CLEAN_BASE_MAP_FEATURES, "point"];
 const SEARCH_CITY_NAMES = new Set(`
   北京 上海 天津 重庆 香港 澳门 深圳 广州 东莞 佛山 珠海 汕头
   石家庄 太原 呼和浩特 沈阳 大连 长春 哈尔滨 南京 苏州 无锡
@@ -17,6 +21,7 @@ let canEdit = false;
 let mapTitle = DEFAULT_MAP_TITLE;
 
 let map;
+let activeBaseMapFeatures = "";
 let placeSearch;
 let markers = new Map();
 let searchMarkers = [];
@@ -31,8 +36,7 @@ let selectedCategoryIconId = "";
 let editingCategoryId = "";
 let categoryDialogReturnToPlace = false;
 let categoryIntegrityChanged = false;
-let recommendationPhotoData = "";
-let recommendationPhotoFileId = "";
+let recommendationDrafts = [];
 let selectedVisitMode = "solo";
 let infoWindow;
 let sharedVersion = null;
@@ -105,6 +109,25 @@ function normalizeMapTitle(value) {
   return normalized.slice(0, 60) || DEFAULT_MAP_TITLE;
 }
 
+function normalizedRecommendations(place = {}) {
+  const source = Array.isArray(place.recommendations) && place.recommendations.length
+    ? place.recommendations
+    : place.recommendation
+      ? [place.recommendation]
+      : [];
+
+  return source
+    .filter((item) => item && typeof item === "object")
+    .slice(0, MAX_RECOMMENDATIONS)
+    .map((item) => ({
+      title: String(item.title || "").slice(0, 80),
+      description: String(item.description || "").slice(0, 300),
+      photo: String(item.photo || ""),
+      photoFileId: String(item.photoFileId || "")
+    }))
+    .filter((item) => item.title || item.description || item.photo || item.photoFileId);
+}
+
 function applyMapIdentity() {
   mapTitle = normalizeMapTitle(mapTitle);
   document.title = mapTitle;
@@ -137,13 +160,19 @@ function resolveAssetReferences() {
       : category.iconUrl || ""
   }));
 
-  savedPlaces = savedPlaces.map((place) => ({
-    ...place,
-    credits: normalizedRestaurantCredits(place.credits),
-    iconUrl: place.iconId
-      ? iconsById.get(place.iconId)?.url || ""
-      : place.iconUrl || ""
-  }));
+  savedPlaces = savedPlaces.map((place) => {
+    const recommendations = normalizedRecommendations(place);
+    return {
+      ...place,
+      credits: normalizedRestaurantCredits(place.credits),
+      iconUrl: place.iconId
+        ? iconsById.get(place.iconId)?.url || ""
+        : place.iconUrl || "",
+      recommendations,
+      // 暂时保留第一道菜的旧字段，兼容仍在使用旧缓存的页面。
+      recommendation: recommendations[0] || null
+    };
+  });
 }
 
 async function loadFallbackMap() {
@@ -274,6 +303,10 @@ function sharedPayload() {
   return {
     places: savedPlaces.map((place) => {
       const category = findCategory(place.category, place.categoryId);
+      const recommendations = normalizedRecommendations(place).map((item) => ({
+        ...item,
+        photo: item.photoFileId ? "" : item.photo || ""
+      }));
       return {
         ...place,
         category: category?.name || place.category || "",
@@ -282,14 +315,8 @@ function sharedPayload() {
         iconId: "",
         iconUrl: "",
         credits: normalizedRestaurantCredits(place.credits),
-        recommendation: place.recommendation
-          ? {
-              ...place.recommendation,
-              photo: place.recommendation.photoFileId
-                ? ""
-                : place.recommendation.photo || ""
-            }
-          : null
+        recommendations,
+        recommendation: recommendations[0] || null
       };
     }),
     categories: savedCategories.map((category) => ({
@@ -558,13 +585,29 @@ function initMap() {
     resizeEnable: true,
     doubleClickZoom: false,
 
-    // 保留高德底图标注，让地铁站等公共交通信息正常显示。
-    features: ["bg", "road", "building", "point"]
+    // 城市概览隐藏密集的默认 POI；放大到街区后再显示地铁站等信息。
+    features: CLEAN_BASE_MAP_FEATURES
   });
+
+  const updateBaseMapDensity = () => {
+    const showDetailedPois = Number(map.getZoom()) >= DETAILED_POI_MIN_ZOOM;
+    const nextFeatures = showDetailedPois
+      ? DETAILED_BASE_MAP_FEATURES
+      : CLEAN_BASE_MAP_FEATURES;
+    const nextKey = nextFeatures.join(",");
+    if (nextKey === activeBaseMapFeatures) return;
+    activeBaseMapFeatures = nextKey;
+    map.setFeatures(nextFeatures);
+  };
+
+  updateBaseMapDensity();
+  map.on("zoomend", updateBaseMapDensity);
 
   map.addControl(new AMap.Scale());
   map.addControl(new AMap.ToolBar({
-    position: { right: "20px", top: "20px" }
+    position: window.matchMedia("(max-width: 680px)").matches
+      ? { right: "12px", bottom: "86px" }
+      : { right: "20px", top: "20px" }
   }));
 
   placeSearch = new AMap.PlaceSearch({
@@ -580,17 +623,58 @@ function initMap() {
     isCustom: false
   });
 
-  map.on("dblclick", (event) => {
+  const openManualPlaceAt = (lnglat) => {
     if (!canEdit) return;
     const placeName = pendingManualPlaceName || "地图上的地点";
     resetManualPlacement();
     openPlaceDialog({
       name: placeName,
       address: "",
-      location: [event.lnglat.lng, event.lnglat.lat],
+      location: [lnglat.lng, lnglat.lat],
       poiId: ""
     });
-  });
+  };
+
+  map.on("dblclick", (event) => openManualPlaceAt(event.lnglat));
+
+  // 手机上没有可靠的“双击地图”手势，长按约 0.65 秒即可手动落点。
+  const mapContainer = map.getContainer();
+  let longPressTimer = 0;
+  let longPressStart = null;
+  const cancelLongPress = () => {
+    window.clearTimeout(longPressTimer);
+    longPressTimer = 0;
+    longPressStart = null;
+  };
+
+  mapContainer.addEventListener("pointerdown", (event) => {
+    if (!canEdit || event.pointerType !== "touch") return;
+    const eventTarget = event.target instanceof Element ? event.target : null;
+    if (eventTarget?.closest(".amap-controls, .amap-info-window")) return;
+    longPressStart = { x: event.clientX, y: event.clientY };
+    longPressTimer = window.setTimeout(() => {
+      if (!longPressStart) return;
+      const rect = mapContainer.getBoundingClientRect();
+      const pixel = new AMap.Pixel(
+        longPressStart.x - rect.left,
+        longPressStart.y - rect.top
+      );
+      openManualPlaceAt(map.containerToLngLat(pixel));
+      if (navigator.vibrate) navigator.vibrate(20);
+      cancelLongPress();
+    }, 650);
+  }, { passive: true });
+
+  mapContainer.addEventListener("pointermove", (event) => {
+    if (!longPressStart) return;
+    const movement = Math.hypot(
+      event.clientX - longPressStart.x,
+      event.clientY - longPressStart.y
+    );
+    if (movement > 10) cancelLongPress();
+  }, { passive: true });
+  mapContainer.addEventListener("pointerup", cancelLongPress, { passive: true });
+  mapContainer.addEventListener("pointercancel", cancelLongPress, { passive: true });
 
   migrateIconsFromPlaces();
   categoryIntegrityChanged = ensureCategoryIntegrity() || categoryIntegrityChanged;
@@ -695,19 +779,27 @@ function addMarker(place) {
   });
 
   marker.on("click", () => {
-    const recommendation = place.recommendation || {};
-    const recommendationHtml = recommendation.title
+    const recommendations = normalizedRecommendations(place);
+    const recommendationItemsHtml = recommendations.map((recommendation) => `
+      <div class="recommendation-list-item ${recommendation.photo ? "" : "no-photo"}">
+        <div class="recommendation-copy">
+          <strong>${escapeHtml(recommendation.title)}</strong>
+          ${recommendation.description ? `<p>${escapeHtml(recommendation.description)}</p>` : ""}
+        </div>
+        ${recommendation.photo
+          ? `<img class="recommendation-thumbnail" src="${escapeHtml(recommendation.photo)}" alt="${escapeHtml(recommendation.title)}">`
+          : ""}
+      </div>
+    `).join("");
+    const recommendationHtml = recommendations.length
       ? `
         <section class="info-recommendation" aria-label="推荐菜单">
-          <div class="recommendation-list-label">推荐菜单</div>
-          <div class="recommendation-list-item ${recommendation.photo ? "" : "no-photo"}">
-            <div class="recommendation-copy">
-              <strong>${escapeHtml(recommendation.title)}</strong>
-              ${recommendation.description ? `<p>${escapeHtml(recommendation.description)}</p>` : ""}
-            </div>
-            ${recommendation.photo
-              ? `<img class="recommendation-thumbnail" src="${recommendation.photo}" alt="${escapeHtml(recommendation.title)}">`
-              : ""}
+          <div class="recommendation-list-label">
+            <span>推荐菜单</span>
+            <span>${recommendations.length} 道</span>
+          </div>
+          <div class="recommendation-display-list ${recommendations.length > 3 ? "is-scrollable" : ""}">
+            ${recommendationItemsHtml}
           </div>
         </section>
       `
@@ -1249,7 +1341,14 @@ function mergeSearchResults(resultGroups, limit = 15) {
 
 function resetManualPlacement() {
   pendingManualPlaceName = "";
-  if ($("bottomHint")) $("bottomHint").textContent = "双击地图可手动添加地点";
+  if ($("bottomHint")) $("bottomHint").textContent = manualPlacementHint();
+}
+
+function manualPlacementHint(placeName = "") {
+  const gesture = window.matchMedia("(pointer: coarse)").matches ? "长按" : "双击";
+  return placeName
+    ? `${gesture}餐厅所在位置，添加“${placeName}”`
+    : `${gesture}地图可手动添加地点`;
 }
 
 function startManualPlacement(rawKeyword, city) {
@@ -1260,7 +1359,7 @@ function startManualPlacement(rawKeyword, city) {
   $("searchResultsSection").classList.add("hidden");
   $("mainPanel").classList.add("collapsed");
   $("openPanelBtn").classList.remove("hidden");
-  $("bottomHint").textContent = `双击餐厅所在位置，添加“${pendingManualPlaceName}”`;
+  $("bottomHint").textContent = manualPlacementHint(pendingManualPlaceName);
   if (city) map.setCity(city);
 }
 
@@ -1799,17 +1898,116 @@ function saveStandaloneCategory(event) {
   renderAll();
 }
 
-function setRecommendationPhoto(dataUrl, fileId = "") {
-  recommendationPhotoData = dataUrl || "";
-  recommendationPhotoFileId = fileId || "";
-  $("recommendationPhotoPreview").classList.toggle("hidden", !recommendationPhotoData);
+function recommendationDraftId() {
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : `recommendation-${Date.now()}-${Math.random()}`;
+}
 
-  if (recommendationPhotoData) {
-    $("recommendationPhotoImage").src = recommendationPhotoData;
-  } else {
-    $("recommendationPhotoImage").removeAttribute("src");
-    $("recommendationPhotoFile").value = "";
+function createRecommendationDraft(item = {}) {
+  return {
+    draftId: item.draftId || recommendationDraftId(),
+    title: String(item.title || ""),
+    description: String(item.description || ""),
+    photo: String(item.photo || ""),
+    photoFileId: String(item.photoFileId || "")
+  };
+}
+
+function collectRecommendationDraftsFromForm() {
+  const host = $("recommendationList");
+  if (!host) return recommendationDrafts;
+
+  recommendationDrafts = [...host.querySelectorAll(".recommendation-editor-item")]
+    .map((element) => {
+      const draftId = element.dataset.recommendationId || "";
+      const previous = recommendationDrafts.find((item) => item.draftId === draftId) || {};
+      return createRecommendationDraft({
+        ...previous,
+        draftId,
+        title: element.querySelector("[data-field='title']")?.value || "",
+        description: element.querySelector("[data-field='description']")?.value || ""
+      });
+    });
+  return recommendationDrafts;
+}
+
+function recommendationEditorItemMarkup(draft, index) {
+  const hasPhoto = Boolean(draft.photo);
+  return `
+    <article class="recommendation-editor-item" data-recommendation-id="${escapeHtml(draft.draftId)}">
+      <header class="recommendation-editor-header">
+        <div class="recommendation-editor-title">
+          <span class="recommendation-number">${index + 1}</span>
+          <strong>推荐菜 ${index + 1}</strong>
+        </div>
+        <button
+          class="recommendation-remove-button"
+          type="button"
+          data-action="remove-recommendation"
+          aria-label="删除推荐菜 ${index + 1}"
+        >
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 9.25h9v1.5h-9v-1.5Z"/></svg>
+        </button>
+      </header>
+      <label class="form-field">
+        <span>名称</span>
+        <input data-field="title" maxlength="80" value="${escapeHtml(draft.title)}" placeholder="例如：招牌烤鸭" />
+      </label>
+      <label class="form-field">
+        <span>推荐理由（可选）</span>
+        <textarea data-field="description" rows="2" maxlength="300" placeholder="口味、分量、价格或推荐理由">${escapeHtml(draft.description)}</textarea>
+      </label>
+      <div class="recommendation-photo-row">
+        ${hasPhoto
+          ? `<div class="recommendation-photo-compact-preview">
+              <img src="${escapeHtml(draft.photo)}" alt="${escapeHtml(draft.title || `推荐菜 ${index + 1}`)}">
+              <button type="button" data-action="remove-photo">移除照片</button>
+            </div>`
+          : ""}
+        <label class="recommendation-photo-button ${hasPhoto ? "has-photo" : ""}">
+          <input data-action="upload-photo" type="file" accept="image/png,image/jpeg,image/webp" />
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 5.5A1.5 1.5 0 0 1 5 4h2l1 1.5h7A1.5 1.5 0 0 1 16.5 7v7A1.5 1.5 0 0 1 15 15.5H5A1.5 1.5 0 0 1 3.5 14V5.5Zm6.5 2A3.25 3.25 0 1 0 10 14a3.25 3.25 0 0 0 0-6.5Zm0 1.5a1.75 1.75 0 1 1 0 3.5A1.75 1.75 0 0 1 10 9Z"/></svg>
+          <span>${hasPhoto ? "更换照片" : "添加照片"}</span>
+        </label>
+      </div>
+    </article>
+  `;
+}
+
+function renderRecommendationEditor(focusDraftId = "") {
+  if (!recommendationDrafts.length) {
+    recommendationDrafts = [createRecommendationDraft()];
   }
+  recommendationDrafts = recommendationDrafts.slice(0, MAX_RECOMMENDATIONS);
+
+  $("recommendationList").innerHTML = recommendationDrafts
+    .map(recommendationEditorItemMarkup)
+    .join("");
+
+  const atLimit = recommendationDrafts.length >= MAX_RECOMMENDATIONS;
+  $("addRecommendationBtn").disabled = atLimit;
+  $("recommendationLimitHint").textContent = atLimit
+    ? "已添加 10 道，达到上限"
+    : `${recommendationDrafts.length} / ${MAX_RECOMMENDATIONS}`;
+
+  if (focusDraftId) {
+    const item = [...$("recommendationList").querySelectorAll(".recommendation-editor-item")]
+      .find((element) => element.dataset.recommendationId === focusDraftId);
+    item?.querySelector("[data-field='title']")?.focus();
+  }
+}
+
+function recommendationValuesFromForm() {
+  return collectRecommendationDraftsFromForm()
+    .map((item) => ({
+      title: item.title.trim(),
+      description: item.description.trim(),
+      photo: item.photo,
+      photoFileId: item.photoFileId
+    }))
+    .filter((item) => item.title || item.description || item.photo || item.photoFileId)
+    .slice(0, MAX_RECOMMENDATIONS);
 }
 
 function setVisitMode(mode) {
@@ -1836,10 +2034,9 @@ function openPlaceDialog(data, editingId = "") {
 
   renderCategorySelect(data.category || "");
 
-  const recommendation = data.recommendation || {};
-  $("recommendationTitle").value = recommendation.title || "";
-  $("recommendationDescription").value = recommendation.description || "";
-  setRecommendationPhoto(recommendation.photo || "", recommendation.photoFileId || "");
+  recommendationDrafts = normalizedRecommendations(data).map(createRecommendationDraft);
+  if (!recommendationDrafts.length) recommendationDrafts = [createRecommendationDraft()];
+  renderRecommendationEditor();
 
   const visitRecord = data.visitRecord || {};
   $("visitDate").value = visitRecord.date || "";
@@ -1867,6 +2064,7 @@ window.editSavedPlace = function (id) {
     address: place.address,
     category: place.category,
     note: place.note,
+    recommendations: place.recommendations || [],
     recommendation: place.recommendation || {},
     visitRecord: place.visitRecord || {},
     location: [place.longitude, place.latitude],
@@ -1878,17 +2076,18 @@ function resolvedCategory() {
   return findCategory($("categorySelect").value);
 }
 
-function validateRecommendation() {
-  const title = $("recommendationTitle").value.trim();
-  const description = $("recommendationDescription").value.trim();
+function validateRecommendations(recommendations) {
+  const invalidDraft = recommendationDrafts.find((item) =>
+    (item.description || item.photo || item.photoFileId) && !item.title
+  );
+  if (!invalidDraft) return true;
 
-  if ((description || recommendationPhotoData) && !title) {
-    alert("上传推荐照片或填写描述后，请同时填写推荐标题。");
-    $("recommendationTitle").focus();
-    return false;
-  }
-
-  return true;
+  const invalidIndex = recommendationDrafts.indexOf(invalidDraft);
+  alert(`第 ${invalidIndex + 1} 道推荐菜添加了描述或照片，请同时填写名称。`);
+  const item = [...$("recommendationList").querySelectorAll(".recommendation-editor-item")]
+    .find((element) => element.dataset.recommendationId === invalidDraft.draftId);
+  item?.querySelector("[data-field='title']")?.focus();
+  return false;
 }
 
 function savePlace(event) {
@@ -1901,7 +2100,8 @@ function savePlace(event) {
     return;
   }
 
-  if (!validateRecommendation()) return;
+  const recommendations = recommendationValuesFromForm();
+  if (!validateRecommendations(recommendations)) return;
 
   if (
     $("visitDate").value &&
@@ -1917,8 +2117,6 @@ function savePlace(event) {
   const existingPlace = editingId
     ? savedPlaces.find((item) => item.id === editingId)
     : null;
-  const recommendationTitle = $("recommendationTitle").value.trim();
-
   const place = {
     id: editingId || (
       crypto.randomUUID ? crypto.randomUUID() : String(Date.now())
@@ -1942,14 +2140,8 @@ function savePlace(event) {
       latitude: Number($("latitude").value)
     }),
     isMarked: true,
-    recommendation: recommendationTitle
-      ? {
-          title: recommendationTitle,
-          description: $("recommendationDescription").value.trim(),
-          photo: recommendationPhotoData,
-          photoFileId: recommendationPhotoFileId
-        }
-      : null,
+    recommendations,
+    recommendation: recommendations[0] || null,
     visitRecord: $("visitDate").value
       ? {
           date: $("visitDate").value,
@@ -2191,24 +2383,65 @@ $("cancelBtn").onclick = () => $("placeDialog").close();
 $("visitSoloBtn").onclick = () => setVisitMode("solo");
 $("visitWithBtn").onclick = () => setVisitMode("with");
 
-$("recommendationPhotoFile").onchange = async (event) => {
-  const file = event.target.files[0];
+$("addRecommendationBtn").onclick = () => {
+  collectRecommendationDraftsFromForm();
+  if (recommendationDrafts.length >= MAX_RECOMMENDATIONS) return;
+  const draft = createRecommendationDraft();
+  recommendationDrafts.push(draft);
+  renderRecommendationEditor(draft.draftId);
+};
+
+$("recommendationList").onclick = (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  const item = button.closest(".recommendation-editor-item");
+  const draftId = item?.dataset.recommendationId || "";
+
+  collectRecommendationDraftsFromForm();
+  const index = recommendationDrafts.findIndex((draft) => draft.draftId === draftId);
+  if (index < 0) return;
+
+  if (button.dataset.action === "remove-recommendation") {
+    recommendationDrafts.splice(index, 1);
+    renderRecommendationEditor();
+    return;
+  }
+
+  if (button.dataset.action === "remove-photo") {
+    recommendationDrafts[index].photo = "";
+    recommendationDrafts[index].photoFileId = "";
+    renderRecommendationEditor();
+  }
+};
+
+$("recommendationList").onchange = async (event) => {
+  const input = event.target.closest("input[data-action='upload-photo']");
+  if (!input) return;
+  const file = input.files[0];
   if (!file) return;
+
+  const item = input.closest(".recommendation-editor-item");
+  const draftId = item?.dataset.recommendationId || "";
+  collectRecommendationDraftsFromForm();
+  input.disabled = true;
+  item?.classList.add("is-uploading");
 
   try {
     const asset = await uploadSharedAsset(file, "photo");
-    setRecommendationPhoto(asset.url, asset.fileId);
+    collectRecommendationDraftsFromForm();
+    const index = recommendationDrafts.findIndex((draft) => draft.draftId === draftId);
+    if (index >= 0) {
+      recommendationDrafts[index].photo = asset.url;
+      recommendationDrafts[index].photoFileId = asset.fileId;
+      renderRecommendationEditor();
+    }
   } catch (error) {
     console.error(error);
     alert(error.message || "照片上传失败");
     setSyncStatus("照片上传失败", "error");
-  } finally {
-    event.target.value = "";
+    input.disabled = false;
+    item?.classList.remove("is-uploading");
   }
-};
-
-$("removeRecommendationPhotoBtn").onclick = () => {
-  setRecommendationPhoto("");
 };
 
 $("deleteCategoryForm").addEventListener("submit", confirmDeleteCategory);
