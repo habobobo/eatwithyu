@@ -47,8 +47,136 @@ let isHydrating = true;
 let cloudbaseApp = null;
 let sharedStatusText = "正在同步…";
 let sharedStatusState = "saving";
+let mobileSheetState = "peek";
 
 const $ = (id) => document.getElementById(id);
+
+function isMobileSheetViewport() {
+  return window.matchMedia("(max-width: 680px)").matches;
+}
+
+function mobileSheetStateIndex(state = mobileSheetState) {
+  return ["peek", "half", "full"].indexOf(state);
+}
+
+function updateMobileSheetAccessibility() {
+  const grip = $("mobileSheetGrip");
+  if (!grip) return;
+  const isExpanded = mobileSheetState !== "peek";
+  grip.setAttribute("aria-expanded", String(isExpanded));
+  grip.setAttribute(
+    "aria-label",
+    mobileSheetState === "peek"
+      ? "展开地点列表"
+      : mobileSheetState === "full"
+        ? "缩小地点列表"
+        : "展开或收起地点列表"
+  );
+}
+
+function setMobileSheetState(state, options = {}) {
+  if (!isMobileSheetViewport()) return;
+  const nextState = ["peek", "half", "full"].includes(state) ? state : "peek";
+  mobileSheetState = nextState;
+  const panel = $("mainPanel");
+  const content = $("panelContent");
+  panel.dataset.mobileSheet = nextState;
+  panel.classList.remove("collapsed");
+  panel.removeAttribute("data-mobile-sheet-dragging");
+  content.style.removeProperty("--mobile-sheet-drag-height");
+  if (nextState === "peek") content.scrollTop = 0;
+  $("openPanelBtn").classList.add("hidden");
+  updateMobileSheetAccessibility();
+  if (!options.immediate) {
+    window.setTimeout(() => map?.resize(), 300);
+  }
+}
+
+function stepMobileSheet(direction) {
+  const states = ["peek", "half", "full"];
+  const currentIndex = Math.max(0, mobileSheetStateIndex());
+  const nextIndex = Math.max(0, Math.min(states.length - 1, currentIndex + direction));
+  setMobileSheetState(states[nextIndex]);
+}
+
+function updateMobileSheetMeta() {
+  if ($("mobileSheetTitle")) $("mobileSheetTitle").textContent = mapTitle;
+  if ($("mobileSheetSummary")) {
+    $("mobileSheetSummary").textContent = `${currentPlaces().length} 个地点`;
+  }
+}
+
+function initializeMobileSheet() {
+  const grip = $("mobileSheetGrip");
+  const panel = $("mainPanel");
+  const content = $("panelContent");
+  if (!grip || !panel || !content) return;
+
+  let dragStartY = 0;
+  let dragStartHeight = 0;
+  let dragMoved = false;
+  let suppressClick = false;
+
+  grip.addEventListener("click", () => {
+    if (!isMobileSheetViewport() || suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    if (mobileSheetState === "full") stepMobileSheet(-1);
+    else stepMobileSheet(1);
+  });
+
+  grip.addEventListener("pointerdown", (event) => {
+    if (!isMobileSheetViewport()) return;
+    dragStartY = event.clientY;
+    dragStartHeight = content.getBoundingClientRect().height;
+    dragMoved = false;
+    grip.setPointerCapture?.(event.pointerId);
+    panel.setAttribute("data-mobile-sheet-dragging", "true");
+    content.style.setProperty("--mobile-sheet-drag-height", `${dragStartHeight}px`);
+  });
+
+  grip.addEventListener("pointermove", (event) => {
+    if (!panel.hasAttribute("data-mobile-sheet-dragging")) return;
+    const delta = dragStartY - event.clientY;
+    if (Math.abs(delta) > 6) dragMoved = true;
+    const minHeight = 76;
+    const maxHeight = Math.max(320, window.innerHeight - 80);
+    const nextHeight = Math.max(minHeight, Math.min(maxHeight, dragStartHeight + delta));
+    content.style.setProperty("--mobile-sheet-drag-height", `${nextHeight}px`);
+  });
+
+  const finishDrag = (event) => {
+    if (!panel.hasAttribute("data-mobile-sheet-dragging")) return;
+    const delta = dragStartY - event.clientY;
+    panel.removeAttribute("data-mobile-sheet-dragging");
+    content.style.removeProperty("--mobile-sheet-drag-height");
+    if (dragMoved) {
+      suppressClick = true;
+      window.setTimeout(() => {
+        suppressClick = false;
+      }, 350);
+      if (event.type === "pointercancel") setMobileSheetState(mobileSheetState);
+      else if (delta > 44) stepMobileSheet(1);
+      else if (delta < -44) stepMobileSheet(-1);
+      else setMobileSheetState(mobileSheetState);
+    }
+  };
+
+  grip.addEventListener("pointerup", finishDrag);
+  grip.addEventListener("pointercancel", finishDrag);
+
+  window.addEventListener("resize", () => {
+    if (isMobileSheetViewport()) {
+      setMobileSheetState(mobileSheetState, { immediate: true });
+    } else {
+      panel.removeAttribute("data-mobile-sheet-dragging");
+      content.style.removeProperty("--mobile-sheet-drag-height");
+    }
+  });
+
+  setMobileSheetState("peek", { immediate: true });
+}
 
 function persistPlaces() {
   scheduleSharedSave();
@@ -779,6 +907,7 @@ function addMarker(place) {
   });
 
   marker.on("click", () => {
+    setMobileSheetState("peek");
     const recommendations = normalizedRecommendations(place);
     const recommendationItemsHtml = recommendations.map((recommendation) => `
       <div class="recommendation-list-item ${recommendation.photo ? "" : "no-photo"}">
@@ -1020,6 +1149,7 @@ function renderSavedPlaces() {
         </div>
       </div>`;
     item.onclick = () => {
+      setMobileSheetState("peek");
       map.setZoomAndCenter(17, [place.longitude, place.latitude]);
       if (isUnmarked && canEdit) {
         window.editSavedPlace(place.id);
@@ -1040,6 +1170,7 @@ function renderAll() {
   renderMarkers();
   renderCategoryFilters();
   renderSavedPlaces();
+  updateMobileSheetMeta();
 }
 
 function renderMapPresets() {
@@ -1198,6 +1329,7 @@ function savedSearchHighlight(place) {
 function openSavedSearchResult(place, highlightMarker) {
   const position = placeLocation(place);
   if (!position) return;
+  setMobileSheetState("peek");
   if (highlightMarker) focusSearchMarker(highlightMarker);
 
   if (place.isMarked === false && canEdit) {
@@ -1357,8 +1489,12 @@ function startManualPlacement(rawKeyword, city) {
   activeSearchId += 1;
   clearSearchMarkers();
   $("searchResultsSection").classList.add("hidden");
-  $("mainPanel").classList.add("collapsed");
-  $("openPanelBtn").classList.remove("hidden");
+  if (isMobileSheetViewport()) {
+    setMobileSheetState("peek");
+  } else {
+    $("mainPanel").classList.add("collapsed");
+    $("openPanelBtn").classList.remove("hidden");
+  }
   $("bottomHint").textContent = manualPlacementHint(pendingManualPlaceName);
   if (city) map.setCity(city);
 }
@@ -1559,6 +1695,7 @@ function appendManualSearchAction(host, rawKeyword, city, isEmpty = false) {
 }
 
 function openSearchResult(poi, location, marker) {
+  setMobileSheetState("peek");
   focusSearchMarker(marker);
 
   if (canEdit) {
@@ -1589,6 +1726,7 @@ async function searchPoi() {
   resetManualPlacement();
   clearSearchMarkers();
   $("searchResultsSection").classList.remove("hidden");
+  setMobileSheetState("full");
   const { attempts, parsed } = searchAttempts(keyword);
   $("searchResults").innerHTML = `<div class="item-meta">正在${parsed.city ? `${escapeHtml(parsed.city)}范围内` : "全国范围内"}搜索…</div>`;
 
@@ -2371,6 +2509,7 @@ $("clearResultsBtn").onclick = () => {
   $("searchResultsSection").classList.add("hidden");
   activeSearchId += 1;
   clearSearchMarkers();
+  setMobileSheetState("half");
 };
 
 $("newCategoryBtn").onclick = () => openCategoryDialog("", true);
@@ -2494,6 +2633,10 @@ $("mapAvatarFile").onchange = async (event) => {
 };
 
 $("menuBtn").onclick = () => {
+  if (isMobileSheetViewport()) {
+    setMobileSheetState(mobileSheetState === "peek" ? "half" : "peek");
+    return;
+  }
   $("mainPanel").classList.add("collapsed");
   $("openPanelBtn").classList.remove("hidden");
 };
@@ -2551,4 +2694,5 @@ document.addEventListener("keydown", (event) => {
   });
 });
 
+initializeMobileSheet();
 bootstrapSharedMap().then(loadAmap);
