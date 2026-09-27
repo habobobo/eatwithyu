@@ -287,11 +287,13 @@ function resolveAssetReferences() {
       ? iconsById.get(category.iconId)?.url || ""
       : category.iconUrl || ""
   }));
+  const categoriesById = new Map(savedCategories.map((category) => [category.id, category]));
 
   savedPlaces = savedPlaces.map((place) => {
     const recommendations = normalizedRecommendations(place);
     return {
       ...place,
+      category: place.category || categoriesById.get(place.categoryId)?.name || "",
       credits: normalizedRestaurantCredits(place.credits),
       iconUrl: place.iconId
         ? iconsById.get(place.iconId)?.url || ""
@@ -435,26 +437,43 @@ function sharedPayload() {
         ...item,
         photo: item.photoFileId ? "" : item.photo || ""
       }));
-      return {
+      const compactPlace = {
         ...place,
-        category: category?.name || place.category || "",
         categoryId: category?.id || "",
-        // Logo 只属于分类。地点不再保存一份可独立修改的图标。
-        iconId: "",
-        iconUrl: "",
         credits: normalizedRestaurantCredits(place.credits),
-        recommendations,
-        recommendation: recommendations[0] || null
+        recommendations
       };
+
+      // 分类名称、地点 Logo 和旧版单道推荐菜都能从其他字段重建。
+      // 不再在每次保存时重复上传，避免超过 CloudBase HTTP 的请求体上限。
+      if (compactPlace.categoryId) delete compactPlace.category;
+      delete compactPlace.iconId;
+      delete compactPlace.iconUrl;
+      delete compactPlace.recommendation;
+      if (!compactPlace.credits.length) delete compactPlace.credits;
+      if (!compactPlace.recommendations.length) delete compactPlace.recommendations;
+      if (compactPlace.isMarked === true) delete compactPlace.isMarked;
+      Object.keys(compactPlace).forEach((key) => {
+        if (compactPlace[key] === "" || compactPlace[key] == null) delete compactPlace[key];
+      });
+      return compactPlace;
     }),
-    categories: savedCategories.map((category) => ({
-      ...category,
-      iconUrl: category.iconId ? "" : category.iconUrl || ""
-    })),
-    icons: savedIcons.map((icon) => ({
-      ...icon,
-      url: icon.fileId ? "" : icon.url || ""
-    }))
+    categories: savedCategories.map((category) => {
+      const compactCategory = { ...category };
+      if (compactCategory.iconId) delete compactCategory.iconUrl;
+      Object.keys(compactCategory).forEach((key) => {
+        if (compactCategory[key] === "" || compactCategory[key] == null) delete compactCategory[key];
+      });
+      return compactCategory;
+    }),
+    icons: savedIcons.map((icon) => {
+      const compactIcon = { ...icon };
+      if (compactIcon.fileId) delete compactIcon.url;
+      Object.keys(compactIcon).forEach((key) => {
+        if (compactIcon[key] === "" || compactIcon[key] == null) delete compactIcon[key];
+      });
+      return compactIcon;
+    })
   };
 }
 
@@ -501,6 +520,8 @@ async function saveSharedMap() {
       alert("另一位编辑者刚刚更新了地图。请刷新页面读取最新内容后再编辑。");
     } else if (/EDITOR_TOKEN|密钥|token|permission|权限/i.test(`${error.code || ""} ${error.message || ""}`)) {
       alert("这条编辑链接无效或已失效。");
+    } else if (/EXCEED_MAX_PAYLOAD_SIZE|payload size|请求体.*(过大|上限)/i.test(`${error.code || ""} ${error.message || ""}`)) {
+      alert("地图数据超过云端单次保存上限。请刷新页面后重试；如果仍然失败，请联系管理员迁移旧图标数据。");
     }
     setSyncStatus("保存失败", "error");
   } finally {
