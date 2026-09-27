@@ -5,6 +5,32 @@ const MAX_RECOMMENDATIONS = 10;
 const DETAILED_POI_MIN_ZOOM = 14;
 const CLEAN_BASE_MAP_FEATURES = ["bg", "road", "building"];
 const DETAILED_BASE_MAP_FEATURES = [...CLEAN_BASE_MAP_FEATURES, "point"];
+const ROUTE_MODES = [
+  {
+    id: "driving",
+    label: "驾车 / 打车",
+    service: "Driving",
+    icon: '<path d="M5.2 7.2 6.5 4h11l1.3 3.2A3 3 0 0 1 21 10v7h-2v2h-2v-2H7v2H5v-2H3v-7a3 3 0 0 1 2.2-2.8ZM7.8 6 7 8h10l-.8-2H7.8ZM6 10a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm12 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/>'
+  },
+  {
+    id: "transit",
+    label: "公共交通",
+    service: "Transfer",
+    icon: '<path d="M6 3h12a3 3 0 0 1 3 3v9a3 3 0 0 1-2 2.83V20h-2v-2H7v2H5v-2.17A3 3 0 0 1 3 15V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v4h14V6a1 1 0 0 0-1-1H6Zm0 8a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm12 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/>'
+  },
+  {
+    id: "walking",
+    label: "步行",
+    service: "Walking",
+    icon: '<path d="M13 4.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm-1.2 2.1 2.4 1.2 1.5 2.5 1.7-1 1 1.7-3.4 2-1.6-2.3-.7 3.3 2.3 2.1-1.3 4.4-1.9-.6 1-3.4-2.8-2.4-1.2 6-2 .1.9-4.6 1.3-4.8-1.6-.7-2.4 3.5-1.7-1 3.3-5 3.6-1.1Z"/>'
+  },
+  {
+    id: "riding",
+    label: "骑行",
+    service: "Riding",
+    icon: '<path d="M5.5 11a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm0 2a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm13-2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm0 2a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7ZM11 5h3l1 2h-3.2l1.5 3H16l1 2h-5l-2-4H8.2l-1 2H5l2.2-4H11V5Z"/>'
+  }
+];
 const SEARCH_CITY_NAMES = new Set(`
   北京 上海 天津 重庆 香港 澳门 深圳 广州 东莞 佛山 珠海 汕头
   石家庄 太原 呼和浩特 沈阳 大连 长春 哈尔滨 南京 苏州 无锡
@@ -48,6 +74,12 @@ let cloudbaseApp = null;
 let sharedStatusText = "正在同步…";
 let sharedStatusState = "saving";
 let mobileSheetState = "peek";
+let routeOriginId = "";
+let routeDestinationId = "";
+let routeQueryId = 0;
+let routeResults = new Map();
+let routeOverlays = [];
+let activeRouteMode = "";
 
 const $ = (id) => document.getElementById(id);
 
@@ -714,7 +746,8 @@ function loadAmap() {
   const script = document.createElement("script");
   script.src =
     `https://webapi.amap.com/maps?v=2.0&key=${encodeURIComponent(cfg.key)}` +
-    "&plugin=AMap.PlaceSearch,AMap.Geocoder,AMap.Scale,AMap.ToolBar";
+    "&plugin=AMap.PlaceSearch,AMap.Geocoder,AMap.Scale,AMap.ToolBar," +
+    "AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Riding";
 
   script.onload = initMap;
   script.onerror = () => {
@@ -914,6 +947,321 @@ function markerContent(place) {
   return element;
 }
 
+function routePlaceById(placeId) {
+  return savedPlaces.find((place) => place.id === placeId) || null;
+}
+
+function routePoint(place) {
+  const longitude = Number(place?.longitude);
+  const latitude = Number(place?.latitude);
+  return Number.isFinite(longitude) && Number.isFinite(latitude)
+    ? [longitude, latitude]
+    : null;
+}
+
+function routeCityName(place) {
+  const text = `${place?.cityname || ""} ${place?.city || ""} ${place?.address || ""}`;
+  for (const city of SEARCH_CITY_NAMES) {
+    if (text.includes(city)) return `${city}市`;
+  }
+  return "";
+}
+
+function formatRouteDuration(seconds) {
+  const minutes = Math.max(1, Math.round(Number(seconds || 0) / 60));
+  if (minutes < 60) return `约 ${minutes} 分钟`;
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return remainder ? `约 ${hours} 小时 ${remainder} 分钟` : `约 ${hours} 小时`;
+}
+
+function formatRouteDistance(meters) {
+  const distance = Math.max(0, Number(meters || 0));
+  if (distance < 1000) return `${Math.max(1, Math.round(distance / 10) * 10)} 米`;
+  const kilometers = distance / 1000;
+  return `${kilometers < 10 ? kilometers.toFixed(1) : Math.round(kilometers)} 公里`;
+}
+
+function routeOptionLabel(place) {
+  const suffix = place.category ? ` · ${place.category}` : "";
+  return `${place.name}${suffix}`;
+}
+
+function updateRoutePlaceSelectors() {
+  const originSelect = $("routeOriginSelect");
+  const destinationSelect = $("routeDestinationSelect");
+  if (!originSelect || !destinationSelect) return;
+
+  const places = savedPlaces
+    .filter((place) => place.isMarked !== false && routePoint(place))
+    .sort((first, second) => first.name.localeCompare(second.name, "zh-CN"));
+  const options = places.map((place) => (
+    `<option value="${escapeHtml(place.id)}">${escapeHtml(routeOptionLabel(place))}</option>`
+  )).join("");
+
+  originSelect.innerHTML = `<option value="">选择已标记地点</option>${options}`;
+  destinationSelect.innerHTML = `<option value="">选择已标记地点</option>${options}`;
+
+  if (!routePlaceById(routeOriginId)) routeOriginId = "";
+  if (!routePlaceById(routeDestinationId)) routeDestinationId = "";
+  originSelect.value = routeOriginId;
+  destinationSelect.value = routeDestinationId;
+}
+
+function clearRouteOverlays() {
+  if (map && routeOverlays.length) map.remove(routeOverlays);
+  routeOverlays = [];
+  activeRouteMode = "";
+  $("routeModeResults")?.querySelectorAll(".route-mode-card.selected").forEach((card) => {
+    card.classList.remove("selected");
+  });
+}
+
+function routeEndpointOverlay(place, label) {
+  const content = document.createElement("div");
+  content.className = `route-map-endpoint route-map-endpoint-${label.toLowerCase()}`;
+  content.textContent = label;
+  return new AMap.Marker({
+    position: routePoint(place),
+    content,
+    anchor: "center",
+    zIndex: 520
+  });
+}
+
+function routeLine(path, color, dashed = false) {
+  return new AMap.Polyline({
+    path,
+    isOutline: true,
+    outlineColor: "rgba(255,255,255,.96)",
+    borderWeight: 2,
+    strokeWeight: 6,
+    strokeColor: color,
+    strokeOpacity: .92,
+    strokeStyle: dashed ? "dashed" : "solid",
+    lineJoin: "round",
+    lineCap: "round",
+    zIndex: 310
+  });
+}
+
+function routePathFromSteps(steps = []) {
+  return steps.flatMap((step) => Array.isArray(step?.path) ? step.path : []);
+}
+
+function routeLinesForResult(result) {
+  const route = result?.route;
+  if (!route) return [];
+
+  if (result.mode === "transit") {
+    return (route.segments || []).flatMap((segment) => {
+      const path = segment?.transit?.path;
+      if (!Array.isArray(path) || path.length < 2) return [];
+      const walking = segment.transit_mode === "WALK";
+      return [routeLine(path, walking ? "#8a8f98" : "#1a73e8", walking)];
+    });
+  }
+
+  const steps = result.mode === "riding" ? route.rides : route.steps;
+  const path = routePathFromSteps(steps);
+  if (path.length < 2) return [];
+  const color = result.mode === "walking"
+    ? "#188038"
+    : result.mode === "riding"
+      ? "#7b61d1"
+      : "#1a73e8";
+  return [routeLine(path, color, result.mode === "walking")];
+}
+
+function drawRouteResult(modeId) {
+  const result = routeResults.get(modeId);
+  const origin = routePlaceById(routeOriginId);
+  const destination = routePlaceById(routeDestinationId);
+  if (!map || !result?.available || !origin || !destination) return;
+
+  clearRouteOverlays();
+  activeRouteMode = modeId;
+  const startMarker = routeEndpointOverlay(origin, "A");
+  const endMarker = routeEndpointOverlay(destination, "B");
+  const lines = routeLinesForResult(result);
+  routeOverlays = [startMarker, endMarker, ...lines];
+  map.add(routeOverlays);
+  infoWindow?.close();
+
+  const padding = isMobileSheetViewport()
+    ? [92, 34, mobileSheetState === "peek" ? 130 : 250, 34]
+    : [80, 80, 90, 430];
+  map.setFitView(routeOverlays, false, padding, 16);
+
+  $("routeModeResults")?.querySelectorAll(".route-mode-card").forEach((card) => {
+    card.classList.toggle("selected", card.dataset.routeMode === modeId);
+  });
+}
+
+function routeResultSummary(mode, rawResult) {
+  const route = mode.id === "transit"
+    ? rawResult?.plans?.[0]
+    : rawResult?.routes?.[0];
+  const duration = Number(route?.time ?? route?.duration ?? 0);
+  const distance = Number(route?.distance ?? 0);
+  if (!route || !duration) return null;
+  return {
+    mode: mode.id,
+    available: true,
+    rawResult,
+    route,
+    duration,
+    distance
+  };
+}
+
+function searchRouteMode(mode, origin, destination) {
+  return new Promise((resolve) => {
+    const originCity = routeCityName(origin);
+    const destinationCity = routeCityName(destination);
+    if (mode.id === "transit" && originCity && destinationCity && originCity !== destinationCity) {
+      resolve({ mode: mode.id, available: false, message: "仅支持同城公交" });
+      return;
+    }
+
+    try {
+      const options = { extensions: "all" };
+      if (mode.id === "driving") {
+        options.policy = AMap.DrivingPolicy?.LEAST_TIME ?? 0;
+      } else if (mode.id === "transit") {
+        options.city = originCity || destinationCity || undefined;
+        options.cityd = destinationCity || originCity || undefined;
+        options.nightflag = true;
+        options.policy = AMap.TransferPolicy?.LEAST_TIME ?? 0;
+      } else if (mode.id === "riding") {
+        options.policy = 1;
+      }
+
+      const service = new AMap[mode.service](options);
+      const start = new AMap.LngLat(...routePoint(origin));
+      const end = new AMap.LngLat(...routePoint(destination));
+      const callback = (status, result) => {
+        const summary = status === "complete" ? routeResultSummary(mode, result) : null;
+        resolve(summary || {
+          mode: mode.id,
+          available: false,
+          message: status === "no_data" ? "暂无方案" : "计算失败"
+        });
+      };
+
+      if (mode.id === "driving") {
+        service.search(start, end, { waypoints: [] }, callback);
+      } else {
+        service.search(start, end, callback);
+      }
+    } catch (error) {
+      console.warn(`Route search failed for ${mode.id}`, error);
+      resolve({ mode: mode.id, available: false, message: "计算失败" });
+    }
+  });
+}
+
+function routeModeCardMarkup(mode, result, loading = false) {
+  const available = result?.available;
+  const value = loading
+    ? "计算中…"
+    : available
+      ? formatRouteDuration(result.duration)
+      : (result?.message || "暂无方案");
+  const meta = available && result.distance ? formatRouteDistance(result.distance) : "";
+  return `
+    <button
+      class="route-mode-card ${available ? "" : "unavailable"}"
+      type="button"
+      data-route-mode="${mode.id}"
+      ${available ? "" : "disabled"}
+      aria-label="${escapeHtml(mode.label)}，${escapeHtml(value)}${meta ? `，${escapeHtml(meta)}` : ""}"
+    >
+      <span class="route-mode-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${mode.icon}</svg></span>
+      <span class="route-mode-copy">
+        <strong>${escapeHtml(mode.label)}</strong>
+        <span>${escapeHtml(value)}</span>
+        ${meta ? `<small>${escapeHtml(meta)}</small>` : ""}
+      </span>
+    </button>
+  `;
+}
+
+function renderRouteModeResults(loading = false) {
+  const host = $("routeModeResults");
+  if (!host) return;
+  host.innerHTML = ROUTE_MODES.map((mode) => (
+    routeModeCardMarkup(mode, routeResults.get(mode.id), loading)
+  )).join("");
+}
+
+async function calculateRoutes() {
+  const origin = routePlaceById(routeOriginId);
+  const destination = routePlaceById(routeDestinationId);
+  routeQueryId += 1;
+  const queryId = routeQueryId;
+  routeResults = new Map();
+  clearRouteOverlays();
+
+  if (!origin || !destination) {
+    $("routeStatus").textContent = "选择起点和终点后，将比较不同交通方式。";
+    $("routeModeResults").innerHTML = "";
+    return;
+  }
+  if (origin.id === destination.id) {
+    $("routeStatus").textContent = "起点和终点不能是同一个地点。";
+    $("routeModeResults").innerHTML = "";
+    return;
+  }
+
+  $("routeStatus").textContent = `正在计算“${origin.name}”到“${destination.name}”…`;
+  renderRouteModeResults(true);
+  const results = await Promise.all(
+    ROUTE_MODES.map((mode) => searchRouteMode(mode, origin, destination))
+  );
+  if (queryId !== routeQueryId) return;
+
+  routeResults = new Map(results.map((result) => [result.mode, result]));
+  renderRouteModeResults();
+  const availableResults = results.filter((result) => result.available);
+  $("routeStatus").textContent = availableResults.length
+    ? `已找到 ${availableResults.length} 种出行方式，时间为高德实时估算。`
+    : "暂时没有找到可用路线，请稍后重试。";
+  if (availableResults.length) drawRouteResult(availableResults[0].mode);
+}
+
+function openRoutePlanner(placeId = "", endpoint = "") {
+  const section = $("routePlannerSection");
+  section.classList.remove("hidden");
+  $("routePlannerBtn")?.classList.add("active");
+  if (placeId && routePlaceById(placeId)) {
+    if (endpoint === "destination") routeDestinationId = placeId;
+    else routeOriginId = placeId;
+  }
+  updateRoutePlaceSelectors();
+  calculateRoutes();
+  infoWindow?.close();
+
+  if (isMobileSheetViewport()) {
+    setMobileSheetState(routeOriginId && routeDestinationId ? "half" : "full");
+  }
+  window.setTimeout(() => {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 30);
+}
+
+function closeRoutePlanner() {
+  routeQueryId += 1;
+  $("routePlannerSection").classList.add("hidden");
+  $("routePlannerBtn")?.classList.remove("active");
+  clearRouteOverlays();
+  if (isMobileSheetViewport()) setMobileSheetState("peek");
+}
+
+window.setRouteEndpoint = function (placeId, endpoint) {
+  openRoutePlanner(placeId, endpoint);
+};
+
 function addMarker(place) {
   if (!map) return;
   if (activeCategories.size && !activeCategories.has(place.category)) return;
@@ -991,14 +1339,24 @@ function addMarker(place) {
         ${place.note
           ? `<section class="place-note"><div class="place-note-label">备注</div><p>${escapeHtml(place.note)}</p></section>`
           : ""}
-        ${canEdit
-          ? `<div class="place-detail-actions">
-              <button class="place-edit-button" type="button" onclick="window.editSavedPlace('${place.id}')">
+        <div class="place-detail-actions">
+          <div class="place-route-actions" role="group" aria-label="将地点加入路线">
+            <button class="place-route-button" type="button" onclick="window.setRouteEndpoint('${place.id}', 'origin')">
+              <span class="place-route-badge place-route-badge-a">A</span>
+              <span>设为起点</span>
+            </button>
+            <button class="place-route-button" type="button" onclick="window.setRouteEndpoint('${place.id}', 'destination')">
+              <span class="place-route-badge place-route-badge-b">B</span>
+              <span>设为终点</span>
+            </button>
+          </div>
+          ${canEdit
+            ? `<button class="place-edit-button" type="button" onclick="window.editSavedPlace('${place.id}')">
                 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 13.8V16h2.2l7.95-7.95-2.2-2.2L4 13.8Zm11.85-7.45a.6.6 0 0 0 0-.85l-1.35-1.35a.6.6 0 0 0-.85 0l-1.05 1.05 2.2 2.2 1.05-1.05Z"/></svg>
-                <span>编辑地点</span>
-              </button>
-            </div>`
-          : ""}
+                <span>编辑</span>
+              </button>`
+            : ""}
+        </div>
       </article>
     `;
 
@@ -1191,6 +1549,7 @@ function renderAll() {
   renderMarkers();
   renderCategoryFilters();
   renderSavedPlaces();
+  updateRoutePlaceSelectors();
   updateMobileSheetMeta();
 }
 
@@ -2531,6 +2890,35 @@ $("clearResultsBtn").onclick = () => {
   activeSearchId += 1;
   clearSearchMarkers();
   setMobileSheetState("half");
+};
+
+$("routePlannerBtn").onclick = () => {
+  if ($("routePlannerSection").classList.contains("hidden")) openRoutePlanner();
+  else closeRoutePlanner();
+};
+
+$("closeRoutePlannerBtn").onclick = closeRoutePlanner;
+
+$("routeOriginSelect").onchange = (event) => {
+  routeOriginId = event.target.value;
+  calculateRoutes();
+};
+
+$("routeDestinationSelect").onchange = (event) => {
+  routeDestinationId = event.target.value;
+  calculateRoutes();
+};
+
+$("swapRoutePointsBtn").onclick = () => {
+  [routeOriginId, routeDestinationId] = [routeDestinationId, routeOriginId];
+  updateRoutePlaceSelectors();
+  calculateRoutes();
+};
+
+$("routeModeResults").onclick = (event) => {
+  const card = event.target.closest(".route-mode-card[data-route-mode]");
+  if (!card || card.disabled) return;
+  drawRouteResult(card.dataset.routeMode);
 };
 
 $("newCategoryBtn").onclick = () => openCategoryDialog("", true);
