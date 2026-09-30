@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260928-route" />
+  <link rel="stylesheet" href="./style.css?v=20260930-directions" />
 </head>
 <body>
   <div id="app">
@@ -67,38 +67,40 @@
           <section id="routePlannerSection" class="content-section route-planner-section hidden" aria-labelledby="routePlannerTitle">
             <div class="section-title-row route-planner-heading">
               <div>
-                <h2 id="routePlannerTitle">两点路线</h2>
-                <p>从地图中选择两个已标记地点</p>
+                <h2 id="routePlannerTitle">路线</h2>
+                <p>高德实时路线规划</p>
               </div>
               <button id="closeRoutePlannerBtn" class="link-button" type="button">关闭</button>
             </div>
-            <div class="route-endpoint-stack">
-              <label class="route-endpoint-field">
-                <span class="route-endpoint-badge route-endpoint-badge-a">A</span>
-                <span class="route-endpoint-copy">
-                  <small>起点</small>
-                  <select id="routeOriginSelect" aria-label="选择路线起点">
-                    <option value="">选择已标记地点</option>
+            <div class="route-location-editor">
+              <div class="route-location-track" aria-hidden="true">
+                <span class="route-location-dot"></span>
+                <span class="route-location-line"></span>
+                <span class="route-location-pin"></span>
+              </div>
+              <div class="route-location-fields">
+                <label class="route-location-field">
+                  <span class="route-location-placeholder">从哪里出发</span>
+                  <select id="routeOriginSelect" aria-label="选择出发地">
+                    <option value="">选择出发地</option>
                   </select>
-                </span>
-              </label>
+                </label>
+                <label class="route-location-field">
+                  <span class="route-location-placeholder">到哪里去</span>
+                  <select id="routeDestinationSelect" aria-label="选择目的地">
+                    <option value="">选择目的地</option>
+                  </select>
+                </label>
+              </div>
               <button id="swapRoutePointsBtn" class="route-swap-button" type="button" aria-label="交换起点和终点" title="交换起点和终点">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="m7 7 3-3 1.4 1.4L10.8 6H17a3 3 0 0 1 3 3v2h-2V9a1 1 0 0 0-1-1h-6.2l.6.6L10 10 7 7Zm10 10-3 3-1.4-1.4.6-.6H7a3 3 0 0 1-3-3v-2h2v2a1 1 0 0 0 1 1h6.2l-.6-.6L14 14l3 3Z"/>
                 </svg>
               </button>
-              <label class="route-endpoint-field">
-                <span class="route-endpoint-badge route-endpoint-badge-b">B</span>
-                <span class="route-endpoint-copy">
-                  <small>终点</small>
-                  <select id="routeDestinationSelect" aria-label="选择路线终点">
-                    <option value="">选择已标记地点</option>
-                  </select>
-                </span>
-              </label>
             </div>
-            <div id="routeStatus" class="route-status" aria-live="polite">选择起点和终点后，将比较不同交通方式。</div>
-            <div id="routeModeResults" class="route-mode-results" aria-label="交通方式和预计时间"></div>
+            <div id="routeModeTabs" class="route-mode-tabs" role="tablist" aria-label="选择交通方式"></div>
+            <div id="routeStatus" class="route-status" aria-live="polite">选择出发地和目的地后查看路线。</div>
+            <div id="routePlanList" class="route-plan-list" aria-label="路线方案"></div>
           </section>
 
           <section class="content-section map-library-section">
@@ -385,6 +387,6 @@
   <script src="./config.js?v=20260830a"></script>
   <script src="./credits-data.js?v=20260829a"></script>
   <script src="./credits.js?v=20260829a"></script>
-  <script src="./app.js?v=20260928-route"></script>
+  <script src="./app.js?v=20260930-directions"></script>
 </body>
 </html>
