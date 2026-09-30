@@ -5,6 +5,7 @@ const MAX_RECOMMENDATIONS = 10;
 const DETAILED_POI_MIN_ZOOM = 14;
 const CLEAN_BASE_MAP_FEATURES = ["bg", "road", "building"];
 const DETAILED_BASE_MAP_FEATURES = [...CLEAN_BASE_MAP_FEATURES, "point"];
+const CURRENT_LOCATION_ROUTE_ID = "__current_location__";
 const ROUTE_MODES = [
   {
     id: "driving",
@@ -81,6 +82,10 @@ let routeResults = new Map();
 let routeOverlays = [];
 let activeRouteMode = "driving";
 let activeRoutePlanIndex = 0;
+let currentRouteLocation = null;
+let currentRouteLocatedAt = 0;
+let currentRouteLocationPromise = null;
+let routeLocationRequestId = 0;
 
 const $ = (id) => document.getElementById(id);
 
@@ -748,7 +753,7 @@ function loadAmap() {
   script.src =
     `https://webapi.amap.com/maps?v=2.0&key=${encodeURIComponent(cfg.key)}` +
     "&plugin=AMap.PlaceSearch,AMap.Geocoder,AMap.Scale,AMap.ToolBar," +
-    "AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Riding";
+    "AMap.Driving,AMap.Transfer,AMap.Walking,AMap.Riding,AMap.Geolocation";
 
   script.onload = initMap;
   script.onerror = () => {
@@ -949,7 +954,88 @@ function markerContent(place) {
 }
 
 function routePlaceById(placeId) {
+  if (placeId === CURRENT_LOCATION_ROUTE_ID) return currentRouteLocation;
   return savedPlaces.find((place) => place.id === placeId) || null;
+}
+
+function amapPositionCoordinates(position) {
+  const longitude = Number(typeof position?.getLng === "function" ? position.getLng() : position?.lng);
+  const latitude = Number(typeof position?.getLat === "function" ? position.getLat() : position?.lat);
+  return Number.isFinite(longitude) && Number.isFinite(latitude)
+    ? [longitude, latitude]
+    : null;
+}
+
+function currentLocationErrorMessage(result) {
+  const details = `${result?.message || ""} ${result?.info || ""}`.toLowerCase();
+  if (/denied|permission|拒绝|权限/.test(details)) {
+    return "无法使用当前位置，请在浏览器设置中允许此网站访问位置。";
+  }
+  if (/timeout|超时/.test(details)) {
+    return "定位超时，请到开阔处或确认系统定位服务已开启后重试。";
+  }
+  return "暂时无法获取当前位置，请检查系统定位服务和网络后重试。";
+}
+
+function locateCurrentRoutePlace(force = false) {
+  const isFresh = currentRouteLocation && Date.now() - currentRouteLocatedAt < 30000;
+  if (!force && isFresh) return Promise.resolve(currentRouteLocation);
+  if (currentRouteLocationPromise) return currentRouteLocationPromise;
+
+  currentRouteLocationPromise = new Promise((resolve, reject) => {
+    const begin = () => {
+      if (typeof window.AMap?.Geolocation !== "function") {
+        reject(new Error("当前浏览器暂不支持定位。"));
+        return;
+      }
+
+      const geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        convert: true,
+        needAddress: true,
+        extensions: "all",
+        showButton: false,
+        showMarker: false,
+        showCircle: false,
+        panToLocation: false,
+        zoomToAccuracy: false
+      });
+      geolocation.getCurrentPosition((status, result) => {
+        const coordinates = status === "complete" ? amapPositionCoordinates(result?.position) : null;
+        if (!coordinates) {
+          reject(new Error(currentLocationErrorMessage(result)));
+          return;
+        }
+
+        const addressComponent = result?.addressComponent || {};
+        const city = Array.isArray(addressComponent.city)
+          ? addressComponent.province || ""
+          : addressComponent.city || addressComponent.province || "";
+        currentRouteLocation = {
+          id: CURRENT_LOCATION_ROUTE_ID,
+          name: "当前位置",
+          category: "",
+          address: result?.formattedAddress || "GPS 定位",
+          cityname: city,
+          city,
+          longitude: coordinates[0],
+          latitude: coordinates[1],
+          accuracy: Number(result?.accuracy || 0)
+        };
+        currentRouteLocatedAt = Date.now();
+        resolve(currentRouteLocation);
+      });
+    };
+
+    if (typeof window.AMap?.plugin === "function") AMap.plugin("AMap.Geolocation", begin);
+    else begin();
+  }).finally(() => {
+    currentRouteLocationPromise = null;
+  });
+
+  return currentRouteLocationPromise;
 }
 
 function routePoint(place) {
@@ -999,12 +1085,16 @@ function updateRoutePlaceSelectors() {
   const options = places.map((place) => (
     `<option value="${escapeHtml(place.id)}">${escapeHtml(routeOptionLabel(place))}</option>`
   )).join("");
+  const currentLocationOption = `<option value="${CURRENT_LOCATION_ROUTE_ID}">当前位置</option>`;
+  const savedPlaceOptions = options
+    ? `<optgroup label="已标记地点">${options}</optgroup>`
+    : "";
 
-  originSelect.innerHTML = `<option value="">选择出发地</option>${options}`;
-  destinationSelect.innerHTML = `<option value="">选择目的地</option>${options}`;
+  originSelect.innerHTML = `<option value="">选择出发地</option>${currentLocationOption}${savedPlaceOptions}`;
+  destinationSelect.innerHTML = `<option value="">选择目的地</option>${currentLocationOption}${savedPlaceOptions}`;
 
-  if (!routePlaceById(routeOriginId)) routeOriginId = "";
-  if (!routePlaceById(routeDestinationId)) routeDestinationId = "";
+  if (routeOriginId !== CURRENT_LOCATION_ROUTE_ID && !routePlaceById(routeOriginId)) routeOriginId = "";
+  if (routeDestinationId !== CURRENT_LOCATION_ROUTE_ID && !routePlaceById(routeDestinationId)) routeDestinationId = "";
   originSelect.value = routeOriginId;
   destinationSelect.value = routeDestinationId;
 }
@@ -1269,6 +1359,36 @@ function resetRouteResults() {
   routeResults = new Map();
   activeRoutePlanIndex = 0;
   clearRouteOverlays();
+}
+
+async function selectRouteEndpoint(endpoint, placeId) {
+  const requestId = ++routeLocationRequestId;
+  if (endpoint === "destination") routeDestinationId = placeId;
+  else routeOriginId = placeId;
+  resetRouteResults();
+
+  if (placeId !== CURRENT_LOCATION_ROUTE_ID) {
+    calculateActiveRoute();
+    return;
+  }
+
+  $("routeStatus").textContent = "正在获取当前位置，请允许浏览器访问定位…";
+  renderRoutePlanList(null, true);
+  try {
+    await locateCurrentRoutePlace(true);
+    if (requestId !== routeLocationRequestId) return;
+    updateRoutePlaceSelectors();
+    $("routeStatus").textContent = "已获取当前位置，正在规划路线…";
+    calculateActiveRoute();
+  } catch (error) {
+    if (requestId !== routeLocationRequestId) return;
+    if (endpoint === "destination" && routeDestinationId === CURRENT_LOCATION_ROUTE_ID) routeDestinationId = "";
+    if (endpoint !== "destination" && routeOriginId === CURRENT_LOCATION_ROUTE_ID) routeOriginId = "";
+    updateRoutePlaceSelectors();
+    const message = error?.message || "暂时无法获取当前位置。";
+    $("routeStatus").textContent = message;
+    renderRoutePlanList({ message });
+  }
 }
 
 async function calculateActiveRoute(force = false) {
@@ -2990,19 +3110,12 @@ $("routePlannerBtn").onclick = () => {
 
 $("closeRoutePlannerBtn").onclick = closeRoutePlanner;
 
-$("routeOriginSelect").onchange = (event) => {
-  routeOriginId = event.target.value;
-  resetRouteResults();
-  calculateActiveRoute();
-};
+$("routeOriginSelect").onchange = (event) => selectRouteEndpoint("origin", event.target.value);
 
-$("routeDestinationSelect").onchange = (event) => {
-  routeDestinationId = event.target.value;
-  resetRouteResults();
-  calculateActiveRoute();
-};
+$("routeDestinationSelect").onchange = (event) => selectRouteEndpoint("destination", event.target.value);
 
 $("swapRoutePointsBtn").onclick = () => {
+  routeLocationRequestId += 1;
   [routeOriginId, routeDestinationId] = [routeDestinationId, routeOriginId];
   updateRoutePlaceSelectors();
   resetRouteResults();
