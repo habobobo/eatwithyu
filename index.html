@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
   <title>eatwithyu</title>
-  <link rel="stylesheet" href="./style.css?v=20260930-location" />
+  <link rel="stylesheet" href="./style.css?v=20261005-poi" />
 </head>
 <body>
   <div id="app">
@@ -148,6 +148,7 @@
               <h2 id="categorySectionTitle">分类</h2>
               <span id="categorySummary" class="summary-text"></span>
             </div>
+            <div id="categoryGroupFilters" class="category-group-filters" role="group" aria-label="地点大类"></div>
             <div id="categoryFilters" class="category-list"></div>
           </section>
 
@@ -213,7 +214,7 @@
           <p id="deleteCategoryMessage" class="danger-message"></p>
           <div class="danger-impact">
             <strong>删除后将发生：</strong>
-            <p>分类本身会被删除；该分类下的餐厅仍会保留，但会变成“未分类”，并且暂时不再显示在地图上。</p>
+            <p>分类本身会被删除；该分类下的地点仍会保留，但会变成“未分类”，并且暂时不再显示在地图上。</p>
           </div>
         </section>
       </div>
@@ -241,6 +242,15 @@
           <label class="form-field">
             <span>分类名称 <em>*</em></span>
             <input id="standaloneCategoryName" required maxlength="24" placeholder="例如：咖啡、展览、云南菜" />
+          </label>
+          <label class="form-field">
+            <span>所属大类</span>
+            <select id="categoryGroupSelect"></select>
+          </label>
+          <label class="form-field">
+            <span>默认详情类型</span>
+            <select id="categoryDetailTypeSelect"></select>
+            <small class="field-help">决定这类地点记录哪些内容；个别地点可以单独调整。</small>
           </label>
         </section>
 
@@ -304,23 +314,34 @@
               <button id="newCategoryBtn" class="secondary-text-button" type="button">＋ 新建分类</button>
             </div>
           </div>
+          <label class="form-field">
+            <span>详情类型</span>
+            <select id="placeDetailTypeSelect"></select>
+            <small id="placeDetailTypeHelp" class="field-help"></small>
+          </label>
+        </section>
+
+        <section id="placePracticalSection" class="form-section hidden">
+          <div class="section-heading"><h3 id="placePracticalTitle">实用信息</h3></div>
+          <div id="placePracticalFields" class="place-practical-fields"></div>
         </section>
 
         <section class="form-section recommendation-section">
           <div class="section-heading recommendation-section-heading">
             <div>
-              <h3>推荐菜单</h3>
-              <p>最多记录 10 道推荐菜，每道都可以单独添加描述和照片。</p>
+              <h3 id="placeEntriesTitle">地点看点</h3>
+              <p id="placeEntriesHelp">记录这个地点值得记住的事。</p>
             </div>
             <button id="addRecommendationBtn" class="recommendation-add-button" type="button">
               <svg viewBox="0 0 20 20" aria-hidden="true">
                 <path d="M9.25 3.5h1.5v5.75h5.75v1.5h-5.75v5.75h-1.5v-5.75H3.5v-1.5h5.75V3.5Z"/>
               </svg>
-              <span>添加推荐菜</span>
+              <span id="addRecommendationLabel">添加记录</span>
             </button>
           </div>
           <div id="recommendationList" class="recommendation-editor-list"></div>
           <div id="recommendationLimitHint" class="recommendation-limit-hint" aria-live="polite"></div>
+          <div id="otherTypeRecords" class="other-type-records hidden"></div>
         </section>
 
         <section class="form-section visit-section">
@@ -349,7 +370,7 @@
           </div>
 
           <label id="visitCompanionsField" class="form-field hidden">
-            <span>with</span>
+            <span>同行人</span>
             <input id="visitCompanions" maxlength="100" placeholder="输入同行人的名字，可填写多人" />
           </label>
         </section>
@@ -369,7 +390,7 @@
         <section class="form-section last-section">
           <label class="form-field">
             <span>备注（可选）</span>
-            <textarea id="placeNote" rows="4" maxlength="500" placeholder="记录适合场景、是否想再去、同行人等"></textarea>
+            <textarea id="placeNote" rows="4" maxlength="500" placeholder="记录补充感受、实用提醒或下次想做的事"></textarea>
           </label>
         </section>
       </div>
@@ -387,6 +408,7 @@
   <script src="./config.js?v=20260830a"></script>
   <script src="./credits-data.js?v=20260829a"></script>
   <script src="./credits.js?v=20260829a"></script>
-  <script src="./app.js?v=20260930-location"></script>
+  <script src="./poi-model.js?v=20261005-poi"></script>
+  <script src="./app.js?v=20261005-poi"></script>
 </body>
 </html>

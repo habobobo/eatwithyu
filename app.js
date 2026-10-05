@@ -6,6 +6,7 @@ const DETAILED_POI_MIN_ZOOM = 14;
 const CLEAN_BASE_MAP_FEATURES = ["bg", "road", "building"];
 const DETAILED_BASE_MAP_FEATURES = [...CLEAN_BASE_MAP_FEATURES, "point"];
 const CURRENT_LOCATION_ROUTE_ID = "__current_location__";
+const poiModel = window.POIModel;
 const ROUTE_MODES = [
   {
     id: "driving",
@@ -59,11 +60,17 @@ let pendingDeleteCategory = "";
 let savedIcons = [];
 let savedCategories = [];
 let activeCategories = new Set();
+let activeCategoryGroup = "";
+let categoryFilterActive = false;
 let selectedCategoryIconId = "";
 let editingCategoryId = "";
 let categoryDialogReturnToPlace = false;
 let categoryIntegrityChanged = false;
 let recommendationDrafts = [];
+let editingDetailType = "general";
+let detailFieldDrafts = {};
+let categoryGroupManuallyChosen = false;
+const uploadingEntryIds = new Set();
 let selectedVisitMode = "solo";
 let infoWindow;
 let sharedVersion = null;
@@ -276,22 +283,7 @@ function normalizeMapTitle(value) {
 }
 
 function normalizedRecommendations(place = {}) {
-  const source = Array.isArray(place.recommendations) && place.recommendations.length
-    ? place.recommendations
-    : place.recommendation
-      ? [place.recommendation]
-      : [];
-
-  return source
-    .filter((item) => item && typeof item === "object")
-    .slice(0, MAX_RECOMMENDATIONS)
-    .map((item) => ({
-      title: String(item.title || "").slice(0, 80),
-      description: String(item.description || "").slice(0, 300),
-      photo: String(item.photo || ""),
-      photoFileId: String(item.photoFileId || "")
-    }))
-    .filter((item) => item.title || item.description || item.photo || item.photoFileId);
+  return poiModel.normalizeEntries(place);
 }
 
 function applyMapIdentity() {
@@ -479,6 +471,7 @@ function sharedPayload() {
         ...place,
         categoryId: category?.id || "",
         credits: normalizedRestaurantCredits(place.credits),
+        detailsByType: poiModel.normalizeDetails(place.detailsByType),
         recommendations
       };
 
@@ -490,6 +483,7 @@ function sharedPayload() {
       delete compactPlace.recommendation;
       if (!compactPlace.credits.length) delete compactPlace.credits;
       if (!compactPlace.recommendations.length) delete compactPlace.recommendations;
+      if (!Object.keys(compactPlace.detailsByType).length) delete compactPlace.detailsByType;
       if (compactPlace.isMarked === true) delete compactPlace.isMarked;
       Object.keys(compactPlace).forEach((key) => {
         if (compactPlace[key] === "" || compactPlace[key] == null) delete compactPlace[key];
@@ -497,7 +491,11 @@ function sharedPayload() {
       return compactPlace;
     }),
     categories: savedCategories.map((category) => {
-      const compactCategory = { ...category };
+      const compactCategory = {
+        ...category,
+        groupId: poiModel.categoryGroup(category),
+        detailType: poiModel.categoryDetailType(category)
+      };
       if (compactCategory.iconId) delete compactCategory.iconUrl;
       Object.keys(compactCategory).forEach((key) => {
         if (compactCategory[key] === "" || compactCategory[key] == null) delete compactCategory[key];
@@ -1473,9 +1471,53 @@ window.setRouteEndpoint = function (placeId, endpoint) {
   openRoutePlanner(placeId, endpoint);
 };
 
+function detailProfileForPlace(place) {
+  const category = findCategory(place.category, place.categoryId) || { name: place.category };
+  return poiModel.profile(poiModel.placeDetailType(place, category));
+}
+
+function placeMatchesCategoryFilter(place) {
+  const category = findCategory(place.category, place.categoryId) || { name: place.category };
+  if (activeCategoryGroup && poiModel.categoryGroup(category) !== activeCategoryGroup) return false;
+  return !categoryFilterActive || activeCategories.has(place.category);
+}
+
+function placeEntriesMarkup(place, profile) {
+  const entriesByType = new Map();
+  normalizedRecommendations(place).forEach((entry) => {
+    if (!entriesByType.has(entry.detailType)) entriesByType.set(entry.detailType, []);
+    entriesByType.get(entry.detailType).push(entry);
+  });
+  // 当前模板优先；其他类型的历史内容保留其原来的含义。
+  const orderedTypes = [profile.id, ...entriesByType.keys()].filter((id, index, all) => all.indexOf(id) === index);
+  return orderedTypes.map((type) => {
+    const entries = entriesByType.get(type) || [];
+    if (!entries.length) return "";
+    const entryProfile = poiModel.profile(type);
+    return `<section class="info-recommendation" aria-label="${escapeHtml(entryProfile.title)}">
+      <div class="recommendation-list-label"><span>${escapeHtml(entryProfile.title)}</span><span>${entries.length} ${entryProfile.unit}</span></div>
+      <div class="recommendation-display-list ${entries.length > 3 ? "is-scrollable" : ""}">
+        ${entries.map((entry) => `<div class="recommendation-list-item ${entry.photo ? "" : "no-photo"}">
+          <div class="recommendation-copy"><strong>${escapeHtml(entry.title)}</strong>${entry.description ? `<p>${escapeHtml(entry.description)}</p>` : ""}</div>
+          ${entry.photo ? `<img class="recommendation-thumbnail" src="${escapeHtml(entry.photo)}" alt="${escapeHtml(entry.title)}" loading="lazy">` : ""}
+        </div>`).join("")}
+      </div>
+    </section>`;
+  }).join("");
+}
+
+function placePracticalMarkup(place, profile) {
+  const values = poiModel.normalizeDetails(place.detailsByType)[profile.id] || {};
+  const rows = profile.fields.filter((field) => values[field.id]);
+  if (!rows.length) return "";
+  return `<section class="place-practical-summary" aria-label="实用信息"><dl>${rows.map((field) =>
+    `<div><dt>${escapeHtml(field.label)}</dt><dd>${escapeHtml(values[field.id])}</dd></div>`
+  ).join("")}</dl></section>`;
+}
+
 function addMarker(place) {
   if (!map) return;
-  if (activeCategories.size && !activeCategories.has(place.category)) return;
+  if (!placeMatchesCategoryFilter(place)) return;
 
   const hasIcon = Boolean(categoryIconForPlace(place));
   const marker = new AMap.Marker({
@@ -1486,33 +1528,14 @@ function addMarker(place) {
     zIndex: 120
   });
 
-  marker.on("click", () => {
+  marker.on("click", () => openPlaceDetails(place));
+  marker.setMap(map);
+  markers.set(place.id, marker);
+}
+
+function openPlaceDetails(place) {
     setMobileSheetState("peek");
-    const recommendations = normalizedRecommendations(place);
-    const recommendationItemsHtml = recommendations.map((recommendation) => `
-      <div class="recommendation-list-item ${recommendation.photo ? "" : "no-photo"}">
-        <div class="recommendation-copy">
-          <strong>${escapeHtml(recommendation.title)}</strong>
-          ${recommendation.description ? `<p>${escapeHtml(recommendation.description)}</p>` : ""}
-        </div>
-        ${recommendation.photo
-          ? `<img class="recommendation-thumbnail" src="${escapeHtml(recommendation.photo)}" alt="${escapeHtml(recommendation.title)}">`
-          : ""}
-      </div>
-    `).join("");
-    const recommendationHtml = recommendations.length
-      ? `
-        <section class="info-recommendation" aria-label="推荐菜单">
-          <div class="recommendation-list-label">
-            <span>推荐菜单</span>
-            <span>${recommendations.length} 道</span>
-          </div>
-          <div class="recommendation-display-list ${recommendations.length > 3 ? "is-scrollable" : ""}">
-            ${recommendationItemsHtml}
-          </div>
-        </section>
-      `
-      : "";
+    const profile = detailProfileForPlace(place);
 
     const visit = place.visitRecord || {};
     const visitText = visit.date
@@ -1531,7 +1554,7 @@ function addMarker(place) {
       `
       : "";
 
-    const detailCredits = restaurantCreditsForCandidate(place);
+    const detailCredits = profile.groupId === "food" ? restaurantCreditsForCandidate(place) : [];
     const content = `
       <article class="info-card place-detail-card">
         <header class="place-detail-header">
@@ -1540,13 +1563,15 @@ function addMarker(place) {
             ${restaurantCreditLogosMarkup(detailCredits, true)}
           </div>
           <div class="place-detail-location">
+            <span class="place-detail-type">${escapeHtml(profile.name)}</span>
             ${place.category ? `<span>${escapeHtml(place.category)}</span>` : ""}
             ${place.category && place.address ? `<span class="place-detail-separator">·</span>` : ""}
             ${place.address ? `<span>${escapeHtml(place.address)}</span>` : ""}
           </div>
         </header>
         ${visitHtml}
-        ${recommendationHtml}
+        ${placePracticalMarkup(place, profile)}
+        ${placeEntriesMarkup(place, profile)}
         ${place.note
           ? `<section class="place-note"><div class="place-note-label">备注</div><p>${escapeHtml(place.note)}</p></section>`
           : ""}
@@ -1573,10 +1598,6 @@ function addMarker(place) {
 
     infoWindow.setContent(content);
     infoWindow.open(map, [place.longitude, place.latitude]);
-  });
-
-  marker.setMap(map);
-  markers.set(place.id, marker);
 }
 
 function currentPlaces() {
@@ -1598,7 +1619,8 @@ function groupedCategories() {
     groups.set(category.name, {
       id: category.id,
       count: 0,
-      iconUrl: category.iconUrl || ""
+      iconUrl: category.iconUrl || "",
+      groupId: poiModel.categoryGroup(category)
     });
   });
 
@@ -1607,7 +1629,8 @@ function groupedCategories() {
       groups.set(place.category, {
         id: place.categoryId || "",
         count: 0,
-        iconUrl: categoryIconForPlace(place)
+        iconUrl: categoryIconForPlace(place),
+        groupId: poiModel.categoryGroup({ name: place.category })
       });
     }
     groups.get(place.category).count += 1;
@@ -1620,7 +1643,31 @@ function renderCategoryFilters() {
   const host = $("categoryFilters");
   const groups = groupedCategories();
   host.innerHTML = "";
-  $("categorySummary").textContent = groups.size ? `${groups.size} 个分类` : "0 个分类";
+  host.classList.add("has-category-groups");
+  const usedGroups = poiModel.groups.filter((group) => [...groups.values()].some((category) => category.groupId === group.id));
+  $("categorySummary").textContent = `${usedGroups.length} 大类 · ${groups.size} 分类`;
+  const nav = $("categoryGroupFilters");
+  nav.innerHTML = "";
+  [{ id: "", name: "全部" }, ...usedGroups].forEach((group) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `category-group-tab ${activeCategoryGroup === group.id ? "selected" : ""}`;
+    button.setAttribute("aria-pressed", String(activeCategoryGroup === group.id));
+    const count = currentPlaces().filter((place) => place.isMarked !== false && (
+      !group.id || poiModel.categoryGroup(findCategory(place.category, place.categoryId) || { name: place.category }) === group.id
+    )).length;
+    button.innerHTML = `<span>${escapeHtml(group.name)}</span><span class="category-group-count">${count}</span>`;
+    button.onclick = () => {
+      activeCategoryGroup = group.id;
+      activeCategories.clear();
+      categoryFilterActive = false;
+      infoWindow?.close();
+      renderCategoryFilters();
+      renderMarkers();
+      renderSavedPlaces();
+    };
+    nav.appendChild(button);
+  });
 
   if (canEdit) {
     const addButton = document.createElement("button");
@@ -1631,17 +1678,34 @@ function renderCategoryFilters() {
       <span>新建分类</span>
     `;
     addButton.onclick = () => openCategoryDialog();
-    host.appendChild(addButton);
+    nav.appendChild(addButton);
   }
 
+  const categoryHosts = new Map();
+  usedGroups.filter((group) => !activeCategoryGroup || group.id === activeCategoryGroup).forEach((group) => {
+    const section = document.createElement("section");
+    section.className = "category-group-section";
+    section.setAttribute("aria-label", `${group.name}分类`);
+    const groupCategories = [...groups.values()].filter((category) => category.groupId === group.id);
+    section.innerHTML = `<div class="category-group-heading"><h3>${escapeHtml(group.name)}</h3><span>${groupCategories.length} 个分类</span></div>`;
+    const grid = document.createElement("div");
+    grid.className = "category-list category-subcategory-grid";
+    section.appendChild(grid);
+    host.appendChild(section);
+    categoryHosts.set(group.id, grid);
+  });
+
   groups.forEach((data, category) => {
-    const active = activeCategories.size === 0 || activeCategories.has(category);
+    const categoryHost = categoryHosts.get(data.groupId);
+    if (!categoryHost) return;
+    const active = !categoryFilterActive || activeCategories.has(category);
     const wrap = document.createElement("div");
     wrap.className = "category-item-wrap";
 
     const item = document.createElement("button");
     item.type = "button";
     item.className = `category-item ${active ? "" : "inactive"}`;
+    item.setAttribute("aria-pressed", String(active));
 
     const initial = escapeHtml(category.trim().slice(0, 1) || "分");
     item.innerHTML = `
@@ -1650,8 +1714,9 @@ function renderCategoryFilters() {
     `;
 
     item.onclick = () => {
-      if (activeCategories.size === 0) {
+      if (!categoryFilterActive) {
         groups.forEach((_, itemCategory) => activeCategories.add(itemCategory));
+        categoryFilterActive = true;
       }
 
       activeCategories.has(category)
@@ -1660,10 +1725,13 @@ function renderCategoryFilters() {
 
       if (activeCategories.size === groups.size) {
         activeCategories.clear();
+        categoryFilterActive = false;
       }
 
+      infoWindow?.close();
       renderCategoryFilters();
       renderMarkers();
+      renderSavedPlaces();
     };
 
     wrap.appendChild(item);
@@ -1672,8 +1740,8 @@ function renderCategoryFilters() {
       const iconButton = document.createElement("button");
       iconButton.type = "button";
       iconButton.className = "category-logo-button";
-      iconButton.title = `更换“${category}”的 Logo`;
-      iconButton.setAttribute("aria-label", `更换“${category}”的 Logo`);
+      iconButton.title = `编辑“${category}”的分类与 Logo`;
+      iconButton.setAttribute("aria-label", `编辑“${category}”的分类与 Logo`);
       iconButton.innerHTML = `
         ${data.iconUrl
           ? `<img class="mini-icon" src="${data.iconUrl}" alt="">`
@@ -1706,13 +1774,13 @@ function renderCategoryFilters() {
       wrap.prepend(icon);
     }
 
-    host.appendChild(wrap);
+    categoryHost.appendChild(wrap);
   });
 }
 
 function renderSavedPlaces() {
-  const places = currentPlaces();
-  $("placeCount").textContent = places.length;
+  const places = currentPlaces().filter(placeMatchesCategoryFilter);
+  $("placeCount").textContent = activeCategoryGroup || categoryFilterActive ? `${places.length} / ${currentPlaces().length}` : places.length;
   $("savedSectionTitle").textContent = "地图地点";
   $("categorySectionTitle").textContent = "分类";
 
@@ -1751,7 +1819,7 @@ function renderSavedPlaces() {
   });
 
   if (!places.length) {
-    host.innerHTML = `<div class="item-meta">“${escapeHtml(mapTitle)}”暂时还没有地点。</div>`;
+    host.innerHTML = `<div class="item-meta">${currentPlaces().length ? "这个筛选下暂时没有地点，可选择“全部”查看。" : `“${escapeHtml(mapTitle)}”暂时还没有地点。`}</div>`;
   }
 }
 
@@ -1928,20 +1996,7 @@ function openSavedSearchResult(place, highlightMarker) {
     return;
   }
 
-  const savedMarker = markers.get(place.id);
-  if (savedMarker) {
-    savedMarker.emit("click");
-    return;
-  }
-
-  infoWindow.setContent(`
-    <div class="info-card search-preview-card">
-      <h3>${escapeHtml(place.name)}</h3>
-      <p>${escapeHtml(place.address || "暂无地址")}</p>
-      <p class="search-preview-hint">这个地点已经收藏在地图中。</p>
-    </div>
-  `);
-  infoWindow.open(map, position);
+  openPlaceDetails(place);
 }
 
 function splitSearchInput(value) {
@@ -2448,12 +2503,19 @@ function renderCategorySelect(currentCategory = "") {
   placeholder.selected = !currentCategory;
   select.appendChild(placeholder);
 
-  categories.forEach((category) => {
-    const option = document.createElement("option");
-    option.value = category;
-    option.textContent = category;
-    option.selected = category === currentCategory;
-    select.appendChild(option);
+  poiModel.groups.forEach((group) => {
+    const groupCategories = categories.filter((name) => poiModel.categoryGroup(findCategory(name) || { name }) === group.id);
+    if (!groupCategories.length) return;
+    const optionGroup = document.createElement("optgroup");
+    optionGroup.label = group.name;
+    groupCategories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      option.selected = category === currentCategory;
+      optionGroup.appendChild(option);
+    });
+    select.appendChild(optionGroup);
   });
 
   if (currentCategory && !categories.includes(currentCategory)) {
@@ -2469,7 +2531,7 @@ function openDeleteCategoryDialog(category, count) {
   pendingDeleteCategory = category;
   $("deleteCategoryMessage").innerHTML =
     `确定删除分类 <strong>“${escapeHtml(category)}”</strong> 吗？` +
-    (count ? ` 该分类下目前有 <strong>${count}</strong> 家餐厅。` : "");
+    (count ? ` 该分类下目前有 <strong>${count}</strong> 个地点。` : "");
   $("deleteCategoryDialog").showModal();
 }
 
@@ -2548,13 +2610,19 @@ function openCategoryDialog(categoryReference = "", returnToPlace = false) {
   $("standaloneCategoryName").value = category?.name || "";
   $("standaloneCategoryName").readOnly = Boolean(category);
   $("standaloneCategoryName").classList.toggle("readonly-field", Boolean(category));
+  categoryGroupManuallyChosen = Boolean(category);
+  $("categoryGroupSelect").innerHTML = poiModel.groups.map((group) =>
+    `<option value="${group.id}">${escapeHtml(group.name)}</option>`
+  ).join("");
+  $("categoryGroupSelect").value = category ? poiModel.categoryGroup(category) : activeCategoryGroup || "other";
+  renderCategoryDetailTypeOptions(category ? poiModel.categoryDetailType(category) : "");
   selectedCategoryIconId = category?.iconId ||
     savedIcons.find((icon) => icon.url === category?.iconUrl)?.id || "";
-  $("categoryDialogTitle").textContent = category ? "更换分类 Logo" : "新建分类";
+  $("categoryDialogTitle").textContent = category ? "编辑分类" : "新建分类";
   $("categoryIconHelp").textContent = category
     ? `“${category.name}”下的所有地点都会同步使用新的 Logo。`
     : "一个分类固定使用一个 Logo；地点会自动沿用，无需重复选择。";
-  $("saveCategoryBtn").textContent = category ? "保存 Logo" : "创建分类";
+  $("saveCategoryBtn").textContent = category ? "保存分类" : "创建分类";
   renderCategoryIconLibrary();
   $("categoryDialog").showModal();
   setTimeout(() => {
@@ -2564,6 +2632,15 @@ function openCategoryDialog(categoryReference = "", returnToPlace = false) {
       $("standaloneCategoryName").focus();
     }
   }, 0);
+}
+
+function renderCategoryDetailTypeOptions(currentType = "") {
+  const groupId = $("categoryGroupSelect").value;
+  const profiles = poiModel.profiles.filter((profile) => profile.groupId === groupId);
+  $("categoryDetailTypeSelect").innerHTML = profiles.map((profile) =>
+    `<option value="${profile.id}">${escapeHtml(profile.name)}</option>`
+  ).join("");
+  if (profiles.some((profile) => profile.id === currentType)) $("categoryDetailTypeSelect").value = currentType;
 }
 
 function closeCategoryEditorDialog() {
@@ -2606,12 +2683,16 @@ function saveStandaloneCategory(event) {
     category = {
       id: newCategoryId(),
       name,
+      groupId: $("categoryGroupSelect").value,
+      detailType: $("categoryDetailTypeSelect").value,
       iconId: selectedCategoryIconId,
       iconUrl: selectedCategoryIconUrl(),
       createdAt: new Date().toISOString()
     };
     savedCategories.push(category);
   } else {
+    category.groupId = $("categoryGroupSelect").value;
+    category.detailType = $("categoryDetailTypeSelect").value;
     category.iconId = selectedCategoryIconId;
     category.iconUrl = selectedCategoryIconUrl();
     category.updatedAt = new Date().toISOString();
@@ -2621,7 +2702,12 @@ function saveStandaloneCategory(event) {
   persistCategoryLibrary();
   persistPlaces();
   $("categoryDialog").close();
-  if (categoryDialogReturnToPlace) renderCategorySelect(category.name);
+  if (categoryDialogReturnToPlace) {
+    collectPlaceDetailDrafts();
+    renderCategorySelect(category.name);
+    renderPlaceDetailTypeSelect($("placeDetailTypeSelect").value);
+    renderPlaceDetailEditor(false);
+  }
   editingCategoryId = "";
   categoryDialogReturnToPlace = false;
   renderAll();
@@ -2639,7 +2725,8 @@ function createRecommendationDraft(item = {}) {
     title: String(item.title || ""),
     description: String(item.description || ""),
     photo: String(item.photo || ""),
-    photoFileId: String(item.photoFileId || "")
+    photoFileId: String(item.photoFileId || ""),
+    detailType: item.detailType || editingDetailType
   };
 }
 
@@ -2647,50 +2734,51 @@ function collectRecommendationDraftsFromForm() {
   const host = $("recommendationList");
   if (!host) return recommendationDrafts;
 
-  recommendationDrafts = [...host.querySelectorAll(".recommendation-editor-item")]
-    .map((element) => {
+  [...host.querySelectorAll(".recommendation-editor-item")].forEach((element) => {
       const draftId = element.dataset.recommendationId || "";
-      const previous = recommendationDrafts.find((item) => item.draftId === draftId) || {};
-      return createRecommendationDraft({
-        ...previous,
+      const index = recommendationDrafts.findIndex((item) => item.draftId === draftId);
+      if (index < 0) return;
+      recommendationDrafts[index] = createRecommendationDraft({
+        ...recommendationDrafts[index],
         draftId,
         title: element.querySelector("[data-field='title']")?.value || "",
         description: element.querySelector("[data-field='description']")?.value || ""
       });
-    });
+  });
   return recommendationDrafts;
 }
 
 function recommendationEditorItemMarkup(draft, index) {
   const hasPhoto = Boolean(draft.photo);
+  const profile = poiModel.profile(editingDetailType);
   return `
     <article class="recommendation-editor-item" data-recommendation-id="${escapeHtml(draft.draftId)}">
       <header class="recommendation-editor-header">
         <div class="recommendation-editor-title">
           <span class="recommendation-number">${index + 1}</span>
-          <strong>推荐菜 ${index + 1}</strong>
+          <strong>${escapeHtml(profile.item)} ${index + 1}</strong>
         </div>
         <button
           class="recommendation-remove-button"
           type="button"
           data-action="remove-recommendation"
-          aria-label="删除推荐菜 ${index + 1}"
+          aria-label="删除${escapeHtml(profile.item)} ${index + 1}"
         >
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 9.25h9v1.5h-9v-1.5Z"/></svg>
         </button>
       </header>
       <label class="form-field">
         <span>名称</span>
-        <input data-field="title" maxlength="80" value="${escapeHtml(draft.title)}" placeholder="例如：招牌烤鸭" />
+        <input data-field="title" maxlength="80" value="${escapeHtml(draft.title)}" placeholder="${escapeHtml(profile.titlePlaceholder)}" />
       </label>
       <label class="form-field">
-        <span>推荐理由（可选）</span>
-        <textarea data-field="description" rows="2" maxlength="300" placeholder="口味、分量、价格或推荐理由">${escapeHtml(draft.description)}</textarea>
+        <span>${escapeHtml(profile.descriptionLabel)}（可选）</span>
+        <textarea data-field="description" rows="2" maxlength="300" placeholder="${escapeHtml(profile.descriptionPlaceholder)}">${escapeHtml(draft.description)}</textarea>
       </label>
       <div class="recommendation-photo-row">
         ${hasPhoto
           ? `<div class="recommendation-photo-compact-preview">
-              <img src="${escapeHtml(draft.photo)}" alt="${escapeHtml(draft.title || `推荐菜 ${index + 1}`)}">
+              <img src="${escapeHtml(draft.photo)}" alt="${escapeHtml(draft.title || `${profile.item} ${index + 1}`)}">
               <button type="button" data-action="remove-photo">移除照片</button>
             </div>`
           : ""}
@@ -2705,20 +2793,28 @@ function recommendationEditorItemMarkup(draft, index) {
 }
 
 function renderRecommendationEditor(focusDraftId = "") {
-  if (!recommendationDrafts.length) {
-    recommendationDrafts = [createRecommendationDraft()];
+  // 未填写的占位行可以释放，已经填写或上传的内容跨类型保留。
+  recommendationDrafts = recommendationDrafts.filter((draft) => draft.detailType === editingDetailType || draftHasContent(draft));
+  if (!recommendationDrafts.some((draft) => draft.detailType === editingDetailType) && recommendationDrafts.length < MAX_RECOMMENDATIONS) {
+    recommendationDrafts.push(createRecommendationDraft());
   }
-  recommendationDrafts = recommendationDrafts.slice(0, MAX_RECOMMENDATIONS);
+  const visibleDrafts = recommendationDrafts.filter((draft) => draft.detailType === editingDetailType);
+  const profile = poiModel.profile(editingDetailType);
 
-  $("recommendationList").innerHTML = recommendationDrafts
+  $("recommendationList").innerHTML = visibleDrafts
     .map(recommendationEditorItemMarkup)
     .join("");
 
   const atLimit = recommendationDrafts.length >= MAX_RECOMMENDATIONS;
   $("addRecommendationBtn").disabled = atLimit;
   $("recommendationLimitHint").textContent = atLimit
-    ? "已添加 10 道，达到上限"
-    : `${recommendationDrafts.length} / ${MAX_RECOMMENDATIONS}`;
+    ? `每个地点最多 ${MAX_RECOMMENDATIONS} 条记录`
+    : `${visibleDrafts.length} / ${MAX_RECOMMENDATIONS} ${profile.unit}`;
+  const otherTypes = [...new Set(recommendationDrafts.filter((draft) => draft.detailType !== editingDetailType && draftHasContent(draft)).map((draft) => draft.detailType))];
+  $("otherTypeRecords").classList.toggle("hidden", !otherTypes.length);
+  $("otherTypeRecords").innerHTML = otherTypes.length ? `<span>已保留其他类型的记录：</span>${otherTypes.map((type) =>
+    `<button type="button" data-detail-type="${type}">${escapeHtml(poiModel.profile(type).title)}</button>`
+  ).join("")}` : "";
 
   if (focusDraftId) {
     const item = [...$("recommendationList").querySelectorAll(".recommendation-editor-item")]
@@ -2733,7 +2829,8 @@ function recommendationValuesFromForm() {
       title: item.title.trim(),
       description: item.description.trim(),
       photo: item.photo,
-      photoFileId: item.photoFileId
+      photoFileId: item.photoFileId,
+      detailType: item.detailType
     }))
     .filter((item) => item.title || item.description || item.photo || item.photoFileId)
     .slice(0, MAX_RECOMMENDATIONS);
@@ -2751,6 +2848,62 @@ function setVisitMode(mode) {
   }
 }
 
+function draftHasContent(draft) {
+  return Boolean(draft.title.trim() || draft.description.trim() || draft.photo || draft.photoFileId || uploadingEntryIds.has(draft.draftId));
+}
+
+function collectPlaceDetailDrafts() {
+  collectRecommendationDraftsFromForm();
+  const values = {};
+  $("placePracticalFields").querySelectorAll("[data-detail-field]").forEach((input) => {
+    values[input.dataset.detailField] = input.value.trim();
+  });
+  detailFieldDrafts[editingDetailType] = values;
+}
+
+function defaultDetailTypeForForm() {
+  return poiModel.placeDetailType({ name: $("placeName").value.trim() }, resolvedCategory() || {});
+}
+
+function renderPlaceDetailTypeSelect(currentOverride = "") {
+  const defaultType = defaultDetailTypeForForm();
+  const select = $("placeDetailTypeSelect");
+  select.innerHTML = `<option value="">随分类 · ${escapeHtml(poiModel.profile(defaultType).name)}</option>`;
+  poiModel.groups.forEach((group) => {
+    const optionGroup = document.createElement("optgroup");
+    optionGroup.label = group.name;
+    poiModel.profiles.filter((profile) => profile.groupId === group.id).forEach((profile) => {
+      const option = document.createElement("option");
+      option.value = profile.id;
+      option.textContent = profile.name;
+      optionGroup.appendChild(option);
+    });
+    select.appendChild(optionGroup);
+  });
+  select.value = currentOverride;
+  if (select.selectedIndex < 0) select.value = "";
+}
+
+function renderPlaceDetailEditor(collect = true) {
+  if (collect) collectPlaceDetailDrafts();
+  editingDetailType = $("placeDetailTypeSelect").value || defaultDetailTypeForForm();
+  const profile = poiModel.profile(editingDetailType);
+  $("placeDetailTypeHelp").textContent = resolvedCategory()
+    ? "通常随分类即可；同一分类里性质不同的地点，可以单独选择。"
+    : "选择分类后会自动匹配，也可以为这个地点单独选择。";
+  $("placeEntriesTitle").textContent = profile.title;
+  $("placeEntriesHelp").textContent = profile.help;
+  $("addRecommendationLabel").textContent = `添加${profile.item}`;
+  $("placePracticalTitle").textContent = profile.groupId === "food" ? "消费与体验" : "实用信息";
+  const values = detailFieldDrafts[profile.id] || {};
+  $("placePracticalFields").innerHTML = profile.fields.map((field) => `<label class="form-field">
+    <span>${escapeHtml(field.label)}</span>
+    <input data-detail-field="${field.id}" maxlength="300" value="${escapeHtml(values[field.id] || "")}" placeholder="${escapeHtml(field.placeholder)}" />
+  </label>`).join("");
+  $("placePracticalSection").classList.toggle("hidden", !profile.fields.length);
+  renderRecommendationEditor();
+}
+
 function openPlaceDialog(data, editingId = "") {
   if (!canEdit) return;
   $("placeId").value = editingId;
@@ -2764,8 +2917,9 @@ function openPlaceDialog(data, editingId = "") {
   renderCategorySelect(data.category || "");
 
   recommendationDrafts = normalizedRecommendations(data).map(createRecommendationDraft);
-  if (!recommendationDrafts.length) recommendationDrafts = [createRecommendationDraft()];
-  renderRecommendationEditor();
+  detailFieldDrafts = poiModel.normalizeDetails(data.detailsByType);
+  renderPlaceDetailTypeSelect(data.detailType || "");
+  renderPlaceDetailEditor(false);
 
   const visitRecord = data.visitRecord || {};
   $("visitDate").value = visitRecord.date || "";
@@ -2776,6 +2930,7 @@ function openPlaceDialog(data, editingId = "") {
   $("dialogTitle").textContent = editingId ? "编辑地点" : "添加地点";
 
   $("placeDialog").showModal();
+  $("placeDialog").querySelector(".dialog-scroll").scrollTop = 0;
   window.requestAnimationFrame(() => {
     $("placeName").focus({ preventScroll: true });
   });
@@ -2792,6 +2947,8 @@ window.editSavedPlace = function (id) {
     name: place.name,
     address: place.address,
     category: place.category,
+    detailType: place.detailType || "",
+    detailsByType: place.detailsByType || {},
     note: place.note,
     recommendations: place.recommendations || [],
     recommendation: place.recommendation || {},
@@ -2807,12 +2964,17 @@ function resolvedCategory() {
 
 function validateRecommendations(recommendations) {
   const invalidDraft = recommendationDrafts.find((item) =>
-    (item.description || item.photo || item.photoFileId) && !item.title
+    (item.description.trim() || item.photo || item.photoFileId) && !item.title.trim()
   );
   if (!invalidDraft) return true;
 
-  const invalidIndex = recommendationDrafts.indexOf(invalidDraft);
-  alert(`第 ${invalidIndex + 1} 道推荐菜添加了描述或照片，请同时填写名称。`);
+  if (invalidDraft.detailType !== editingDetailType) {
+    $("placeDetailTypeSelect").value = invalidDraft.detailType;
+    renderPlaceDetailEditor(false);
+  }
+  const profile = poiModel.profile(invalidDraft.detailType);
+  const visibleIndex = recommendationDrafts.filter((draft) => draft.detailType === invalidDraft.detailType).indexOf(invalidDraft);
+  alert(`第 ${visibleIndex + 1} 个${profile.item}添加了描述或照片，请同时填写名称。`);
   const item = [...$("recommendationList").querySelectorAll(".recommendation-editor-item")]
     .find((element) => element.dataset.recommendationId === invalidDraft.draftId);
   item?.querySelector("[data-field='title']")?.focus();
@@ -2822,6 +2984,10 @@ function validateRecommendations(recommendations) {
 function savePlace(event) {
   event.preventDefault();
   if (!canEdit) return;
+  if (uploadingEntryIds.size) {
+    alert("照片还在上传，请完成后保存。");
+    return;
+  }
 
   const category = resolvedCategory();
   if (!category) {
@@ -2829,6 +2995,7 @@ function savePlace(event) {
     return;
   }
 
+  collectPlaceDetailDrafts();
   const recommendations = recommendationValuesFromForm();
   if (!validateRecommendations(recommendations)) return;
 
@@ -2847,6 +3014,7 @@ function savePlace(event) {
     ? savedPlaces.find((item) => item.id === editingId)
     : null;
   const place = {
+    ...(existingPlace || {}),
     id: editingId || (
       crypto.randomUUID ? crypto.randomUUID() : String(Date.now())
     ),
@@ -2855,6 +3023,8 @@ function savePlace(event) {
     address: $("placeAddress").value.trim(),
     category: category.name,
     categoryId: category.id,
+    detailType: $("placeDetailTypeSelect").value || "",
+    detailsByType: poiModel.normalizeDetails(detailFieldDrafts),
     note: $("placeNote").value.trim(),
     longitude: Number($("longitude").value),
     latitude: Number($("latitude").value),
@@ -2969,7 +3139,7 @@ function exportData() {
     version: 2,
     id: "beijing",
     title: mapTitle,
-    description: "共同编辑的北京美食地点",
+    description: "共同编辑的地点与到访记录",
     updatedAt: new Date().toISOString(),
     map: {
       center: window.MAP_CONFIG?.defaultCenter || [116.397428, 39.90923],
@@ -3139,6 +3309,19 @@ $("routePlanList").onclick = (event) => {
 
 $("newCategoryBtn").onclick = () => openCategoryDialog("", true);
 
+$("categorySelect").onchange = () => {
+  collectPlaceDetailDrafts();
+  renderPlaceDetailTypeSelect($("placeDetailTypeSelect").value);
+  renderPlaceDetailEditor(false);
+};
+$("placeDetailTypeSelect").onchange = () => renderPlaceDetailEditor();
+$("otherTypeRecords").onclick = (event) => {
+  const button = event.target.closest("button[data-detail-type]");
+  if (!button) return;
+  $("placeDetailTypeSelect").value = button.dataset.detailType;
+  renderPlaceDetailEditor();
+};
+
 $("placeForm").addEventListener("submit", savePlace);
 $("deletePlaceBtn").onclick = deleteCurrentPlace;
 $("closeDialogBtn").onclick = () => $("placeDialog").close();
@@ -3187,6 +3370,7 @@ $("recommendationList").onchange = async (event) => {
   const item = input.closest(".recommendation-editor-item");
   const draftId = item?.dataset.recommendationId || "";
   collectRecommendationDraftsFromForm();
+  uploadingEntryIds.add(draftId);
   input.disabled = true;
   item?.classList.add("is-uploading");
 
@@ -3205,6 +3389,8 @@ $("recommendationList").onchange = async (event) => {
     setSyncStatus("照片上传失败", "error");
     input.disabled = false;
     item?.classList.remove("is-uploading");
+  } finally {
+    uploadingEntryIds.delete(draftId);
   }
 };
 
@@ -3213,6 +3399,16 @@ $("closeDeleteCategoryDialogBtn").onclick = closeDeleteCategoryDialog;
 $("cancelDeleteCategoryBtn").onclick = closeDeleteCategoryDialog;
 
 $("categoryForm").addEventListener("submit", saveStandaloneCategory);
+$("categoryGroupSelect").onchange = () => {
+  categoryGroupManuallyChosen = true;
+  renderCategoryDetailTypeOptions();
+};
+$("standaloneCategoryName").oninput = () => {
+  if (categoryGroupManuallyChosen) return;
+  const type = poiModel.inferDetailType($("standaloneCategoryName").value);
+  $("categoryGroupSelect").value = poiModel.profile(type).groupId;
+  renderCategoryDetailTypeOptions(type);
+};
 $("closeCategoryDialogBtn").onclick = closeCategoryEditorDialog;
 $("cancelCategoryBtn").onclick = closeCategoryEditorDialog;
 

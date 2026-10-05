@@ -3166,9 +3166,64 @@ body.read-only .bottom-hint {
   font-size: 15px;
 }
 
-.category-item-wrap:hover .category-count,
-.category-item-wrap:focus-within .category-count {
+.category-item-wrap:has(.category-delete-button):hover .category-count,
+.category-item-wrap:has(.category-delete-button):focus-within .category-count {
   opacity: 0;
+}
+
+/* 大类 → 原有分类；沿用地图现有的紧凑卡片和柔和灰阶。 */
+.category-group-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.category-group-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid #e5e5ea;
+  border-radius: 10px;
+  color: #515154;
+  background: #f5f5f7;
+  font-size: 12px;
+  line-height: 18px;
+  cursor: pointer;
+}
+
+.category-group-tab:hover { background: #ededf0; }
+.category-group-tab.selected { border-color: #c5d9f7; color: #0071e3; background: #eaf2ff; }
+.category-group-count { font-size: 11px; opacity: .7; font-variant-numeric: tabular-nums; }
+.category-group-filters .new-category-entry { width: auto; min-height: 34px; padding: 4px 9px; }
+.category-group-filters .new-category-plus { width: 20px; height: 20px; font-size: 15px; }
+.category-list.has-category-groups { display: block; }
+.category-group-section + .category-group-section { margin-top: 18px; }
+.category-group-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.category-group-heading h3 { margin: 0; color: #515154; font-size: 12px; line-height: 18px; font-weight: 600; }
+.category-group-heading > span { color: #86868b; font-size: 11px; }
+.category-group-tab:focus-visible { outline: 3px solid rgba(0,113,227,.2); outline-offset: 2px; }
+.field-help { color: #86868b; font-size: 12px; font-weight: 400; line-height: 1.5; }
+.place-practical-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#placeDialog .place-practical-fields .form-field { min-width: 0; margin-top: 0; }
+.other-type-records { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 12px; color: #86868b; font-size: 12px; }
+.other-type-records button { padding: 5px 8px; border: 0; border-radius: 7px; background: #f5f5f7; color: #0071e3; font-size: 12px; cursor: pointer; }
+.place-detail-type { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 5px; background: #f5f5f7; font-size: 11px; }
+.place-practical-summary { margin-top: 14px; padding: 12px; border-radius: 12px; background: #f5f5f7; }
+.place-practical-summary dl { margin: 0; }
+.place-practical-summary dl > div { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 8px; margin-top: 8px; font-size: 12px; line-height: 1.5; }
+.place-practical-summary dl > div:first-child { margin-top: 0; }
+.place-practical-summary dt { color: #86868b; }
+.place-practical-summary dd { margin: 0; color: #515154; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@media (max-width: 680px) {
+  .category-list.has-category-groups { display: block; }
+  .category-group-section .category-subcategory-grid { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+  .category-group-tab { min-height: 40px; }
+  .category-group-filters .new-category-entry { min-height: 40px; }
+  .place-practical-fields { grid-template-columns: minmax(0, 1fr); }
 }
 
 .new-category-entry {

@@ -169,14 +169,18 @@ async function run() {
       places: [{
         id: "place-1",
         name: "测试餐厅",
+        detailType: "museum",
+        detailsByType: { museum: { admission: "提前预约", duration: "2 小时" } },
+        visitRecord: { date: "2026-10-02", mode: "with", companions: "朋友" },
         recommendations: Array.from({ length: 11 }, (_, index) => ({
           title: `测试菜 ${index + 1}`,
           description: `推荐理由 ${index + 1}`,
           photo: uploaded.url,
-          photoFileId: uploaded.fileId
+          photoFileId: uploaded.fileId,
+          detailType: index === 0 ? "museum" : "dining"
         }))
       }],
-      categories: [],
+      categories: [{ id: "museum-category", name: "博物馆", groupId: "culture", detailType: "museum" }],
       icons: []
     }
   });
@@ -193,6 +197,11 @@ async function run() {
   assert.equal(hydrated.data.places[0].recommendations.length, 10);
   assert.ok(hydrated.data.places[0].recommendations.every((item) => item.photo === uploaded.url));
   assert.equal(hydrated.data.places[0].recommendation.photo, uploaded.url);
+  assert.equal(hydrated.data.places[0].recommendations[0].detailType, "museum");
+  assert.equal(hydrated.data.places[0].detailType, "museum");
+  assert.deepEqual(hydrated.data.places[0].detailsByType, { museum: { admission: "提前预约", duration: "2 小时" } });
+  assert.equal(hydrated.data.places[0].visitRecord.companions, "朋友");
+  assert.equal(hydrated.data.categories[0].groupId, "culture");
 
   const conflict = await mapFunction.main({
     action: "save",
